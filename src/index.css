@@ -1,0 +1,87 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+.App {
+  min-height: 100vh;
+  position: relative;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+*,
+::after*,
+::before* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a,
+li {
+  text-decoration: none;
+}
+.accordion-header {
+  background-color: #e6e6e6;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.contents {
+  max-height: 0;
+  overflow: hidden;
+}
+.content-show {
+  height: auto;
+  max-height: 400px;
+  padding: 10px;
+  border: 1px solid #e6e6e6;
+  border-top: none;
+  color: #a3a3a3;
+}
+.text-content {
+  color: #a3a3a3;
+}
+.bao_test {
+  transform: rotate(0deg);
+  font-weight: bold;
+  font-style: italic;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: red; */
+}
+.babaa {
+  letter-spacing: 5px;
+  transform: rotate(-90deg);
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+.bao111 {
+  position: relative;
+}
+.bao111::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  height: 4px;
+  width: 10%;
+  background-color: black;
+  z-index: 100;
+}

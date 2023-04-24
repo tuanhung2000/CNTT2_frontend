@@ -1,0 +1,22 @@
+.App {
+  min-height: 100vh;
+  position: relative;
+}
+.accordion-header {
+  background-color: red;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.contents {
+  max-height: 0;
+  overflow: hidden;
+}
+.content-show {
+  height: auto;
+  max-height: 999px;
+
+  padding: 10px;
+}
