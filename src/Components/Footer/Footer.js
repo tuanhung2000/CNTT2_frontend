@@ -15,15 +15,16 @@ function Footer() {
   );
 }
 const FooterContainer = styled.section`
-  height: 60px;
+  min-height: 100px;
   width: 100%;
   bottom: 0;
   left: 0;
-  background-color: black;
+  background-color: white;
   display: flex;
   align-items: center;
-  padding: 0 2rem;
-  color: white;
+  padding: 15px;
+  box-sizing: border-box;
+  color: black;
 `;
 const FooterLeft = styled.div`
   width: 40%;
@@ -31,7 +32,6 @@ const FooterLeft = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0.5rem 0.3rem;
 `;
 const FooterRight = styled.div`
   width: 60%;
