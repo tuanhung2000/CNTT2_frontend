@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { COLORS } from "../../assets/color";
+import * as Yup from "yup";
+import { Formik, useFormik } from "formik";
 import {
   Button,
   Card,
@@ -15,23 +17,36 @@ import {
 } from "@mui/material";
 import Swal from "sweetalert2";
 function Login() {
-  const [userName, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    Swal.fire({
-      title: "Thành công!",
-      text: "Bạn đăng nhập thành công!",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Tiếp tục",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/");
-      }
-    });
+  const onSubmit = async (values) => {
+    const { password, userName } = values;
+    console.log(values);
   };
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      password: "",
+      userName: "",
+    },
+    validationSchema: Yup.object({
+      userName: Yup.string().required("Bắt buộc"),
+      password: Yup.string().required("Bắt buộc"),
+    }),
+    onSubmit,
+  });
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   Swal.fire({
+  //     title: "Thành công!",
+  //     text: "Bạn đăng nhập thành công!",
+  //     icon: "success",
+  //     confirmButtonColor: `${COLORS.main}`,
+  //     confirmButtonText: "Tiếp tục",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       navigate("/");
+  //     }
+  //   });
+  // };
   return (
     <LoginComponent>
       <Card
@@ -78,35 +93,41 @@ function Login() {
               <p style={{ marginBottom: "20px", color: "GrayText" }}>
                 Chào mừng đến với HVcar
               </p>
-              <form onSubmit={handleSubmit}>
+              <form autoComplete="off" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={1}>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="userName"
                       label="Tên đăng nhập"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập tên đăng nhập của bạn"
                       variant="outlined"
                       fullWidth
-                      value={userName}
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                      }}
+                      value={formik.values.userName}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.userName && formik.touched.userName ? (
+                      <span className="error">{formik.errors.userName}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="password"
                       label="Mật khẩu"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập mật khẩu của bạn"
                       variant="outlined"
                       fullWidth
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                      }}
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.password && formik.touched.password ? (
+                      <span className="error">{formik.errors.password}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <Button
@@ -185,6 +206,10 @@ const LoginComponent = styled.section`
     font-size: 12px;
     border: 1px solid #3e549a;
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+  }
+  .error {
+    color: red;
+    font-size: 12px;
   }
 `;
 export default Login;

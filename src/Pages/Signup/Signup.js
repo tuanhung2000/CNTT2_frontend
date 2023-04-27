@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { COLORS } from "../../assets/color";
 import Swal from "sweetalert2";
+import * as Yup from "yup";
+import { Formik, useFormik } from "formik";
 import {
   Button,
   Card,
@@ -15,30 +17,62 @@ import {
   Typography,
 } from "@mui/material";
 function Signup() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [userName, setUserName] = useState("");
-  const [role, setRole] = useState("");
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [phoneNumber, setPhoneNumber] = useState("");
+  // const [userName, setUserName] = useState("");
+  // const [role, setRole] = useState("");
   const navigate = useNavigate();
-  console.log(role);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    Swal.fire({
-      title: "Thành công!",
-      text: "Bạn đã đăng ký thành công!",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Tiếp tục",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/login");
-      }
-    });
+  const onSubmit = async (values) => {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      address,
+      phoneNumber,
+      userName,
+      role,
+    } = values;
+    console.log(values);
   };
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      address: "",
+      phoneNumber: "",
+      userName: "",
+      role: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("Bắt buộc"),
+      lastName: Yup.string().required("Bắt buộc"),
+      email: Yup.string()
+        .required("Bắt buộc")
+        .matches(
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          "Email không hợp lệ"
+        ),
+      password: Yup.string()
+        .required("Bắt buộc")
+        .matches(
+          /^[A-Za-z]\w{7,14}$/,
+          "Mật khẩu phải từ 7 đến 15 ký tự, chứa ký tự, số, dấu gạch dưới và ký tự đầu tiên phải là chữ"
+        ),
+      address: Yup.string().required("Bắt buộc"),
+      phoneNumber: Yup.string().required("Bắt buộc"),
+      userName: Yup.string().required("Bắt buộc"),
+      role: Yup.string().required("Bắt buộc"),
+    }),
+    onSubmit,
+  });
+
   return (
     <SignupComponent>
       <Card
@@ -53,7 +87,7 @@ function Signup() {
           <Typography gutterBottom variant="h5" style={{ fontWeight: "bold" }}>
             Đăng ký
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form autoComplete="off" onSubmit={formik.handleSubmit}>
             <Grid container>
               <Grid
                 item
@@ -82,122 +116,151 @@ function Signup() {
                 <Grid container spacing={1}>
                   <Grid xs={12} sm={6} item>
                     <TextField
+                      name="firstName"
                       label="Tên"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập tên của bạn"
                       variant="outlined"
                       fullWidth
-                      value={firstName}
-                      required
-                      onChange={(e) => {
-                        setFirstName(e.target.value);
-                      }}
+                      value={formik.values.firstName}
+                      // onChange={(e) => {
+                      //   setFirstName(e.target.value);
+                      // }}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.firstName && formik.touched.firstName ? (
+                      <span className="error">{formik.errors.firstName}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={6} item>
                     <TextField
+                      name="lastName"
                       label="Họ"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập họ của bạn"
                       variant="outlined"
                       fullWidth
-                      value={lastName}
-                      required
-                      onChange={(e) => {
-                        setLastName(e.target.value);
-                      }}
+                      value={formik.values.lastName}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.lastName && formik.touched.lastName ? (
+                      <span className="error">{formik.errors.lastName}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="userName"
                       label="Tên đăng nhập"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập tên đăng nhập của bạn"
                       variant="outlined"
                       fullWidth
-                      value={userName}
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                      }}
+                      value={formik.values.userName}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.userName && formik.touched.userName ? (
+                      <span className="error">{formik.errors.userName}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="email"
                       label="Email"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập email của bạn"
                       variant="outlined"
                       fullWidth
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.email && formik.touched.email ? (
+                      <span className="error">{formik.errors.email}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="password"
                       label="Mật khẩu"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập mật khẩu của bạn"
                       variant="outlined"
                       fullWidth
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                      }}
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.password && formik.touched.password ? (
+                      <span className="error">{formik.errors.password}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
+
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      name="address"
                       label="Địa chỉ"
-                      required
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập địa chỉ của bạn"
                       variant="outlined"
                       fullWidth
-                      value={address}
-                      onChange={(e) => {
-                        setAddress(e.target.value);
-                      }}
+                      value={formik.values.address}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.address && formik.touched.address ? (
+                      <span className="error">{formik.errors.address}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
-                      required
+                      name="phoneNumber"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       label="Số điện thoại"
                       placeholder="Nhập số điện thoại của bạn"
                       variant="outlined"
                       fullWidth
-                      value={phoneNumber}
-                      onChange={(e) => {
-                        setPhoneNumber(e.target.value);
-                      }}
+                      value={formik.values.phoneNumber}
+                      onChange={formik.handleChange}
                     />
+                    {formik.errors.phoneNumber && formik.touched.phoneNumber ? (
+                      <span className="error">
+                        {formik.errors.phoneNumber}*
+                      </span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item style={{ marginBottom: "10px" }}>
                     <InputLabel
                       id="demo-simple-select-label"
-                      required
                       style={{ color: `${COLORS.main}` }}
                     >
                       Chọn vai trò của bạn
                     </InputLabel>
                     <Select
+                      name="role"
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={role}
-                      required
-                      onChange={(e) => {
-                        setRole(e.target.value);
-                      }}
+                      value={formik.values.role}
+                      onChange={formik.handleChange}
                     >
                       <MenuItem value={"customer"}>Người thuê xe</MenuItem>
                       <MenuItem value={"owner"}>Người cho thuê</MenuItem>
                     </Select>
+                    {formik.errors.role && formik.touched.role ? (
+                      <span className="error">{formik.errors.role}*</span>
+                    ) : (
+                      <></>
+                    )}
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <Button
@@ -212,112 +275,6 @@ function Signup() {
                 </Grid>
               </Grid>
             </Grid>
-            {/* <Grid container spacing={1}>
-              <Grid xs={12} sm={6} item>
-                <TextField
-                  label="Tên"
-                  placeholder="Nhập tên của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={firstName}
-                  required
-                  onChange={(e) => {
-                    setFirstName(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={6} item>
-                <TextField
-                  label="Họ"
-                  placeholder="Nhập họ của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={lastName}
-                  required
-                  onChange={(e) => {
-                    setLastName(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={12} item>
-                <TextField
-                  label="Email"
-                  required
-                  placeholder="Nhập email của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={12} item>
-                <TextField
-                  label="Mật khẩu"
-                  required
-                  placeholder="Nhập mật khẩu của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={12} item>
-                <TextField
-                  label="Địa chỉ"
-                  required
-                  placeholder="Nhập địa chỉ của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={address}
-                  onChange={(e) => {
-                    setAddress(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={12} item>
-                <TextField
-                  required
-                  label="Số điện thoại"
-                  placeholder="Nhập số điện thoại của bạn"
-                  variant="outlined"
-                  fullWidth
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    setPhoneNumber(e.target.value);
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} sm={12} item style={{ marginBottom: "10px" }}>
-                <InputLabel id="demo-simple-select-label" required>
-                  Chọn vai trò của bạn
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={role}
-                  onChange={(e) => {
-                    setRole(e.target.value);
-                  }}
-                >
-                  <MenuItem value={"customer"}>Người thuê xe</MenuItem>
-                  <MenuItem value={"owner"}>Người cho thuê</MenuItem>
-                </Select>
-              </Grid>
-              <Grid xs={12} sm={12} item>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Đăng ký
-                </Button>
-              </Grid>
-            </Grid> */}
           </form>
         </CardContent>
       </Card>
@@ -352,6 +309,10 @@ const SignupComponent = styled.section`
     font-size: 12px;
     border: 1px solid #3e549a;
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+  }
+  .error {
+    color: red;
+    font-size: 12px;
   }
 `;
 
