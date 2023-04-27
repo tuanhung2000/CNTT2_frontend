@@ -15,7 +15,7 @@ function Footer() {
   );
 }
 const FooterContainer = styled.section`
-  min-height: 100px;
+  height: 100px;
   width: 100%;
   bottom: 0;
   left: 0;

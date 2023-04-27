@@ -10,6 +10,8 @@ import UserManagement from "./Pages/Admin/UserManagement/UserManagement";
 import RouterAdmin from "./Pages/Admin/RouterAdmin/RouterAdmin";
 import { Outlet } from "react-router-dom";
 import Bao from "./Pages/Bao";
+import NotFound from "./Pages/NotFound/NotFound";
+import Cars from "./Pages/Cars/Cars";
 function App() {
   return (
     <div className="App">
@@ -30,7 +32,7 @@ function App() {
           </Route> */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<div>Page not found</div>}></Route>
+          <Route path="*" element={<NotFound />}></Route>
           <Route
             element={
               <>
@@ -42,6 +44,7 @@ function App() {
           >
             <Route path="/" element={<Home />}></Route>
             <Route path="/products" element={<Product />}></Route>
+            <Route path="/listcars" element={<Cars />}></Route>
             <Route path="/bao" element={<Bao />}></Route>
           </Route>
         </Routes>

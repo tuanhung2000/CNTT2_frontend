@@ -38,6 +38,17 @@ function Signup() {
       role,
     } = values;
     console.log(values);
+    Swal.fire({
+      title: "Thành công!",
+      text: "Bạn đăng ký thành công!",
+      icon: "success",
+      confirmButtonColor: `${COLORS.main}`,
+      confirmButtonText: "Tiếp tục",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/login");
+      }
+    });
   };
   const formik = useFormik({
     initialValues: {

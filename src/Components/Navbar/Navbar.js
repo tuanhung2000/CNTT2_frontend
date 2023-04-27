@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 function Navbar() {
   const [active, setActive] = useState("nav_menu");
   const [toggleIcon, setToggleIcon] = useState("nav_toggler");
+  const [open, setOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const menuRef = useRef();
+  const imgRef = useRef();
+  window.addEventListener("click", (e) => {
+    if (e.target !== menuRef.current && e.target !== imgRef.current) {
+      setOpen(false);
+    }
+  });
   const toggle = () => {
     active === "nav_menu"
       ? setActive("nav_menu nav_active")
@@ -42,14 +51,114 @@ function Navbar() {
             <span className="hidden">Trở thành chủ xe</span>
           </Bao>
         </section>
-        <ul className={active}>
-          <li>
-            <LinkCustom to="/login">Đăng nhập</LinkCustom>
-          </li>
-          <li>
-            <ButtonSignup to="/signup">Đăng ký</ButtonSignup>
-          </li>
-        </ul>
+        <section className="product">
+          <Bao to="/listcars">
+            <ion-icon name="car-sport-outline"></ion-icon>
+            <span className="hidden">Danh sách xe</span>
+          </Bao>
+        </section>
+        {isLogin ? (
+          <ul className={active}>
+            <li>
+              <LinkCustom to="/login">Đăng nhập</LinkCustom>
+            </li>
+            <li>
+              <ButtonSignup to="/signup">Đăng ký</ButtonSignup>
+            </li>
+          </ul>
+        ) : (
+          <div
+            style={{
+              marginLeft: "20px",
+              marginRight: "20px",
+              position: "relative",
+            }}
+          >
+            <img
+              ref={imgRef}
+              height={50}
+              width={50}
+              style={{
+                objectFit: "cover",
+                borderRadius: "50%",
+                display: "block",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (!open) {
+                  setOpen(true);
+                } else {
+                  setOpen(false);
+                }
+              }}
+              alt=""
+              src="https://plus.unsplash.com/premium_photo-1671656349204-950bf60fdadb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMnx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60"
+            />
+            {open && (
+              <div
+                ref={menuRef}
+                style={{
+                  position: "absolute",
+                  zIndex: "100",
+                  left: "-45px",
+                  top: "55px",
+                  width: "140px",
+                  backgroundColor: "#f0f0f0",
+                }}
+              >
+                <ul>
+                  <li
+                    onClick={() => setOpen(false)}
+                    className="menu-item"
+                    style={{
+                      padding: "10px 10px",
+                      color: "black",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Link
+                      to="/"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      Trang cá nhân
+                    </Link>
+                  </li>
+                  <li
+                    className="menu-item"
+                    onClick={() => setOpen(false)}
+                    style={{
+                      padding: "10px 10px",
+                      color: "black",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Link
+                      to="/"
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      Xe của bạn
+                    </Link>
+                  </li>
+                  <li
+                    className="menu-item"
+                    onClick={() => setOpen(false)}
+                    style={{
+                      padding: "10px 10px",
+                      color: "black",
+                      fontWeight: "500",
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Đăng xuất
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
         <div onClick={toggle} className={toggleIcon}>
           <div className="line1"></div>
           <div className="line2"></div>
@@ -67,6 +176,9 @@ const NavbarContainer = styled.section`
   width: 100%;
   background-color: #141414;
   color: white;
+  .menu-item:hover {
+    background-color: white;
+  }
 `;
 const NavbarLeft = styled.section`
   padding-left: 50px;

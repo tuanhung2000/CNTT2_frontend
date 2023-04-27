@@ -17,9 +17,21 @@ import {
 } from "@mui/material";
 import Swal from "sweetalert2";
 function Login() {
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, { resetForm }) => {
     const { password, userName } = values;
     console.log(values);
+    Swal.fire({
+      title: "Thành công!",
+      text: "Bạn đăng nhập thành công!",
+      icon: "success",
+      confirmButtonColor: `${COLORS.main}`,
+      confirmButtonText: "Tiếp tục",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        resetForm(); // reset form after submit
+        navigate("/");
+      }
+    });
   };
   const navigate = useNavigate();
   const formik = useFormik({
