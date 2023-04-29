@@ -175,13 +175,22 @@ function Cars() {
               <Grid item xs={4} md={4}>
                 <img
                   alt=""
-                  height={150}
+                  height={200}
                   style={{ objectFit: "cover", width: "100%" }}
                   src="https://images.unsplash.com/photo-1541348263662-e068662d82af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YXVkaXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60"
                 />
               </Grid>
               <Grid item xs={8} md={8} style={{ padding: "10px 20px" }}>
-                <Grid item xs={12} md={12}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
                   <div style={{ fontWeight: "bold", fontSize: "30px" }}>
                     Audi{" "}
                     <span style={{ fontSize: "14px", color: "GrayText" }}>
@@ -446,6 +455,7 @@ function Cars() {
                     justifyContent: "flex-start",
                     alignItems: "center",
                     gap: "5px",
+                    padding: "10px 0",
                   }}
                 >
                   <div
@@ -453,10 +463,12 @@ function Cars() {
                       width: "50px",
                       height: "50px",
                       display: "flex",
+                      color: "white",
                       justifyContent: "center",
                       alignItems: "center",
                       backgroundColor: COLORS.main,
                       fontWeight: "bold",
+                      marginLeft: "10px",
                       borderRadius: "5px",
                     }}
                   >
@@ -474,22 +486,66 @@ function Cars() {
                     <span style={{ fontSize: "14px" }}>100 đánh giá</span>
                   </div>
                 </div>
-                <Button>Chi tiết</Button>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ color: "GrayText", fontSize: "15px" }}>
+                      Giá trong vòng 7 ngày
+                    </p>
+                    <p style={{ fontWeight: "bold", fontSize: "20px" }}>$500</p>
+                  </div>
+                  <Button
+                    style={{
+                      backgroundColor: "#00a550",
+                      color: "white",
+                      padding: "10px 20px",
+
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                </div>
               </div>
             </Grid>
           </Card>
           <Card style={{ backgroundColor: "ButtonFace", padding: "10px" }}>
-            <Grid container>
+            <Grid
+              container
+              style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
+            >
               <Grid item xs={4} md={4}>
                 <img
                   alt=""
-                  height={180}
+                  height={200}
                   style={{ objectFit: "cover", width: "100%" }}
                   src="https://images.unsplash.com/photo-1541348263662-e068662d82af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YXVkaXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60"
                 />
               </Grid>
               <Grid item xs={8} md={8} style={{ padding: "10px 20px" }}>
-                <Grid item xs={12} md={12}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
                   <div style={{ fontWeight: "bold", fontSize: "30px" }}>
                     Audi{" "}
                     <span style={{ fontSize: "14px", color: "GrayText" }}>
@@ -559,19 +615,282 @@ function Cars() {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid
+              container
+              style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
+            >
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="battery-half"
+                    style={{ fontSize: "2em" }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Tình trạng xe</p>
+                    <p>2 năm</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="compass"
+                    style={{ fontSize: "2em" }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Khu vực</p>
+                    <p>Hồ Chí Minh</p>
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Hỗ trợ giao xe tận nơi</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Có thể thuê tài xế</p>
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                    backgroundColor: "#e2ffd0",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ color: COLORS.main }}>Làm thủ tục trực tuyến</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                    backgroundColor: "#e2ffd0",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ color: COLORS.main, fontWeight: "bold" }}>
+                      Hủy miễn phí
+                    </p>
+                  </div>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "5px",
+                    padding: "10px 0",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      display: "flex",
+                      color: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: COLORS.main,
+                      fontWeight: "bold",
+                      marginLeft: "10px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    5/10
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <span style={{ fontWeight: "bold" }}>Rất tốt</span>
+                    <span style={{ fontSize: "14px" }}>100 đánh giá</span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ color: "GrayText", fontSize: "15px" }}>
+                      Giá trong vòng 7 ngày
+                    </p>
+                    <p style={{ fontWeight: "bold", fontSize: "20px" }}>$500</p>
+                  </div>
+                  <Button className="btn_view">Chi tiết</Button>
+                </div>
+              </div>
+            </Grid>
           </Card>
           <Card style={{ backgroundColor: "ButtonFace", padding: "10px" }}>
-            <Grid container>
+            <Grid
+              container
+              style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
+            >
               <Grid item xs={4} md={4}>
                 <img
                   alt=""
-                  height={180}
+                  height={200}
                   style={{ objectFit: "cover", width: "100%" }}
                   src="https://images.unsplash.com/photo-1541348263662-e068662d82af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YXVkaXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60"
                 />
               </Grid>
               <Grid item xs={8} md={8} style={{ padding: "10px 20px" }}>
-                <Grid item xs={12} md={12}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
                   <div style={{ fontWeight: "bold", fontSize: "30px" }}>
                     Audi{" "}
                     <span style={{ fontSize: "14px", color: "GrayText" }}>
@@ -640,6 +959,268 @@ function Cars() {
                   </div>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid
+              container
+              style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
+            >
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="battery-half"
+                    style={{ fontSize: "2em" }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Tình trạng xe</p>
+                    <p>2 năm</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="compass"
+                    style={{ fontSize: "2em" }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Khu vực</p>
+                    <p>Hồ Chí Minh</p>
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Hỗ trợ giao xe tận nơi</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p>Có thể thuê tài xế</p>
+                  </div>
+                </Grid>
+              </Grid>
+              <Grid item xs={4} md={4}>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                    backgroundColor: "#e2ffd0",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ color: COLORS.main }}>Làm thủ tục trực tuyến</p>
+                  </div>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={12}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    gap: "10px",
+                    padding: "10px",
+                    backgroundColor: "#e2ffd0",
+                  }}
+                >
+                  <ion-icon
+                    name="checkmark"
+                    style={{ fontSize: "1em", color: COLORS.main }}
+                  ></ion-icon>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <p style={{ color: COLORS.main, fontWeight: "bold" }}>
+                      Hủy miễn phí
+                    </p>
+                  </div>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "5px",
+                    padding: "10px 0",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      display: "flex",
+                      color: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: COLORS.main,
+                      fontWeight: "bold",
+                      marginLeft: "10px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    5/10
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <span style={{ fontWeight: "bold" }}>Rất tốt</span>
+                    <span style={{ fontSize: "14px" }}>100 đánh giá</span>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ color: "GrayText", fontSize: "15px" }}>
+                      Giá trong vòng 7 ngày
+                    </p>
+                    <p style={{ fontWeight: "bold", fontSize: "20px" }}>$500</p>
+                  </div>
+                  <Button
+                    className="btn_view"
+                    style={{
+                      backgroundColor: "#00a550",
+                      color: "white",
+                      padding: "10px 20px",
+
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                </div>
+              </div>
             </Grid>
           </Card>
         </Grid>
@@ -661,6 +1242,18 @@ const CarsComponent = styled.section`
     justify-content: center;
     align-items: center;
     gap: 2px;
+  }
+  .btn_view {
+    background-color: #00a550;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: 1px solid ${COLORS.main};
+  }
+  .btn_view:hover {
+    background-color: white;
+    border: 1px solid ${COLORS.main};
+    color: #00a550;
   }
 `;
 export default Cars;

@@ -12,6 +12,8 @@ import { Outlet } from "react-router-dom";
 import Bao from "./Pages/Bao";
 import NotFound from "./Pages/NotFound/NotFound";
 import Cars from "./Pages/Cars/Cars";
+import CarDetail from "./Pages/Cars/CarDetail";
+
 function App() {
   return (
     <div className="App">
@@ -45,6 +47,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/products" element={<Product />}></Route>
             <Route path="/listcars" element={<Cars />}></Route>
+            <Route path="/cardetail" element={<CarDetail />}></Route>
             <Route path="/bao" element={<Bao />}></Route>
           </Route>
         </Routes>

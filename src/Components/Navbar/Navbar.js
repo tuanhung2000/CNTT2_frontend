@@ -51,7 +51,7 @@ function Navbar() {
             <span className="hidden">Trở thành chủ xe</span>
           </Bao>
         </section>
-        <section className="product">
+        <section className="product" style={{ marginLeft: "20px" }}>
           <Bao to="/listcars">
             <ion-icon name="car-sport-outline"></ion-icon>
             <span className="hidden">Danh sách xe</span>

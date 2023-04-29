@@ -16,31 +16,45 @@ import {
   Typography,
 } from "@mui/material";
 import Swal from "sweetalert2";
+import { useLoginMutation } from "../../features/auth/authApiSlice";
+import { setCredentials } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 function Login() {
+  const dispatch = useDispatch();
+  const [login] = useLoginMutation();
   const onSubmit = async (values, { resetForm }) => {
-    const { password, userName } = values;
-    console.log(values);
-    Swal.fire({
-      title: "Thành công!",
-      text: "Bạn đăng nhập thành công!",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Tiếp tục",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        resetForm(); // reset form after submit
-        navigate("/");
-      }
-    });
+    const { password, username } = values;
+    console.log(username, password);
+    // axios
+    //   .post("http://localhost:9090/auth/login", {
+    //     username: username,
+    //     password: password,
+    //   })
+    //   .then((response) => {
+    //     // Handle successful login
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     // Handle failed login
+    //     console.error(error.response.data);
+    //   });
+    try {
+      const { accessToken } = await login({ username, password }).unwrap();
+      dispatch(setCredentials({ accessToken }));
+      localStorage.setItem("token", accessToken);
+    } catch (error) {
+      console.error(error.data.message);
+    }
   };
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       password: "",
-      userName: "",
+      username: "",
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("Bắt buộc"),
+      username: Yup.string().required("Bắt buộc"),
       password: Yup.string().required("Bắt buộc"),
     }),
     onSubmit,
@@ -109,17 +123,17 @@ function Login() {
                 <Grid container spacing={1}>
                   <Grid xs={12} sm={12} item>
                     <TextField
-                      name="userName"
+                      name="username"
                       label="Tên đăng nhập"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập tên đăng nhập của bạn"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.userName}
+                      value={formik.values.username}
                       onChange={formik.handleChange}
                     />
-                    {formik.errors.userName && formik.touched.userName ? (
-                      <span className="error">{formik.errors.userName}*</span>
+                    {formik.errors.username && formik.touched.username ? (
+                      <span className="error">{formik.errors.username}*</span>
                     ) : (
                       <></>
                     )}
