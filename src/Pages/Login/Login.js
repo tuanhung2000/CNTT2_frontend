@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { COLORS } from "../../assets/color";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 import { Formik, useFormik } from "formik";
+import useAuth from "../../hooks/useAuth";
 import {
   Button,
   Card,
@@ -23,6 +25,10 @@ import axios from "axios";
 function Login() {
   const dispatch = useDispatch();
   const [login] = useLoginMutation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
   const onSubmit = async (values, { resetForm }) => {
     const { password, username } = values;
     console.log(username, password);
@@ -43,11 +49,13 @@ function Login() {
       const { accessToken } = await login({ username, password }).unwrap();
       dispatch(setCredentials({ accessToken }));
       localStorage.setItem("token", accessToken);
+      toast.success("Đăng nhập thành công");
+      navigate("/");
     } catch (error) {
       console.error(error.data.message);
     }
   };
-  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       password: "",
@@ -73,6 +81,7 @@ function Login() {
   //     }
   //   });
   // };
+
   return (
     <LoginComponent>
       <Card

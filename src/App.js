@@ -13,6 +13,7 @@ import Bao from "./Pages/Bao";
 import NotFound from "./Pages/NotFound/NotFound";
 import Cars from "./Pages/Cars/Cars";
 import CarDetail from "./Pages/Cars/CarDetail";
+import Profile from "./Pages/Profile/Profile";
 
 function App() {
   return (
@@ -28,10 +29,9 @@ function App() {
           <Route path="*" element={<div>Page not found</div>}></Route> */}
 
           {/* Private Components */}
-          {/* <Route element={<PrivateComponent />}>
-            <Route path="admin" element={<RouterAdmin />} />
-            <Route path="user" element={<UserManagement />} />
-          </Route> */}
+          <Route element={<PrivateComponent />}>
+            <Route path="profile" element={<Profile />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />}></Route>
@@ -47,6 +47,7 @@ function App() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/products" element={<Product />}></Route>
             <Route path="/listcars" element={<Cars />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
             <Route path="/cardetail" element={<CarDetail />}></Route>
             <Route path="/bao" element={<Bao />}></Route>
           </Route>

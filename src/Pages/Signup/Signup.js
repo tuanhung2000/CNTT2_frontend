@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { COLORS } from "../../assets/color";
 import Swal from "sweetalert2";
 import * as Yup from "yup";
+import axios from "axios";
 import { Formik, useFormik } from "formik";
 import {
   Button,
@@ -25,6 +26,9 @@ function Signup() {
   // const [phoneNumber, setPhoneNumber] = useState("");
   // const [userName, setUserName] = useState("");
   // const [role, setRole] = useState("");
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
   const navigate = useNavigate();
   const onSubmit = async (values) => {
     const {
@@ -34,21 +38,40 @@ function Signup() {
       password,
       address,
       phoneNumber,
-      userName,
+      username,
       role,
     } = values;
-    console.log(values);
-    Swal.fire({
-      title: "Thành công!",
-      text: "Bạn đăng ký thành công!",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Tiếp tục",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/login");
-      }
-    });
+    try {
+      await axios
+        .post("http://localhost:9090/auth/signup", {
+          firstName,
+          lastName,
+          email,
+          password,
+          address,
+          phoneNumber,
+          username,
+          role,
+        })
+        .then(() => {
+          Swal.fire({
+            title: "Thành công!",
+            text: "Bạn đăng ký thành công!",
+            icon: "success",
+            confirmButtonColor: `${COLORS.main}`,
+            confirmButtonText: "Tiếp tục",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/login");
+            }
+          });
+        })
+        .catch((err) => {
+          if (err && err.response) console.log("Error", err);
+        });
+    } catch (error) {
+      console.log("Error...");
+    }
   };
   const formik = useFormik({
     initialValues: {
@@ -58,7 +81,7 @@ function Signup() {
       password: "",
       address: "",
       phoneNumber: "",
-      userName: "",
+      username: "",
       role: "",
     },
     validationSchema: Yup.object({
@@ -78,7 +101,7 @@ function Signup() {
         ),
       address: Yup.string().required("Bắt buộc"),
       phoneNumber: Yup.string().required("Bắt buộc"),
-      userName: Yup.string().required("Bắt buộc"),
+      username: Yup.string().required("Bắt buộc"),
       role: Yup.string().required("Bắt buộc"),
     }),
     onSubmit,
@@ -164,17 +187,17 @@ function Signup() {
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
-                      name="userName"
+                      name="username"
                       label="Tên đăng nhập"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
                       placeholder="Nhập tên đăng nhập của bạn"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.userName}
+                      value={formik.values.username}
                       onChange={formik.handleChange}
                     />
-                    {formik.errors.userName && formik.touched.userName ? (
-                      <span className="error">{formik.errors.userName}*</span>
+                    {formik.errors.username && formik.touched.username ? (
+                      <span className="error">{formik.errors.username}*</span>
                     ) : (
                       <></>
                     )}

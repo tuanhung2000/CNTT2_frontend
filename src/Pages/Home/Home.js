@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Carousel } from "antd";
+import useAuth from "../../hooks/useAuth";
 function Home() {
   const [open, setOpen] = useState("close");
   // const scrollTop = () => {
@@ -16,6 +17,8 @@ function Home() {
       setOpen("close");
     }
   };
+  const { username } = useAuth();
+  console.log(username);
   return (
     <HomeSection>
       <HomeSectionTop>

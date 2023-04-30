@@ -1,7 +1,12 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import styled from "styled-components";
+import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 function Navbar() {
+  const { username } = useAuth();
+  console.log(username);
+  const [sendLogout] = useSendLogoutMutation();
   const [active, setActive] = useState("nav_menu");
   const [toggleIcon, setToggleIcon] = useState("nav_toggler");
   const [open, setOpen] = useState(false);
@@ -20,6 +25,13 @@ function Navbar() {
     toggleIcon === "nav_toggler"
       ? setToggleIcon("nav_toggler toggle")
       : setToggleIcon("nav_toggler");
+  };
+  const handleLogout = async () => {
+    setOpen(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("app/token");
+    await sendLogout;
+    window.location.reload(false);
   };
   return (
     <NavbarContainer>
@@ -57,7 +69,7 @@ function Navbar() {
             <span className="hidden">Danh sách xe</span>
           </Bao>
         </section>
-        {isLogin ? (
+        {!username ? (
           <ul className={active}>
             <li>
               <LinkCustom to="/login">Đăng nhập</LinkCustom>
@@ -118,7 +130,7 @@ function Navbar() {
                     }}
                   >
                     <Link
-                      to="/"
+                      to="/profile"
                       style={{ textDecoration: "none", color: "black" }}
                     >
                       Trang cá nhân
@@ -143,7 +155,7 @@ function Navbar() {
                   </li>
                   <li
                     className="menu-item"
-                    onClick={() => setOpen(false)}
+                    onClick={handleLogout}
                     style={{
                       padding: "10px 10px",
                       color: "black",
@@ -214,10 +226,11 @@ const NavbarRight = styled.section`
   flex-direction: row;
   align-items: center;
   .nav_menu {
+    margin-left: 20px;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    gap: 3rem;
+    gap: 2rem;
 
     @media screen and (max-width: 767px) {
       position: absolute;
