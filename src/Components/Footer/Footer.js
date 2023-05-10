@@ -19,12 +19,12 @@ const FooterContainer = styled.section`
   width: 100%;
   bottom: 0;
   left: 0;
-  background-color: white;
+  background-color: #000000;
   display: flex;
   align-items: center;
   padding: 15px;
   box-sizing: border-box;
-  color: black;
+  color: white;
 `;
 const FooterLeft = styled.div`
   width: 40%;

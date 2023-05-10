@@ -1,8 +1,12 @@
-import { Button, Card, Grid } from "@mui/material";
-import React from "react";
+import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../assets/color";
 function CarDetail() {
+  const [sex, setSex] = useState("");
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
   return (
     <CarDetailComponent>
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
@@ -430,9 +434,238 @@ function CarDetail() {
                 flexDirection: "column",
                 alignItems: "flex-start",
                 width: "100%",
-                backgroundColor: "white",
+                gap: "10px",
               }}
-            ></div>
+            >
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="sex" style={{ cursor: "pointer" }}>
+                    Giới tính:
+                  </label>
+                  <Select
+                    name="role"
+                    labelId="demo-simple-select-label"
+                    id="sex"
+                    value={sex}
+                    style={{ height: "40px" }}
+                    onChange={(e) => setSex(e.target.value)}
+                  >
+                    <MenuItem value={"male"}>Nam</MenuItem>
+                    <MenuItem value={"female"}>Nữ</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="firstname" style={{ cursor: "pointer" }}>
+                    Tên:
+                  </label>
+                  <input
+                    id="firstname"
+                    type="text"
+                    style={{
+                      display: "block",
+                      height: "40px",
+                      border: "none",
+                      outline: "0.5px solid #f0f0f0",
+                      padding: "0 5px",
+                    }}
+                  ></input>
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="lastname" style={{ cursor: "pointer" }}>
+                    Họ:
+                  </label>
+                  <input
+                    id="lastname"
+                    type="text"
+                    style={{
+                      display: "block",
+                      height: "40px",
+                      padding: "0 5px",
+                      border: "none",
+                      outline: "0.5px solid #f0f0f0",
+                    }}
+                  ></input>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="email" style={{ cursor: "pointer" }}>
+                    Email:
+                  </label>
+                  <input
+                    id="email"
+                    type="text"
+                    style={{
+                      display: "block",
+                      height: "40px",
+                      padding: "0 5px",
+                      border: "none",
+                      outline: "0.5px solid #f0f0f0",
+                    }}
+                  ></input>
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="phone" style={{ cursor: "pointer" }}>
+                    Số điện thoại:
+                  </label>
+                  <input
+                    id="phone"
+                    type="text"
+                    style={{
+                      display: "block",
+                      height: "40px",
+                      padding: "0 5px",
+                      border: "none",
+                      outline: "0.5px solid #f0f0f0",
+                    }}
+                  ></input>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="sex" style={{ cursor: "pointer" }}>
+                    Giới tính:
+                  </label>
+                  <Select
+                    name="role"
+                    labelId="demo-simple-select-label"
+                    id="day"
+                    value={day}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setDay(e.target.value)}
+                  >
+                    <MenuItem value={"male"}>Nam</MenuItem>
+                    <MenuItem value={"female"}>Nữ</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="sex"
+                    style={{ cursor: "pointer", opacity: "0" }}
+                  >
+                    fod
+                  </label>
+                  <Select
+                    name="role"
+                    labelId="demo-simple-select-label"
+                    id="day"
+                    value={day}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setDay(e.target.value)}
+                  >
+                    <MenuItem value={"male"}>Nam</MenuItem>
+                    <MenuItem value={"female"}>Nữ</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="sex"
+                    style={{ cursor: "pointer", opacity: "0" }}
+                  >
+                    fod
+                  </label>
+                  <Select
+                    name="role"
+                    labelId="demo-simple-select-label"
+                    id="day"
+                    value={day}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setDay(e.target.value)}
+                  >
+                    <MenuItem value={"male"}>Nam</MenuItem>
+                    <MenuItem value={"female"}>Nữ</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="lastname" style={{ cursor: "pointer" }}>
+                    Họ:
+                  </label>
+                  <input
+                    id="lastname"
+                    type="text"
+                    style={{
+                      display: "block",
+                      height: "40px",
+                      padding: "0 5px",
+                      border: "none",
+                      outline: "0.5px solid #f0f0f0",
+                    }}
+                  ></input>
+                </Grid>
+              </Grid>
+            </div>
           </Grid>
         </Grid>
       </Card>

@@ -2,15 +2,31 @@ import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import styled from "styled-components";
+import {
+  Box,
+  TextareaAutosize,
+  Button,
+  Dialog,
+  Textarea,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
+import Swal from "sweetalert2";
 function Navbar() {
   const { username } = useAuth();
-  console.log(username);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [newpassword, setNewpassword] = useState("");
+  const [newpasswordConfirm, setNewpasswordConfirm] = useState("");
   const [sendLogout] = useSendLogoutMutation();
   const [active, setActive] = useState("nav_menu");
   const [toggleIcon, setToggleIcon] = useState("nav_toggler");
   const [open, setOpen] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+
   const menuRef = useRef();
   const imgRef = useRef();
   window.addEventListener("click", (e) => {
@@ -33,6 +49,11 @@ function Navbar() {
     await sendLogout;
     window.location.reload(false);
   };
+
+  const handleClickClose = () => {
+    setOpenDialog(false);
+  };
+  console.log(openDialog);
   return (
     <NavbarContainer>
       <NavbarLeft>
@@ -115,7 +136,7 @@ function Navbar() {
                   left: "-45px",
                   top: "55px",
                   width: "140px",
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: "black",
                 }}
               >
                 <ul>
@@ -124,15 +145,11 @@ function Navbar() {
                     className="menu-item"
                     style={{
                       padding: "10px 10px",
-                      color: "black",
                       fontWeight: "500",
                       textAlign: "center",
                     }}
                   >
-                    <Link
-                      to="/profile"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
+                    <Link to="/profile" className="link_item">
                       Trang cá nhân
                     </Link>
                   </li>
@@ -141,24 +158,34 @@ function Navbar() {
                     onClick={() => setOpen(false)}
                     style={{
                       padding: "10px 10px",
-                      color: "black",
                       fontWeight: "500",
                       textAlign: "center",
                     }}
                   >
-                    <Link
-                      to="/"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
+                    <Link to="/" className="link_item">
                       Xe của bạn
                     </Link>
                   </li>
+                  <li
+                    onClick={() => {
+                      setOpenDialog(true);
+                    }}
+                    className="menu-item"
+                    style={{
+                      padding: "10px 10px",
+                      fontWeight: "500",
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Đổi mật khẩu
+                  </li>
+
                   <li
                     className="menu-item"
                     onClick={handleLogout}
                     style={{
                       padding: "10px 10px",
-                      color: "black",
                       fontWeight: "500",
                       textAlign: "center",
                       cursor: "pointer",
@@ -169,6 +196,97 @@ function Navbar() {
                 </ul>
               </div>
             )}
+            <Dialog
+              open={openDialog}
+              onClose={handleClickClose}
+              style={{ zIndex: "1000" }}
+            >
+              <DialogTitle style={{ backgroundColor: "black", color: "white" }}>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <span style={{ fontWeight: "bold", color: "white" }}>
+                    Đổi mật khẩu
+                  </span>
+                  <ion-icon
+                    name="close-circle-outline"
+                    onClick={handleClickClose}
+                    style={{
+                      cursor: "pointer",
+                      width: "30px",
+                      height: "30px",
+                      display: "block",
+                      border: "none",
+                      zIndex: "6",
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  ></ion-icon>
+                </Box>
+              </DialogTitle>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-around",
+                  position: "relative",
+                  padding: "40px",
+                  width: "400px",
+                  height: "300px",
+                  gap: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="newpassword"
+                    style={{ cursor: "pointer", fontWeight: "600" }}
+                  >
+                    Mật khẩu mới
+                  </label>
+                  <input
+                    type="text"
+                    id="newpassword"
+                    value={newpassword}
+                    style={{ display: "block", padding: "5px" }}
+                    onChange={(e) => {
+                      setNewpassword(e.target.value);
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="newpasswordConfirm"
+                    style={{ cursor: "pointer", fontWeight: "600" }}
+                  >
+                    Nhập lại mật khẩu mới
+                  </label>
+                  <input
+                    type="text"
+                    id="newpasswordConfirm"
+                    value={newpasswordConfirm}
+                    style={{ display: "block", padding: "5px" }}
+                    onChange={(e) => {
+                      setNewpasswordConfirm(e.target.value);
+                    }}
+                  />
+                </div>
+                <ButtonChange className="btn_change">Gửi</ButtonChange>
+              </div>
+            </Dialog>
           </div>
         )}
         <div onClick={toggle} className={toggleIcon}>
@@ -189,6 +307,33 @@ const NavbarContainer = styled.section`
   background-color: #141414;
   color: white;
   .menu-item:hover {
+    background-color: white;
+    color: black;
+  }
+  .menu-item {
+    color: white;
+  }
+  .menu-item .link_item {
+    color: white;
+  }
+  .menu-item:hover .link_item {
+    color: black;
+  }
+  .text_menu-item:hover {
+    color: black;
+  }
+`;
+const ButtonChange = styled.section`
+  color: white;
+  background-color: black;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid black;
+  font-weight: bold;
+  padding: 5px 10px;
+  &:hover {
+    color: black;
+    border-color: black;
     background-color: white;
   }
 `;
