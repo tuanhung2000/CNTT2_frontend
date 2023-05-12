@@ -1,11 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import MaterialReactTable from "material-react-table";
+import { Image, Input, Space, Table, Tag } from "antd";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import DescriptionIcon from "@mui/icons-material/Description";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import TabList from "@mui/lab/TabList";
+import TabContext from "@mui/lab/TabContext";
+import { Box, Typography } from "@mui/material";
+import TabPanel from "@mui/lab/TabPanel";
+
+const onChange = (pagination, filters, sorter, extra) => {
+  console.log("params", pagination, filters, sorter, extra);
+};
+const formatter = new Intl.NumberFormat("vi-VN", {
+  style: "currency",
+  currency: "VND",
+});
+const LinkTab = (props) => <Tab component="a" {...props} />;
 function Product() {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
+  const { role, username } = useAuth();
+  const [value, setValue] = React.useState("1");
+  const [searchText, setSearchText] = useState("");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  console.log(role);
+
   return (
     <ProductComponent>
-      {user ? (
+      {!username ? (
         <>
           <section className="productTop">
             <div className="productTop-left">
@@ -140,10 +169,279 @@ function Product() {
             </div>
           </section>
         </>
-      ) : (
+      ) : role === "customer" ? (
         <>
-          <p>Khoong phai</p>
+          <TabContext value={value}>
+            <section className="sidebar">
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="lab API tabs example"
+                  style={{
+                    height: "50px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Tab
+                    icon={<DirectionsCarIcon />}
+                    iconPosition="start"
+                    label="Danh sách xe"
+                    className="tab_item"
+                    value="1"
+                    style={{ color: value == 1 ? "#00a550" : "" }}
+                  />
+                  <Tab
+                    icon={<DescriptionIcon />}
+                    iconPosition="start"
+                    label="Hồ sơ mẫu"
+                    className="tab_item"
+                    value="2"
+                    style={{ color: value == 2 ? "#00a550" : "" }}
+                  />
+                  <Tab
+                    icon={<AutoGraphIcon />}
+                    iconPosition="start"
+                    label="Đánh giá"
+                    value="3"
+                    className="tab_item"
+                    style={{ color: value == 3 ? "#00a550" : "" }}
+                  />
+                </TabList>
+              </Box>
+            </section>
+            <TabPanel
+              value="1"
+              style={{
+                minHeight: "calc(100vh - 51px)",
+                boxSizing: "border-box",
+              }}
+            >
+              {/* <MaterialReactTable
+                columns={columns}
+                data={data}
+                enableEditing={true}
+                enableHiding={false}
+                enableDensityToggle={false}
+                enableFullScreenToggle={false}
+                enableColumnFilterModes={false}
+                enableColumnFilters={false}
+                muiSearchTextFieldProps={{
+                  placeholder: `Nhập thông tin của xe`,
+                }}
+                searchButtonProps={{
+                  "aria-label": "Custom search button aria label",
+                }}
+              /> */}
+              <Input.Search
+                placeholder="Nhập thông tin cần tìm..."
+                style={{ marginBottom: "20px" }}
+                onSearch={(value) => {
+                  setSearchText(value);
+                }}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+              />
+              <Table
+                columns={[
+                  { title: "STT", dataIndex: "index" },
+                  {
+                    title: "Tên",
+                    dataIndex: "name",
+                    filteredValue: [searchText],
+                    onFilter: (value, record) => {
+                      return (
+                        String(record.name)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.owner)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.desc)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.price)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.status)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.times)
+                          .toLowerCase()
+                          .includes(value.toLowerCase())
+                      );
+                    },
+                  },
+                  {
+                    title: "Ảnh",
+                    dataIndex: "image",
+                    render: (image) => (
+                      <Image
+                        src={image}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          objectPosition: "center",
+                        }}
+                      />
+                    ),
+                  },
+                  { title: "Chủ xe", dataIndex: "owner" },
+                  {
+                    title: "Mô tả",
+                    key: "desc",
+                    dataIndex: "desc",
+                    render: (_, { desc }) => (
+                      <>
+                        {desc.map((tag) => {
+                          let color = tag.length > 5 ? "geekblue" : "green";
+                          if (tag === "Có máy lạnh") {
+                            color = "volcano";
+                          }
+                          return (
+                            <Tag color={color} key={tag}>
+                              {tag.toUpperCase()}
+                            </Tag>
+                          );
+                        })}
+                      </>
+                    ),
+                  },
+                  {
+                    title: "Thời gian",
+                    dataIndex: "times",
+                    render: (times) => `${times} ngày`,
+                    sorter: (a, b) => a.times - b.times,
+                  },
+                  {
+                    title: "Giá tiền",
+                    dataIndex: "price",
+                    render: (price) => formatter.format(price),
+                    sorter: (a, b) => a.price - b.price,
+                  },
+                  {
+                    title: "Trạng thái",
+                    dataIndex: "status",
+                    render: (status) => {
+                      if (status === "Đang thuê") {
+                        return <Tag color="green">{status}</Tag>;
+                      } else if (status === "Đang giao xe") {
+                        return <Tag color="red">{status}</Tag>;
+                      } else {
+                        return <p>{status}</p>;
+                      }
+                    },
+                  },
+                ]}
+                dataSource={[
+                  {
+                    index: 1,
+                    name: "Honda",
+                    image:
+                      "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
+                    owner: "Thùy Vân",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 3,
+                    price: 1000000,
+                    status: "Đang giao xe",
+                  },
+                  {
+                    index: 2,
+                    name: "Mecs",
+                    owner: "Huỳnh Chánh",
+                    image:
+                      "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 4,
+                    price: 7000000,
+                    status: "Đang giao xe",
+                  },
+                  {
+                    index: 3,
+                    name: "Audi",
+                    image:
+                      "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Thùy Vân",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 20,
+                    price: 500000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 4,
+                    name: "Audi",
+                    owner: "duy",
+                    image:
+                      "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 14,
+                    price: 10000030,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 5,
+                    name: "Audi",
+                    owner: "Đăng Duy",
+                    image:
+                      "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 9,
+                    price: 66600000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 6,
+                    name: "Audi",
+                    image:
+                      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
+                    times: 7,
+                    price: 6600000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 7,
+                    name: "Audi",
+                    image:
+                      "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 1,
+                    price: 450000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 8,
+                    name: "Audi",
+                    image:
+                      "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 1,
+                    price: 380000,
+                    status: "Đang thuê",
+                  },
+                ]}
+                onChange={onChange}
+                locale={{
+                  triggerDesc: "Giảm dần",
+                  triggerAsc: "Tăng dần",
+                  cancelSort: "Hủy",
+                  emptyText: "Không có dữ liệu",
+                }}
+              ></Table>
+            </TabPanel>
+            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="3">Item Three</TabPanel>
+          </TabContext>
         </>
+      ) : (
+        <>Chu xe</>
       )}
     </ProductComponent>
   );
@@ -151,7 +449,7 @@ function Product() {
 const ProductComponent = styled.section`
   min-height: 100vh;
   width: 100%;
-  ${"" /* background-color: darkgray; */}
+
   .productTop::after {
     content: "";
     position: absolute;
@@ -311,6 +609,47 @@ const ProductComponent = styled.section`
       url("https://images.unsplash.com/photo-1570303278489-041bd897a873?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8aG9uZGF8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60");
   }
   .btn_signup {
+    color: red;
+  }
+  .sidebar {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    .tab_item {
+      padding: 15px;
+      min-height: 0;
+    }
+    ul {
+      display: flex;
+      li {
+        padding: 0 40px;
+      }
+      li:not(:first-child):not(:last-child) {
+        border-right: 0.5px solid black;
+        border-left: 0.5px solid black;
+      }
+      .item-sidebar {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+      .item-sidebar span {
+        font-weight: bold;
+      }
+      .item-sidebar:hover span {
+        color: #00a550;
+      }
+      .item-sidebar:hover ion-icon {
+        color: #00a550;
+      }
+    }
+  }
+  ..css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected {
     color: red;
   }
 `;

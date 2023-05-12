@@ -1,12 +1,48 @@
 import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { COLORS } from "../../assets/color";
 function CarDetail() {
   const [sex, setSex] = useState("");
+  const [year, setYear] = useState([]);
   const [day, setDay] = useState("");
   const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
+  const [years, setYears] = useState([]);
+  const [days, setDays] = useState([]);
+  const [months, setMonths] = useState([]);
+  const [province, setProvince] = useState("");
+  const [provinces, setProvinces] = useState([]);
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
+    setYears(yearList);
+  }, []);
+  useEffect(() => {
+    const dayList = Array.from({ length: 31 }, (v, i) => i + 1);
+    setDays(dayList);
+  }, []);
+  useEffect(() => {
+    const monthList = Array.from({ length: 12 }, (v, i) => i + 1);
+    setMonths(monthList);
+  }, []);
+  useEffect(() => {
+    axios
+      .get("https://provinces.open-api.vn/api/")
+      .then((response) => {
+        const data = response.data;
+        const provinceList = data.map((province) => ({
+          id: province.code,
+          name: province.name,
+        }));
+        setProvinces(provinceList);
+      })
+      .catch((error) => {
+        console.error("Error fetching provinces data:", error);
+      });
+  }, []);
+  console.log(provinces);
+  console.log(year);
   return (
     <CarDetailComponent>
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
@@ -571,19 +607,37 @@ function CarDetail() {
                     gap: "5px",
                   }}
                 >
-                  <label htmlFor="sex" style={{ cursor: "pointer" }}>
-                    Giới tính:
+                  <label htmlFor="day" style={{ cursor: "pointer" }}>
+                    Sinh ngày:
                   </label>
                   <Select
                     name="role"
+                    displayEmpty
                     labelId="demo-simple-select-label"
                     id="day"
                     value={day}
                     style={{ height: "40px", width: "100%" }}
                     onChange={(e) => setDay(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
                   >
-                    <MenuItem value={"male"}>Nam</MenuItem>
-                    <MenuItem value={"female"}>Nữ</MenuItem>
+                    <MenuItem value="">Ngày</MenuItem>
+                    {days.map((item) => (
+                      <MenuItem value={item} key={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
                 <Grid
@@ -602,15 +656,33 @@ function CarDetail() {
                     fod
                   </label>
                   <Select
-                    name="role"
+                    name="month"
+                    displayEmpty
                     labelId="demo-simple-select-label"
-                    id="day"
-                    value={day}
+                    id="month"
+                    value={month}
                     style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setDay(e.target.value)}
+                    onChange={(e) => setMonth(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
                   >
-                    <MenuItem value={"male"}>Nam</MenuItem>
-                    <MenuItem value={"female"}>Nữ</MenuItem>
+                    <MenuItem value="">Tháng</MenuItem>
+                    {months.map((item) => (
+                      <MenuItem value={item} key={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
                 <Grid
@@ -623,21 +695,39 @@ function CarDetail() {
                   }}
                 >
                   <label
-                    htmlFor="sex"
+                    htmlFor="year"
                     style={{ cursor: "pointer", opacity: "0" }}
                   >
-                    fod
+                    g
                   </label>
                   <Select
                     name="role"
+                    displayEmpty
                     labelId="demo-simple-select-label"
-                    id="day"
-                    value={day}
+                    id="year"
+                    value={year}
                     style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setDay(e.target.value)}
+                    onChange={(e) => setYear(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
                   >
-                    <MenuItem value={"male"}>Nam</MenuItem>
-                    <MenuItem value={"female"}>Nữ</MenuItem>
+                    <MenuItem value="">Năm</MenuItem>
+                    {years.map((year) => (
+                      <MenuItem value={year} key={year}>
+                        {year}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </Grid>
                 <Grid
@@ -650,20 +740,48 @@ function CarDetail() {
                   }}
                 >
                   <label htmlFor="lastname" style={{ cursor: "pointer" }}>
-                    Họ:
+                    Nơi đang sinh sống:
                   </label>
-                  <input
-                    id="lastname"
-                    type="text"
-                    style={{
-                      display: "block",
-                      height: "40px",
-                      padding: "0 5px",
-                      border: "none",
-                      outline: "0.5px solid #f0f0f0",
+                  <Select
+                    name="provinces"
+                    displayEmpty
+                    labelId="demo-simple-select-label"
+                    id="provinces"
+                    value={province}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setProvince(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
                     }}
-                  ></input>
+                  >
+                    <MenuItem value="">Chọn thành phố</MenuItem>
+                    {provinces.map((item) => (
+                      <MenuItem value={item.name} key={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
+              </Grid>
+              <Grid
+                container
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <button className="btn_hire">Thuê</button>
               </Grid>
             </div>
           </Grid>
@@ -680,5 +798,19 @@ const CarDetailComponent = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  .btn_hire {
+    background-color: #00a550;
+    border: 1px solid #00a550;
+    outline: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .btn_hire:hover {
+    background-color: white;
+    color: #00a550;
+  }
 `;
 export default CarDetail;

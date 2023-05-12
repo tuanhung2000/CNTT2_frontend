@@ -52,7 +52,10 @@ function Login() {
       toast.success("Đăng nhập thành công");
       navigate("/");
     } catch (error) {
-      console.error(error.data.message);
+      if (error && error.status === 401) {
+        toast.warning("Tài khoản không tồn tại");
+        resetForm();
+      }
     }
   };
 
