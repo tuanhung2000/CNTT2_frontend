@@ -17,20 +17,20 @@ import Profile from "./Pages/Profile/Profile";
 import { useEffect } from "react";
 
 function App() {
-  useEffect(() => {
-    // Add event listener to the beforeunload event
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  // useEffect(() => {
+  //   // Add event listener to the beforeunload event
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // Cleanup function to remove the event listener
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   // Cleanup function to remove the event listener
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
-  const handleBeforeUnload = () => {
-    // Remove the authentication token from localStorage
-    localStorage.removeItem("token");
-  };
+  // const handleBeforeUnload = () => {
+  //   // Remove the authentication token from localStorage
+  //   localStorage.removeItem("token");
+  // };
   return (
     <div className="App">
       <BrowserRouter>
@@ -63,7 +63,7 @@ function App() {
             <Route path="/products" element={<Product />}></Route>
             <Route path="/listcars" element={<Cars />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/cardetail" element={<CarDetail />}></Route>
+            <Route path="/listcars/id" element={<CarDetail />}></Route>
             <Route path="/bao" element={<Bao />}></Route>
           </Route>
         </Routes>

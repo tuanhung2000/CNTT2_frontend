@@ -145,22 +145,23 @@ function Home() {
       </HomeGuide>
       <HomeDestination>
         <div className="title">
-          <Titleh3>Địa điểm nổi bật</Titleh3>
+          <Titleh3>Đặc điểm nổi bật</Titleh3>
         </div>
         <div className="destinationcard-wrap">
           <div class="image">
             <div id="zoom-In">
               <figure>
                 <img
-                  src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                  src="https://images.unsplash.com/photo-1504215680853-026ed2a45def?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fGNhcnxlbnwwfDF8MHx8&auto=format&fit=crop&w=600&q=60"
                   alt=""
                 />
               </figure>
-              <h3>Zoom In</h3>
+              <h3>Nâng tầm cuộc sống Việt</h3>
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text specimen book.
+                Phục vụ Phi Ngôn Ngữ giúp khách hàng cảm giác được Nâng tầm khi
+                mà Khách đến Công ty và lái xe đi như chính là xe của mình mà
+                không cần ái ngại gặp mặt bất cứ nhân viên nào với cảm giác đi
+                thuê.
               </p>
             </div>
           </div>
@@ -168,15 +169,16 @@ function Home() {
             <div id="zoom-In">
               <figure>
                 <img
-                  src="https://images.unsplash.com/photo-1577346898588-7a1f1dd5cc79?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80"
+                  src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8Y2FyfGVufDB8MXwwfHw%3D&auto=format&fit=crop&w=600&q=60"
                   alt=""
                 />
               </figure>
-              <h3>Zoom In</h3>
+              <h3>Thuê xe ngồi tại nhà</h3>
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text specimen book.
+                Phục vụ Phi Ngôn Ngữ giúp khách hàng cảm giác được Nâng tầm khi
+                mà Khách đến Công ty và lái xe đi như chính là xe của mình mà
+                không cần ái ngại gặp mặt bất cứ nhân viên nào với cảm giác đi
+                thuê.
               </p>
             </div>
           </div>
@@ -184,15 +186,16 @@ function Home() {
             <div id="zoom-In">
               <figure>
                 <img
-                  src="https://images.unsplash.com/photo-1571333250630-f0230c320b6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+                  src="https://images.unsplash.com/photo-1609520505218-7421df70121d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mzh8fGNhcnxlbnwwfDF8MHx8&auto=format&fit=crop&w=600&q=60"
                   alt=""
                 />
               </figure>
               <h3>Zoom In</h3>
               <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text specimen book.
+                Phục vụ Phi Ngôn Ngữ giúp khách hàng cảm giác được Nâng tầm khi
+                mà Khách đến Công ty và lái xe đi như chính là xe của mình mà
+                không cần ái ngại gặp mặt bất cứ nhân viên nào với cảm giác đi
+                thuê.
               </p>
             </div>
           </div>
@@ -575,9 +578,11 @@ const HomeDestination = styled.section`
     .image img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 222px;
       cursor: pointer;
       border-radius: 20px;
+      object-fit: cover;
+      object-position: center;
     }
     .image #zoom-In figure img {
       transform: scale(1);

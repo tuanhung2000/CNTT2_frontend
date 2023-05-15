@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -9,6 +9,7 @@ import Tab from "@mui/material/Tab";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import DescriptionIcon from "@mui/icons-material/Description";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import TaskIcon from "@mui/icons-material/Task";
 import TabList from "@mui/lab/TabList";
 import TabContext from "@mui/lab/TabContext";
 import { Box, Typography } from "@mui/material";
@@ -26,11 +27,18 @@ function Product() {
   const [user, setUser] = useState(false);
   const { role, username } = useAuth();
   const [value, setValue] = React.useState("1");
+  const [value1, setValue1] = React.useState("1");
   const [searchText, setSearchText] = useState("");
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const handleChange1 = (event, newValue) => {
+    setValue1(newValue);
+  };
   console.log(role);
+  const paginationConfig = {
+    className: "centered-pagination",
+  };
 
   return (
     <ProductComponent>
@@ -196,7 +204,7 @@ function Product() {
                   <Tab
                     icon={<DescriptionIcon />}
                     iconPosition="start"
-                    label="Hồ sơ mẫu"
+                    label="Lịch sử giao dịch"
                     className="tab_item"
                     value="2"
                     style={{ color: value == 2 ? "#00a550" : "" }}
@@ -219,22 +227,6 @@ function Product() {
                 boxSizing: "border-box",
               }}
             >
-              {/* <MaterialReactTable
-                columns={columns}
-                data={data}
-                enableEditing={true}
-                enableHiding={false}
-                enableDensityToggle={false}
-                enableFullScreenToggle={false}
-                enableColumnFilterModes={false}
-                enableColumnFilters={false}
-                muiSearchTextFieldProps={{
-                  placeholder: `Nhập thông tin của xe`,
-                }}
-                searchButtonProps={{
-                  "aria-label": "Custom search button aria label",
-                }}
-              /> */}
               <Input.Search
                 placeholder="Nhập thông tin cần tìm..."
                 style={{ marginBottom: "20px" }}
@@ -434,14 +426,65 @@ function Product() {
                   cancelSort: "Hủy",
                   emptyText: "Không có dữ liệu",
                 }}
+                bordered
+                pagination={paginationConfig}
               ></Table>
             </TabPanel>
             <TabPanel value="2">Item Two</TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
+            <TabPanel value="4">Danh sách xe của chủ xe</TabPanel>
+            <TabPanel value="5">Danh sách yêu cầu</TabPanel>
+            <TabPanel value="6">Phản hồi</TabPanel>
           </TabContext>
         </>
       ) : (
-        <>Chu xe</>
+        <>
+          <TabContext value={value1}>
+            <section className="sidebar">
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={handleChange1}
+                  aria-label="lab API tabs example"
+                  style={{
+                    height: "50px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "20px",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Tab
+                    icon={<DirectionsCarIcon />}
+                    iconPosition="start"
+                    label="Danh sách xe"
+                    className="tab_item"
+                    value="1"
+                    style={{ color: value1 == 1 ? "#00a550" : "" }}
+                  />
+                  <Tab
+                    icon={<TaskIcon />}
+                    iconPosition="start"
+                    label="Danh sách yêu cầu"
+                    className="tab_item"
+                    value="2"
+                    style={{ color: value1 == 2 ? "#00a550" : "" }}
+                  />
+                  <Tab
+                    icon={<AutoGraphIcon />}
+                    iconPosition="start"
+                    label="Phản hồi"
+                    value="3"
+                    className="tab_item"
+                    style={{ color: value1 == 3 ? "#00a550" : "" }}
+                  />
+                </TabList>
+              </Box>
+            </section>
+            <TabPanel value="1">Danh sách xe của chủ xe</TabPanel>
+            <TabPanel value="2">Danh sách yêu cầu</TabPanel>
+            <TabPanel value="3">Phản hồi</TabPanel>
+          </TabContext>
+        </>
       )}
     </ProductComponent>
   );
@@ -449,7 +492,10 @@ function Product() {
 const ProductComponent = styled.section`
   min-height: 100vh;
   width: 100%;
-
+  .centered-pagination {
+    display: flex;
+    justify-content: center;
+  }
   .productTop::after {
     content: "";
     position: absolute;

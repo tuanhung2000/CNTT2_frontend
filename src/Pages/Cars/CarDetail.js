@@ -2,6 +2,7 @@ import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Rating from "@mui/material/Rating";
 import { COLORS } from "../../assets/color";
 function CarDetail() {
   const [sex, setSex] = useState("");
@@ -12,7 +13,11 @@ function CarDetail() {
   const [days, setDays] = useState([]);
   const [months, setMonths] = useState([]);
   const [province, setProvince] = useState("");
+  const [hourHire, setHourHire] = useState(1);
+  const [insCar, setInsCar] = useState(20000);
+  const [priceInitial, setPriceInitial] = useState(50000);
   const [provinces, setProvinces] = useState([]);
+  const [avaiable, setAvaiable] = useState(true);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
@@ -41,6 +46,16 @@ function CarDetail() {
         console.error("Error fetching provinces data:", error);
       });
   }, []);
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+  const handleCostCar = (hours, price) => {
+    return hours * price;
+  };
+  const totalPrice = (totalCost, insCar) => {
+    return totalCost + insCar;
+  };
   console.log(provinces);
   console.log(year);
   return (
@@ -421,8 +436,34 @@ function CarDetail() {
                   justifyContent: "space-between",
                 }}
               >
+                <span>Số giờ muốn thuê</span>
+                <input
+                  value={hourHire}
+                  onChange={(e) => {
+                    setHourHire(e.target.value);
+                  }}
+                  type="number"
+                  style={{
+                    width: "50px",
+                    boxSizing: "border-box",
+                    padding: "5px",
+                    textAlign: "center",
+                  }}
+                ></input>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  alignItems: "center",
+                  padding: "10px",
+                  justifyContent: "space-between",
+                }}
+              >
                 <span>Chi phí thuê</span>
-                <span style={{ fontWeight: "bold" }}>$500</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {formatter.format(handleCostCar(priceInitial, hourHire))}
+                </span>
               </div>
               <div
                 style={{
@@ -435,7 +476,9 @@ function CarDetail() {
                 }}
               >
                 <span>+ Phí bảo hiểm</span>
-                <span style={{ fontWeight: "bold" }}>$50</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {formatter.format(insCar)}
+                </span>
               </div>
               <div
                 style={{
@@ -447,7 +490,11 @@ function CarDetail() {
                 }}
               >
                 <span style={{ fontWeight: "bold" }}>Tổng cộng</span>
-                <span style={{ fontWeight: "bold" }}>$50</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {formatter.format(
+                    totalPrice(insCar, handleCostCar(priceInitial, hourHire))
+                  )}
+                </span>
               </div>
             </div>
           </Grid>
@@ -781,8 +828,124 @@ function CarDetail() {
                   alignItems: "center",
                 }}
               >
-                <button className="btn_hire">Thuê</button>
+                {!avaiable ? (
+                  <>
+                    <button className="btn_hire" onClick={() => alert("hi")}>
+                      Thuê
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button className="btn_disabled" disabled={true}>
+                      Đã được thuê
+                    </button>
+                  </>
+                )}
               </Grid>
+            </div>
+          </Grid>
+        </Grid>
+      </Card>
+      <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
+        <Grid container>
+          <Grid item xs={12} md={12}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "10px",
+                padding: "0 12px",
+              }}
+            >
+              <h3>Viết đánh giá</h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  gap: "10px",
+                }}
+              >
+                <Rating name="size-small" defaultValue={2} size="small" />
+                <textarea
+                  style={{
+                    width: "100%",
+                    resize: "none",
+                    outline: "none",
+                    border: "none",
+                    boxSizing: "border-box",
+                    padding: "10px",
+                    backgroundColor: "white",
+                  }}
+                ></textarea>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <button className="btn_cmt">Bình luận</button>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "20px",
+                  }}
+                >
+                  <span style={{ fontWeight: "bold", fontSize: "16px" }}>
+                    Đánh giá :
+                  </span>
+                  <Rating
+                    name="size-small"
+                    defaultValue={2}
+                    size="small"
+                    disabled={true}
+                  />
+                  <span>(23/24)</span>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    width: "100%",
+                  }}
+                >
+                  <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                    Đặng Đăng Duy
+                  </p>
+                  <p style={{ color: "GrayText" }}>
+                    Lorem Để disable button trong React, bạn có thể sử dụng
+                    thuộc tính disabled của thành phần button. Bạn có thể đặt
+                    giá trị disabled thành true khi avaiable là false. Dưới đây
+                    là một ví dụ cách thực hiện điều này:{" "}
+                  </p>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    width: "100%",
+                  }}
+                >
+                  <p style={{ fontWeight: "500", fontSize: "14px" }}>
+                    Đặng Đăng Duy
+                  </p>
+                  <p style={{ color: "GrayText" }}>
+                    Lorem Để disable button trong React, bạn có thể sử dụng
+                    thuộc tính disabled của thành phần button. Bạn có thể đặt
+                    giá trị disabled thành true khi avaiable là false. Dưới đây
+                    là một ví dụ cách thực hiện điều này:{" "}
+                  </p>
+                </div>
+              </div>
             </div>
           </Grid>
         </Grid>
@@ -807,6 +970,29 @@ const CarDetailComponent = styled.section`
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
+  }
+  .btn_cmt {
+    background-color: #00a550;
+    border: 1px solid #00a550;
+    outline: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .btn_cmt:hover {
+    background-color: white;
+    color: #00a550;
+  }
+  .btn_disabled {
+    background-color: #93bda3;
+    border: 1px solid #93bda3;
+    outline: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
   }
   .btn_hire:hover {
     background-color: white;

@@ -59,7 +59,7 @@ function Navbar() {
       <NavbarLeft>
         <LogoSections>
           <LinkCustom to="/">
-            B<Green className="green">i</Green>cycle
+            M<Green className="green">i</Green>car
           </LinkCustom>
         </LogoSections>
         <ContactSection>
@@ -162,7 +162,7 @@ function Navbar() {
                       textAlign: "center",
                     }}
                   >
-                    <Link to="/" className="link_item">
+                    <Link to="products" className="link_item">
                       Xe của bạn
                     </Link>
                   </li>
