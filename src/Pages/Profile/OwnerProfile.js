@@ -2,15 +2,13 @@ import { Button, Card, CardMedia, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
 import styled from "styled-components";
 import user from "../../assets/user.png";
-import { useMediaQuery } from "@mui/material";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { COLORS } from "../../assets/color";
 import { useGetUserQuery } from "../../features/user/userApiSlice";
 import axios from "axios";
 import Swal from "sweetalert2";
-const Profile = () => {
-  const isXsScreen = useMediaQuery("(max-width: 599px)");
+const OwnerProfile = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -230,12 +228,7 @@ const Profile = () => {
               </form>
             )}
           </Grid>
-          <Grid
-            item
-            xs={0}
-            md={4}
-            style={{ display: isXsScreen ? "none" : "block" }}
-          >
+          <Grid item xs={0} md={4}>
             <img
               src={user}
               alt=""
@@ -275,4 +268,4 @@ const ProfileComponent = styled.section`
     color: ${COLORS.main};
   }
 `;
-export default Profile;
+export default OwnerProfile;

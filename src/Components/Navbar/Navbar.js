@@ -18,7 +18,7 @@ import {
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 import Swal from "sweetalert2";
 function Navbar() {
-  const { username } = useAuth();
+  const { username, role } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const [newpassword, setNewpassword] = useState("");
   const [newpasswordConfirm, setNewpasswordConfirm] = useState("");
@@ -53,7 +53,7 @@ function Navbar() {
   const handleClickClose = () => {
     setOpenDialog(false);
   };
-  console.log(openDialog);
+  console.log(role);
   return (
     <NavbarContainer>
       <NavbarLeft>
@@ -85,10 +85,21 @@ function Navbar() {
           </Bao>
         </section>
         <section className="product" style={{ marginLeft: "20px" }}>
-          <Bao to="/listcars">
-            <ion-icon name="car-sport-outline"></ion-icon>
-            <span className="hidden">Danh sách xe</span>
-          </Bao>
+          {role === "owner" ? (
+            <>
+              <Bao to="/post">
+                <ion-icon name="car-sport-outline"></ion-icon>
+                <span className="hidden">Đăng xe</span>
+              </Bao>
+            </>
+          ) : (
+            <>
+              <Bao to="/listcars">
+                <ion-icon name="car-sport-outline"></ion-icon>
+                <span className="hidden">Danh sách xe</span>
+              </Bao>
+            </>
+          )}
         </section>
         {!username ? (
           <ul className={active}>

@@ -14,8 +14,10 @@ import NotFound from "./Pages/NotFound/NotFound";
 import Cars from "./Pages/Cars/Cars";
 import CarDetail from "./Pages/Cars/CarDetail";
 import Profile from "./Pages/Profile/Profile";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import useAuth from "./hooks/useAuth";
+import PostCar from "./Pages/PostCar/PostCar";
+import OwnerProfile from "./Pages/Profile/OwnerProfile";
 function App() {
   // useEffect(() => {
   //   // Add event listener to the beforeunload event
@@ -31,21 +33,24 @@ function App() {
   //   // Remove the authentication token from localStorage
   //   localStorage.removeItem("token");
   // };
+  const { username, role } = useAuth();
+  const [role1, setRole1] = useState("");
+  const [role2, setRole2] = useState("");
+  useEffect(() => {
+    if (role === "customer") {
+      setRole1("customer");
+    } else if (role === "owner") {
+      setRole2("owner");
+    }
+  }, [role]);
   return (
     <div className="App">
       <BrowserRouter>
         {/* <Navbar /> */}
         <Routes>
-          {/* <Public Components /> */}
-          {/* <Route path="/" element={<Home />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="*" element={<div>Page not found</div>}></Route> */}
-
-          {/* Private Components */}
           <Route element={<PrivateComponent />}>
             <Route path="profile" element={<Profile />} />
+            <Route path="/post" element={<PostCar />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
