@@ -32,19 +32,6 @@ function Login() {
   const onSubmit = async (values, { resetForm }) => {
     const { password, username } = values;
     console.log(username, password);
-    // axios
-    //   .post("http://localhost:9090/auth/login", {
-    //     username: username,
-    //     password: password,
-    //   })
-    //   .then((response) => {
-    //     // Handle successful login
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     // Handle failed login
-    //     console.error(error.response.data);
-    //   });
     try {
       const { accessToken } = await login({ username, password }).unwrap();
       dispatch(setCredentials({ accessToken }));
@@ -70,20 +57,6 @@ function Login() {
     }),
     onSubmit,
   });
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   Swal.fire({
-  //     title: "Thành công!",
-  //     text: "Bạn đăng nhập thành công!",
-  //     icon: "success",
-  //     confirmButtonColor: `${COLORS.main}`,
-  //     confirmButtonText: "Tiếp tục",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       navigate("/");
-  //     }
-  //   });
-  // };
 
   return (
     <LoginComponent>

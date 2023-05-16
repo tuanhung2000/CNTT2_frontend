@@ -18,6 +18,16 @@ function CarDetail() {
   const [priceInitial, setPriceInitial] = useState(50000);
   const [provinces, setProvinces] = useState([]);
   const [avaiable, setAvaiable] = useState(true);
+  const [selfDrive, setSelfDrive] = useState(true);
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
+  const [ward, setWard] = useState("");
+  const [city1, setCity1] = useState("");
+  const [district1, setDistrict1] = useState("");
+  const [ward1, setWard1] = useState("");
+  const [listcity, setListCity] = useState([]);
+  const [listdistrict, setListDistrict] = useState([]);
+  const [listward, setListWard] = useState([]);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
@@ -46,6 +56,35 @@ function CarDetail() {
         console.error("Error fetching provinces data:", error);
       });
   }, []);
+
+  useEffect(() => {
+    axios.get("https://provinces.open-api.vn/api/").then((response) => {
+      setListCity(response.data);
+    });
+  }, []);
+  useEffect(() => {
+    if (city) {
+      axios
+        .get(`https://provinces.open-api.vn/api/p/${city}?depth=2`)
+        .then((response) => {
+          setListDistrict(response.data.districts);
+          setCity1(response.data.name);
+        });
+    }
+  }, [city]);
+  useEffect(() => {
+    if (district) {
+      axios
+        .get(
+          `https://provinces.open-api.vn/api/d/${district}?depth=2
+      `
+        )
+        .then((response) => {
+          setListWard(response.data.wards);
+          setDistrict1(response.data.name);
+        });
+    }
+  }, [district]);
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -56,8 +95,9 @@ function CarDetail() {
   const totalPrice = (totalCost, insCar) => {
     return totalCost + insCar;
   };
-  console.log(provinces);
-  console.log(year);
+  console.log(city1);
+  console.log(district1);
+  console.log(ward);
   return (
     <CarDetailComponent>
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
@@ -820,6 +860,143 @@ function CarDetail() {
                   </Select>
                 </Grid>
               </Grid>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  xs={4}
+                  md={4}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label htmlFor="city" style={{ cursor: "pointer" }}>
+                    Chọn nơi đón
+                  </label>
+                  <Select
+                    name="city"
+                    displayEmpty
+                    labelId="demo-simple-select-label"
+                    id="city"
+                    value={city}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setCity(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">Tỉnh</MenuItem>
+                    {listcity.map((item) => (
+                      <MenuItem value={item.code} key={item.code}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  md={4}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="lastname"
+                    style={{ cursor: "pointer", opacity: "0" }}
+                  >
+                    Chọn nơi đón
+                  </label>
+                  <Select
+                    name="district"
+                    displayEmpty
+                    labelId="demo-simple-select-label"
+                    id="district"
+                    value={district}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setDistrict(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">Huyện</MenuItem>
+                    {listdistrict.map((item) => (
+                      <MenuItem value={item.code} key={item.code}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  md={4}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "5px",
+                  }}
+                >
+                  <label
+                    htmlFor="lastname"
+                    style={{ cursor: "pointer", opacity: "0" }}
+                  >
+                    Chọn nơi đón
+                  </label>
+                  <Select
+                    name="ward"
+                    displayEmpty
+                    labelId="demo-simple-select-label"
+                    id="ward"
+                    value={ward}
+                    style={{ height: "40px", width: "100%" }}
+                    onChange={(e) => setWard(e.target.value)}
+                    MenuProps={{
+                      getcontentanchorel: null,
+                      anchorOrigin: {
+                        vertical: "bottom",
+                        horizontal: "center",
+                      },
+                      PaperProps: {
+                        style: {
+                          maxHeight: 100,
+                          width: "auto",
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">Xã</MenuItem>
+                    {listward.map((item) => (
+                      <MenuItem value={item.name} key={item.name}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+              </Grid>
               <Grid
                 container
                 style={{
@@ -828,7 +1005,7 @@ function CarDetail() {
                   alignItems: "center",
                 }}
               >
-                {!avaiable ? (
+                {avaiable ? (
                   <>
                     <button className="btn_hire" onClick={() => alert("hi")}>
                       Thuê
