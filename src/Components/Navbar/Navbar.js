@@ -145,9 +145,10 @@ function Navbar() {
                   position: "absolute",
                   zIndex: "100",
                   left: "-45px",
-                  top: "55px",
+                  top: "60px",
                   width: "140px",
                   backgroundColor: "black",
+                  border: "1px solid black",
                 }}
               >
                 <ul>
@@ -155,12 +156,17 @@ function Navbar() {
                     onClick={() => setOpen(false)}
                     className="menu-item"
                     style={{
+                      width: "100%",
                       padding: "10px 10px",
                       fontWeight: "500",
                       textAlign: "center",
                     }}
                   >
-                    <Link to="/profile" className="link_item">
+                    <Link
+                      to="/profile"
+                      className="link_item"
+                      style={{ width: "100%" }}
+                    >
                       Trang cá nhân
                     </Link>
                   </li>

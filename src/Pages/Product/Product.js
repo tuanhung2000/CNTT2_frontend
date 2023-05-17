@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import Icon, { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import MaterialReactTable from "material-react-table";
-import { Image, Input, Space, Table, Tag } from "antd";
+import { Image, Input, Space, Table, Tag, Modal } from "antd";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
@@ -23,13 +24,106 @@ const formatter = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
 });
-const LinkTab = (props) => <Tab component="a" {...props} />;
+
 function Product() {
+  const [listCarOwner, setListCarOwner] = useState([
+    {
+      index: 1,
+      name: "Honda",
+      image:
+        "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
+      owner: "Thùy Vân",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 3,
+      price: 1000000,
+      status: "Đang giao xe",
+    },
+    {
+      index: 2,
+      name: "Mecs",
+      owner: "Huỳnh Chánh",
+      image:
+        "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 4,
+      price: 7000000,
+      status: "Đang giao xe",
+    },
+    {
+      index: 3,
+      name: "Audi",
+      image:
+        "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+      owner: "Thùy Vân",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 20,
+      price: 500000,
+      status: "Đang thuê",
+    },
+    {
+      index: 4,
+      name: "Audi",
+      owner: "duy",
+      image:
+        "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 14,
+      price: 10000030,
+      status: "Đang thuê",
+    },
+    {
+      index: 5,
+      name: "Audi",
+      owner: "Đăng Duy",
+      image:
+        "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 9,
+      price: 66600000,
+      status: "Đang thuê",
+    },
+    {
+      index: 6,
+      name: "Audi",
+      image:
+        "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+      owner: "Đăng Duy",
+      desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
+      times: 7,
+      price: 6600000,
+      status: "Đang thuê",
+    },
+    {
+      index: 7,
+      name: "Audi",
+      image:
+        "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+      owner: "Đăng Duy",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 1,
+      price: 450000,
+      status: "Đang thuê",
+    },
+    {
+      index: 8,
+      name: "Audi",
+      image:
+        "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+      owner: "Đăng Duy",
+      desc: ["Rất đẹp", "Có máy lạnh"],
+      times: 1,
+      price: 380000,
+      status: "Đang thuê",
+    },
+  ]);
   const [user, setUser] = useState(false);
   const { role, username } = useAuth();
   const [value, setValue] = React.useState("1");
   const [value1, setValue1] = React.useState("1");
   const [searchText, setSearchText] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [edit, setEdit] = useState(null);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -40,7 +134,23 @@ function Product() {
   const paginationConfig = {
     className: "centered-pagination",
   };
-
+  const onEditCar = (record) => {
+    setIsEditing(true);
+    setEdit({ ...record });
+  };
+  const onDeleteCar = (record) => {
+    Modal.confirm({
+      title: `Bạn đang chọn xóa xe ${record.name}`,
+      okText: "Xóa",
+      cancelText: "Hủy",
+      okType: "danger",
+      onOk: () => {
+        setListCarOwner((pre) => {
+          return pre.filter((car) => car.index !== record.index);
+        });
+      },
+    });
+  };
   return (
     <ProductComponent>
       {!username ? (
@@ -209,14 +319,6 @@ function Product() {
                     className="tab_item"
                     value="2"
                     style={{ color: value == 2 ? "#00a550" : "" }}
-                  />
-                  <Tab
-                    icon={<AutoGraphIcon />}
-                    iconPosition="start"
-                    label="Đánh giá"
-                    value="3"
-                    className="tab_item"
-                    style={{ color: value == 3 ? "#00a550" : "" }}
                   />
                 </TabList>
               </Box>
@@ -640,12 +742,10 @@ function Product() {
               ></Table>
             </TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
-            <TabPanel value="4">Danh sách xe của chủ xe</TabPanel>
-            <TabPanel value="5">Danh sách yêu cầu</TabPanel>
-            <TabPanel value="6">Phản hồi</TabPanel>
           </TabContext>
         </>
       ) : (
+        /* Tab of owner */
         <>
           <TabContext value={value1}>
             <section className="sidebar">
@@ -688,12 +788,225 @@ function Product() {
                 </TabList>
               </Box>
             </section>
-            <TabPanel value="1">Danh sách xe của chủ xe</TabPanel>
+            <TabPanel value="1">
+              <TabPanel
+                value="1"
+                style={{
+                  minHeight: "calc(100vh - 51px)",
+                  boxSizing: "border-box",
+                }}
+              >
+                <Input.Search
+                  placeholder="Nhập thông tin cần tìm..."
+                  style={{ marginBottom: "20px" }}
+                  onSearch={(value) => {
+                    setSearchText(value);
+                  }}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                  }}
+                />
+                <Table
+                  columns={[
+                    { title: "STT", dataIndex: "index" },
+                    {
+                      title: "Tên",
+                      dataIndex: "name",
+                      filteredValue: [searchText],
+                      onFilter: (value, record) => {
+                        return (
+                          String(record.name)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.owner)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.desc)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.price)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.status)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.times)
+                            .toLowerCase()
+                            .includes(value.toLowerCase())
+                        );
+                      },
+                    },
+                    {
+                      title: "Ảnh",
+                      dataIndex: "image",
+                      render: (image) => (
+                        <Image
+                          src={image}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                        />
+                      ),
+                    },
+
+                    {
+                      title: "Giá giờ thuê",
+                      dataIndex: "price",
+                      render: (price) => formatter.format(price),
+                      sorter: (a, b) => a.price - b.price,
+                    },
+                    {
+                      title: "Trạng thái",
+                      dataIndex: "status",
+                      render: (status) => {
+                        if (status === "Đang thuê") {
+                          return <Tag color="green">{status}</Tag>;
+                        } else if (status === "Đang ở bãi") {
+                          return <Tag color="red">{status}</Tag>;
+                        } else {
+                          return <p>{status}</p>;
+                        }
+                      },
+                    },
+                    {
+                      title: "",
+                      render: (record) => {
+                        return (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                              }}
+                            >
+                              <EditOutlined
+                                style={{
+                                  fontSize: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => onEditCar(record)}
+                              />
+                              <DeleteOutlined
+                                style={{
+                                  color: "red",
+                                  fontSize: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => onDeleteCar(record)}
+                              />
+                            </div>
+                          </>
+                        );
+                      },
+                    },
+                  ]}
+                  dataSource={listCarOwner}
+                  onChange={onChange}
+                  locale={{
+                    triggerDesc: "Giảm dần",
+                    triggerAsc: "Tăng dần",
+                    cancelSort: "Hủy",
+                    emptyText: "Không có dữ liệu",
+                  }}
+                  bordered
+                  pagination={paginationConfig}
+                ></Table>
+              </TabPanel>
+            </TabPanel>
             <TabPanel value="2">Danh sách yêu cầu</TabPanel>
             <TabPanel value="3">Phản hồi</TabPanel>
           </TabContext>
         </>
       )}
+      <Modal
+        title="Chỉnh sửa thông tin"
+        visible={isEditing}
+        okText="Cập nhật"
+        cancelText="Hủy"
+        onCancel={() => {
+          setIsEditing(false);
+        }}
+        onOk={() => {
+          setIsEditing(false);
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "10px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              width: "100%",
+            }}
+          >
+            <Image
+              style={{
+                width: "236px",
+                height: "auto",
+                maxHeight: "200px",
+                objectFit: "cover",
+                objectPosition: "center",
+              }}
+              src={edit?.image}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+
+                width: "200px",
+                padding: "0 10px",
+                gap: "10px",
+              }}
+            >
+              <label style={{ fontWeight: "bold", cursor: "pointer" }}>
+                Tên xe
+              </label>
+              <input
+                value={edit?.name}
+                style={{
+                  boxSizing: "border-box",
+                  padding: "10px",
+                  outline: "none",
+                  borderRadius: "5px",
+                  border: "1px solid black",
+                }}
+              ></input>
+              <label
+                style={{
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  outline: "none",
+                }}
+              >
+                Giá giờ thuê
+              </label>
+              <input
+                value={edit?.price}
+                style={{
+                  boxSizing: "border-box",
+                  padding: "10px",
+                  outline: "none",
+                  borderRadius: "5px",
+                  border: "1px solid black",
+                }}
+              ></input>
+            </div>
+          </div>
+          <Input value={edit?.name}></Input>
+        </div>
+      </Modal>
     </ProductComponent>
   );
 }

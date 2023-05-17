@@ -27,7 +27,7 @@ function PostCar() {
   const [selfDr, setSelfDr] = useState("");
   const [desc, setDesc] = useState("");
   const [img, setImg] = useState(
-    "https://plus.unsplash.com/premium_photo-1683880731495-ae0f4bf18c7e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=600&q=60"
+    "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
   );
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
