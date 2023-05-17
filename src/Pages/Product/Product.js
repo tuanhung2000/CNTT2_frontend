@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
+import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import MaterialReactTable from "material-react-table";
@@ -430,7 +431,214 @@ function Product() {
                 pagination={paginationConfig}
               ></Table>
             </TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel
+              value="2"
+              style={{
+                minHeight: "calc(100vh - 51px)",
+                boxSizing: "border-box",
+              }}
+            >
+              <Input.Search
+                placeholder="Nhập thông tin cần tìm..."
+                style={{ marginBottom: "20px" }}
+                onSearch={(value) => {
+                  setSearchText(value);
+                }}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+              />
+              <Table
+                columns={[
+                  { title: "STT", dataIndex: "index" },
+                  {
+                    title: "Tên",
+                    dataIndex: "name",
+                    filteredValue: [searchText],
+                    onFilter: (value, record) => {
+                      return (
+                        String(record.name)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.owner)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.price)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.times)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.daystart)
+                          .toLowerCase()
+                          .includes(value.toLowerCase()) ||
+                        String(record.dayend)
+                          .toLowerCase()
+                          .includes(value.toLowerCase())
+                      );
+                    },
+                  },
+
+                  {
+                    title: "Tổng số giờ thuê",
+                    dataIndex: "times",
+                    render: (times) => `${times} giờ`,
+                    sorter: (a, b) => a.times - b.times,
+                  },
+                  {
+                    title: "Ngày bắt đầu",
+                    dataIndex: "daystart",
+                    render: (daystart) => daystart,
+                    sorter: (a, b) => {
+                      const dateA = dayjs(a.daystart, "DD/MM/YYYY HH:mm:ss");
+                      const dateB = dayjs(b.daystart, "DD/MM/YYYY HH:mm:ss");
+                      if (dateA.isBefore(dateB)) {
+                        return -1;
+                      } else if (dateA.isAfter(dateB)) {
+                        return 1;
+                      }
+                      return 0;
+                    },
+                  },
+                  {
+                    title: "Ngày kết thúc",
+                    dataIndex: "dayend",
+                    render: (dayend) => dayend,
+                    sorter: (a, b) => {
+                      const dateA = dayjs(a.dayend, "DD/MM/YYYY HH:mm:ss");
+                      const dateB = dayjs(b.dayend, "DD/MM/YYYY HH:mm:ss");
+                      if (dateA.isBefore(dateB)) {
+                        return -1;
+                      } else if (dateA.isAfter(dateB)) {
+                        return 1;
+                      }
+                      return 0;
+                    },
+                  },
+                  {
+                    title: "Tổng giá tiền",
+                    dataIndex: "price",
+                    render: (price) => formatter.format(price),
+                    sorter: (a, b) => a.price - b.price,
+                  },
+                ]}
+                dataSource={[
+                  {
+                    index: 1,
+                    name: "Honda",
+                    image:
+                      "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
+                    owner: "Thùy Vân",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 3,
+                    price: 1000000,
+                    status: "Đang giao xe",
+                  },
+                  {
+                    index: 2,
+                    name: "Mecs",
+                    owner: "Huỳnh Chánh",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 4,
+                    price: 7000000,
+                    status: "Đang giao xe",
+                  },
+                  {
+                    index: 3,
+                    name: "Audi",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/04/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Thùy Vân",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 20,
+                    price: 500000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 4,
+                    name: "Audi",
+                    owner: "duy",
+                    daystart: "17/05/2023 21:00:00",
+                    dayend: "17/02/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 14,
+                    price: 10000030,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 5,
+                    name: "Audi",
+                    owner: "Đăng Duy",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    image:
+                      "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 9,
+                    price: 66600000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 6,
+                    name: "Audi",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
+                    times: 7,
+                    price: 6600000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 7,
+                    name: "Audi",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 1,
+                    price: 450000,
+                    status: "Đang thuê",
+                  },
+                  {
+                    index: 8,
+                    name: "Audi",
+                    daystart: "17/05/2023 19:00:00",
+                    dayend: "17/05/2023 22:00:00",
+                    image:
+                      "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
+                    owner: "Đăng Duy",
+                    desc: ["Rất đẹp", "Có máy lạnh"],
+                    times: 1,
+                    price: 380000,
+                    status: "Đang thuê",
+                  },
+                ]}
+                onChange={onChange}
+                locale={{
+                  triggerDesc: "Giảm dần",
+                  triggerAsc: "Tăng dần",
+                  cancelSort: "Hủy",
+                  emptyText: "Không có dữ liệu",
+                }}
+                bordered
+                pagination={paginationConfig}
+              ></Table>
+            </TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
             <TabPanel value="4">Danh sách xe của chủ xe</TabPanel>
             <TabPanel value="5">Danh sách yêu cầu</TabPanel>

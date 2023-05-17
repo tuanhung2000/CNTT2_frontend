@@ -2,14 +2,22 @@ import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Rating from "@mui/material/Rating";
 import { COLORS } from "../../assets/color";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DateField } from "@mui/x-date-pickers";
+
 function CarDetail() {
   const [sex, setSex] = useState("");
   const [year, setYear] = useState([]);
   const [day, setDay] = useState("");
   const [month, setMonth] = useState("");
   const [years, setYears] = useState([]);
+  const [currentDate, setCurrentDate] = useState(dayjs());
   const [days, setDays] = useState([]);
   const [months, setMonths] = useState([]);
   const [province, setProvince] = useState("");
@@ -28,6 +36,10 @@ function CarDetail() {
   const [listcity, setListCity] = useState([]);
   const [listdistrict, setListDistrict] = useState([]);
   const [listward, setListWard] = useState([]);
+  const today = dayjs().startOf("day");
+  const currentTime = dayjs();
+  const [daystart, setDaystart] = useState(null);
+  const [dayend, setDayend] = useState(null);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
@@ -37,10 +49,10 @@ function CarDetail() {
     const dayList = Array.from({ length: 31 }, (v, i) => i + 1);
     setDays(dayList);
   }, []);
-  useEffect(() => {
-    const monthList = Array.from({ length: 12 }, (v, i) => i + 1);
-    setMonths(monthList);
-  }, []);
+  // useEffect(() => {
+  //   const monthList = Array.from({ length: 12 }, (v, i) => i + 1);
+  //   setMonths(monthList);
+  // }, []);
   useEffect(() => {
     axios
       .get("https://provinces.open-api.vn/api/")
@@ -85,6 +97,7 @@ function CarDetail() {
         });
     }
   }, [district]);
+
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -95,9 +108,33 @@ function CarDetail() {
   const totalPrice = (totalCost, insCar) => {
     return totalCost + insCar;
   };
-  console.log(city1);
-  console.log(district1);
-  console.log(ward);
+
+  const handleDayStartChange = (newValue) => {
+    setDaystart(newValue);
+
+    if (dayend && dayjs(dayend).isBefore(dayjs(newValue))) {
+      setDayend(dayjs(newValue).add(1, "hour"));
+    }
+  };
+
+  const handleDayendChange = (newValue) => {
+    setDayend(newValue);
+  };
+  // console.log(city1);
+  // console.log(district1);
+  // console.log(ward);
+  dayjs.locale("vi");
+  useEffect(() => {
+    if (daystart && dayend) {
+      const formattedDateTime = dayjs(daystart).format("DD/MM/YYYY HH:mm:ss");
+      const formattedDateTime1 = dayjs(dayend).format("DD/MM/YYYY HH:mm:ss  ");
+      const duration = dayjs(dayend).diff(dayjs(daystart), "hour");
+      setHourHire(duration);
+      console.log("Ngày bắt đầu", formattedDateTime);
+      console.log("Ngày kết thúc", formattedDateTime1);
+    }
+  }, [daystart, dayend]);
+  console.log(daystart);
   return (
     <CarDetailComponent>
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
@@ -477,19 +514,9 @@ function CarDetail() {
                 }}
               >
                 <span>Số giờ muốn thuê</span>
-                <input
-                  value={hourHire}
-                  onChange={(e) => {
-                    setHourHire(e.target.value);
-                  }}
-                  type="number"
-                  style={{
-                    width: "50px",
-                    boxSizing: "border-box",
-                    padding: "5px",
-                    textAlign: "center",
-                  }}
-                ></input>
+                <span style={{ fontWeight: "bold" }}>
+                  {hourHire <= 0 ? 0 : hourHire}
+                </span>
               </div>
               <div
                 style={{
@@ -502,7 +529,9 @@ function CarDetail() {
               >
                 <span>Chi phí thuê</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(handleCostCar(priceInitial, hourHire))}
+                  {handleCostCar(priceInitial, hourHire) <= 0
+                    ? formatter.format(priceInitial)
+                    : formatter.format(handleCostCar(priceInitial, hourHire))}
                 </span>
               </div>
               <div
@@ -531,8 +560,21 @@ function CarDetail() {
               >
                 <span style={{ fontWeight: "bold" }}>Tổng cộng</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(
-                    totalPrice(insCar, handleCostCar(priceInitial, hourHire))
+                  {totalPrice(insCar, handleCostCar(priceInitial, hourHire)) <=
+                  0 ? (
+                    <span
+                      style={{
+                        color: "red",
+                        fontWeight: "200",
+                        fontSize: "12px",
+                      }}
+                    >
+                      Thời gian không hợp lệ
+                    </span>
+                  ) : (
+                    formatter.format(
+                      totalPrice(insCar, handleCostCar(priceInitial, hourHire))
+                    )
                   )}
                 </span>
               </div>
@@ -687,7 +729,7 @@ function CarDetail() {
               <Grid container spacing={2}>
                 <Grid
                   item
-                  xs={2}
+                  xs={6}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -695,128 +737,19 @@ function CarDetail() {
                   }}
                 >
                   <label htmlFor="day" style={{ cursor: "pointer" }}>
-                    Sinh ngày:
+                    Ngày bắt đầu:
                   </label>
-                  <Select
-                    name="role"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="day"
-                    value={day}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setDay(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Ngày</MenuItem>
-                    {days.map((item) => (
-                      <MenuItem value={item} key={item}>
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </Select>
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      id="daystart"
+                      minDateTime={dayjs()}
+                      value={daystart}
+                      onChange={handleDayStartChange}
+                    />
+                  </LocalizationProvider>
                 </Grid>
-                <Grid
-                  item
-                  xs={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label
-                    htmlFor="sex"
-                    style={{ cursor: "pointer", opacity: "0" }}
-                  >
-                    fod
-                  </label>
-                  <Select
-                    name="month"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="month"
-                    value={month}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setMonth(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Tháng</MenuItem>
-                    {months.map((item) => (
-                      <MenuItem value={item} key={item}>
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid
-                  item
-                  xs={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label
-                    htmlFor="year"
-                    style={{ cursor: "pointer", opacity: "0" }}
-                  >
-                    g
-                  </label>
-                  <Select
-                    name="role"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="year"
-                    value={year}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setYear(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Năm</MenuItem>
-                    {years.map((year) => (
-                      <MenuItem value={year} key={year}>
-                        {year}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
+
                 <Grid
                   item
                   xs={6}
@@ -826,38 +759,20 @@ function CarDetail() {
                     gap: "5px",
                   }}
                 >
-                  <label htmlFor="lastname" style={{ cursor: "pointer" }}>
-                    Nơi đang sinh sống:
+                  <label htmlFor="day" style={{ cursor: "pointer" }}>
+                    Ngày kết thúc:
                   </label>
-                  <Select
-                    name="provinces"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="provinces"
-                    value={province}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setProvince(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Chọn thành phố</MenuItem>
-                    {provinces.map((item) => (
-                      <MenuItem value={item.name} key={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      id="dayend"
+                      minDateTime={
+                        daystart ? dayjs(daystart).add(1, "hour") : dayjs()
+                      }
+                      value={dayend}
+                      onChange={handleDayendChange}
+                    />
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
               <Grid container spacing={2}>
