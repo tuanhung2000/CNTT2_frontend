@@ -1,13 +1,45 @@
 import { Card, Grid } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import dayjs from "dayjs";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
-
+import { useLocation } from "react-router-dom";
 import StepLabel from "@mui/material/StepLabel";
-import { red } from "@mui/material/colors";
+
 function Payment() {
   const [activeStep, setActiveStep] = useState(2);
+  const [daystart, setDaystart] = useState();
+  const [dayend, setDayend] = useState();
+  const location = useLocation();
+  dayjs.locale("vi");
+  const dataUser = location.state;
+  const options = {
+    timeZone: "Asia/Ho_Chi_Minh",
+    hour12: false,
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  };
+  useEffect(() => {
+    if (dataUser.daystart && dataUser.dayend) {
+      const formattedDateStart = new Date(
+        dataUser.daystart["$d"]
+      ).toLocaleString("vi-VN", options);
+      const formattedDateEnd = new Date(dataUser.dayend["$d"]).toLocaleString(
+        "vi-VN",
+        options
+      );
+      setDaystart(formattedDateStart);
+      setDayend(formattedDateEnd);
+      console.log("Ngày bắt đầu", formattedDateStart);
+      console.log("Ngày kết thúc", formattedDateEnd);
+    }
+  }, [dataUser.daystart, dataUser.dayend]);
+  console.log(dataUser);
   return (
     <PaymentContainer>
       <Card
@@ -275,7 +307,7 @@ function Payment() {
                   }}
                 >
                   <label>Ngày bắt đầu</label>
-                  <input className="input"></input>
+                  <input className="input" value={daystart}></input>
                 </Grid>
                 <Grid
                   item

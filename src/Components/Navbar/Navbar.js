@@ -2,21 +2,9 @@ import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import styled from "styled-components";
-import {
-  Box,
-  TextareaAutosize,
-  Button,
-  Dialog,
-  Textarea,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Dialog, DialogTitle } from "@mui/material";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
-import Swal from "sweetalert2";
+
 function Navbar() {
   const { username, role } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);

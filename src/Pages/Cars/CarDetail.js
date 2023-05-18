@@ -1,4 +1,4 @@
-import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
+import { Card, Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -6,14 +6,14 @@ import useAuth from "../../hooks/useAuth";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import Rating from "@mui/material/Rating";
 import { COLORS } from "../../assets/color";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { DateField } from "@mui/x-date-pickers";
+
 import { useNavigate } from "react-router-dom";
 function CarDetail() {
-  const { username, role } = useAuth();
+  const { role } = useAuth();
   const navigate = useNavigate();
   const [sex, setSex] = useState("");
   const [year, setYear] = useState([]);
@@ -39,8 +39,7 @@ function CarDetail() {
   const [listcity, setListCity] = useState([]);
   const [listdistrict, setListDistrict] = useState([]);
   const [listward, setListWard] = useState([]);
-  const today = dayjs().startOf("day");
-  const currentTime = dayjs();
+
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
   useEffect(() => {
@@ -138,6 +137,13 @@ function CarDetail() {
     }
   }, [daystart, dayend]);
   console.log(daystart);
+  const handleHire = () => {
+    const dataUser = {
+      daystart: daystart,
+      dayend: dayend,
+    };
+    navigate(`/payment/${12}`, { state: dataUser });
+  };
   return (
     <CarDetailComponent>
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
@@ -938,7 +944,9 @@ function CarDetail() {
                       <>
                         <button
                           className="btn_hire"
-                          onClick={() => navigate(`/payment/${12}`)}
+                          onClick={() => {
+                            handleHire();
+                          }}
                         >
                           Thuê
                         </button>
