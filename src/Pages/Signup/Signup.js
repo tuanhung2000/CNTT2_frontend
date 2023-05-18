@@ -286,7 +286,9 @@ function Signup() {
                       id="demo-simple-select"
                       value={formik.values.role}
                       onChange={formik.handleChange}
+                      style={{ minWidth: "100px" }}
                     >
+                      <MenuItem value={""}>Vai trò</MenuItem>
                       <MenuItem value={"customer"}>Người thuê xe</MenuItem>
                       <MenuItem value={"owner"}>Người cho thuê</MenuItem>
                     </Select>
@@ -316,13 +318,12 @@ function Signup() {
   );
 }
 const SignupComponent = styled.section`
-  ${
-    "" /* min-height: 100vh;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center; */
-  }
+  align-items: center;
+
   .bao1 {
     background-color: ${COLORS.main}; /* background-position: center;
     background-size: cover;

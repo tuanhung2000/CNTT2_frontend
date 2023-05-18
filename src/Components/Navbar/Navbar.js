@@ -79,9 +79,23 @@ function Navbar() {
       </NavbarLeft>
       <NavbarRight>
         <section className="product">
+          <Bao to="/listcars">
+            <ion-icon name="car-sport-outline"></ion-icon>
+            <span className="hidden">Xe trên thị trường</span>
+          </Bao>
+        </section>
+        <section className="product" style={{ marginLeft: "20px" }}>
           <Bao to="/products">
             <ion-icon name="car-sport-outline"></ion-icon>
-            <span className="hidden">Trở thành chủ xe</span>
+            {username ? (
+              <>
+                <span className="hidden">Xe của bạn</span>
+              </>
+            ) : (
+              <>
+                <span className="hidden">Trở thành thành viên</span>
+              </>
+            )}
           </Bao>
         </section>
         <section className="product" style={{ marginLeft: "20px" }}>
@@ -94,10 +108,10 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Bao to="/listcars">
+              {/* <Bao to="/listcars">
                 <ion-icon name="car-sport-outline"></ion-icon>
-                <span className="hidden">Danh sách xe</span>
-              </Bao>
+                <span className="hidden">Xe trên thị trường</span>
+              </Bao> */}
             </>
           )}
         </section>

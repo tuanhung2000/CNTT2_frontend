@@ -16,6 +16,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState("");
   const [address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [inputEnabled, setInputEnabled] = useState(true);
   const { data } = useGetUserQuery();
   const token = localStorage.getItem("token");
 
@@ -62,7 +63,15 @@ const Profile = () => {
   };
   return (
     <ProfileComponent>
-      <Card style={{ backgroundColor: "#f0f0f0" }}>
+      <Card
+        style={{
+          backgroundColor: "#f0f0f0",
+          minHeight: "calc(100vh - 200px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Grid container>
           <Grid
             item
@@ -120,7 +129,11 @@ const Profile = () => {
                           border: "none",
                           boxSizing: "border-box",
                           padding: "10px",
+                          backgroundColor: inputEnabled
+                            ? "ghostwhite"
+                            : "white",
                         }}
+                        disabled={inputEnabled}
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                       />
@@ -134,6 +147,7 @@ const Profile = () => {
                       </label>
                       <input
                         value={lastName}
+                        disabled={inputEnabled}
                         onChange={(e) => setLastName(e.target.value)}
                         placeholder={data.User.lastName}
                         id="lastName"
@@ -145,6 +159,9 @@ const Profile = () => {
                           border: "none",
                           boxSizing: "border-box",
                           padding: "10px",
+                          backgroundColor: inputEnabled
+                            ? "ghostwhite"
+                            : "white",
                         }}
                       />
                     </Grid>
@@ -176,6 +193,7 @@ const Profile = () => {
                   </label>
                   <input
                     value={address}
+                    disabled={inputEnabled}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder={data.User.address}
                     id="address"
@@ -187,6 +205,7 @@ const Profile = () => {
                       border: "none",
                       boxSizing: "border-box",
                       padding: "10px",
+                      backgroundColor: inputEnabled ? "ghostwhite" : "white",
                     }}
                   />
                 </Grid>
@@ -200,6 +219,7 @@ const Profile = () => {
                   <input
                     placeholder={data.User.phoneNumber}
                     id="phoneNumber"
+                    disabled={inputEnabled}
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     style={{
@@ -209,6 +229,7 @@ const Profile = () => {
                       outline: "none",
                       border: "none",
                       boxSizing: "border-box",
+                      backgroundColor: inputEnabled ? "ghostwhite" : "white",
                       padding: "10px",
                     }}
                   />
@@ -221,8 +242,15 @@ const Profile = () => {
                     justifyContent: "flex-end",
                     width: "100%",
                     marginTop: "10px",
+                    gap: "10px",
                   }}
                 >
+                  <Button
+                    className="btn"
+                    onClick={() => setInputEnabled(false)}
+                  >
+                    Chỉnh sửa
+                  </Button>
                   <Button className="btn" type="submit">
                     Cập nhật
                   </Button>

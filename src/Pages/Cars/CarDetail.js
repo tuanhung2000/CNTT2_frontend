@@ -2,6 +2,7 @@ import { Button, Card, Grid, MenuItem, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -12,6 +13,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { DateField } from "@mui/x-date-pickers";
 
 function CarDetail() {
+  const { username, role } = useAuth();
   const [sex, setSex] = useState("");
   const [year, setYear] = useState([]);
   const [day, setDay] = useState("");
@@ -480,464 +482,480 @@ function CarDetail() {
           </Grid>
         </Grid>
       </Card>
-      <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
-        <Grid container>
-          <Grid
-            item
-            xs={5}
-            md={5}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "10px",
-              padding: "0 12px",
-            }}
-          >
-            <h3>Bản tóm tắt</h3>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-                backgroundColor: "white",
-              }}
-            >
-              <div
+      {!role === "owner" ? (
+        <>
+          <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
+            <Grid container>
+              <Grid
+                item
+                xs={5}
+                md={5}
                 style={{
                   display: "flex",
-                  width: "100%",
-                  alignItems: "center",
-                  padding: "10px",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "10px",
+                  padding: "0 12px",
                 }}
               >
-                <span>Số giờ muốn thuê</span>
-                <span style={{ fontWeight: "bold" }}>
-                  {hourHire <= 0 ? 0 : hourHire}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  alignItems: "center",
-                  padding: "10px",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>Chi phí thuê</span>
-                <span style={{ fontWeight: "bold" }}>
-                  {handleCostCar(priceInitial, hourHire) <= 0
-                    ? formatter.format(priceInitial)
-                    : formatter.format(handleCostCar(priceInitial, hourHire))}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  padding: "10px",
-                  alignItems: "center",
-                  borderBottom: "1px solid gray",
-                  width: "100%",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span>+ Phí bảo hiểm</span>
-                <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(insCar)}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  padding: "10px",
-                  alignItems: "center",
-                  width: "100%",
-                  justifyContent: "space-between",
-                }}
-              >
-                <span style={{ fontWeight: "bold" }}>Tổng cộng</span>
-                <span style={{ fontWeight: "bold" }}>
-                  {totalPrice(insCar, handleCostCar(priceInitial, hourHire)) <=
-                  0 ? (
-                    <span
-                      style={{
-                        color: "red",
-                        fontWeight: "200",
-                        fontSize: "12px",
-                      }}
-                    >
-                      Thời gian không hợp lệ
+                <h3>Bản tóm tắt</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    width: "100%",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      alignItems: "center",
+                      padding: "10px",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>Số giờ muốn thuê</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {hourHire <= 0 ? 0 : hourHire}
                     </span>
-                  ) : (
-                    formatter.format(
-                      totalPrice(insCar, handleCostCar(priceInitial, hourHire))
-                    )
-                  )}
-                </span>
-              </div>
-            </div>
-          </Grid>
-          <Grid
-            item
-            xs={7}
-            md={7}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              gap: "10px",
-              padding: "0 12px",
-            }}
-          >
-            <h3>Nhập thông tin để thuê xe</h3>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
-                gap: "10px",
-              }}
-            >
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={2}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="sex" style={{ cursor: "pointer" }}>
-                    Giới tính:
-                  </label>
-                  <Select
-                    name="role"
-                    labelId="demo-simple-select-label"
-                    id="sex"
-                    value={sex}
-                    style={{ height: "40px" }}
-                    onChange={(e) => setSex(e.target.value)}
-                  >
-                    <MenuItem value={"male"}>Nam</MenuItem>
-                    <MenuItem value={"female"}>Nữ</MenuItem>
-                  </Select>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="firstname" style={{ cursor: "pointer" }}>
-                    Tên:
-                  </label>
-                  <input
-                    id="firstname"
-                    type="text"
+                  </div>
+                  <div
                     style={{
-                      display: "block",
-                      height: "40px",
-                      border: "none",
-                      outline: "0.5px solid #f0f0f0",
-                      padding: "0 5px",
+                      display: "flex",
+                      width: "100%",
+                      alignItems: "center",
+                      padding: "10px",
+                      justifyContent: "space-between",
                     }}
-                  ></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="lastname" style={{ cursor: "pointer" }}>
-                    Họ:
-                  </label>
-                  <input
-                    id="lastname"
-                    type="text"
+                  >
+                    <span>Chi phí thuê</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {handleCostCar(priceInitial, hourHire) <= 0
+                        ? formatter.format(priceInitial)
+                        : formatter.format(
+                            handleCostCar(priceInitial, hourHire)
+                          )}
+                    </span>
+                  </div>
+                  <div
                     style={{
-                      display: "block",
-                      height: "40px",
-                      padding: "0 5px",
-                      border: "none",
-                      outline: "0.5px solid #f0f0f0",
+                      display: "flex",
+                      padding: "10px",
+                      alignItems: "center",
+                      borderBottom: "1px solid gray",
+                      width: "100%",
+                      justifyContent: "space-between",
                     }}
-                  ></input>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="email" style={{ cursor: "pointer" }}>
-                    Email:
-                  </label>
-                  <input
-                    id="email"
-                    type="text"
+                  >
+                    <span>+ Phí bảo hiểm</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {formatter.format(insCar)}
+                    </span>
+                  </div>
+                  <div
                     style={{
-                      display: "block",
-                      height: "40px",
-                      padding: "0 5px",
-                      border: "none",
-                      outline: "0.5px solid #f0f0f0",
-                    }}
-                  ></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="phone" style={{ cursor: "pointer" }}>
-                    Số điện thoại:
-                  </label>
-                  <input
-                    id="phone"
-                    type="text"
-                    style={{
-                      display: "block",
-                      height: "40px",
-                      padding: "0 5px",
-                      border: "none",
-                      outline: "0.5px solid #f0f0f0",
-                    }}
-                  ></input>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="day" style={{ cursor: "pointer" }}>
-                    Ngày bắt đầu:
-                  </label>
-
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      id="daystart"
-                      minDateTime={dayjs()}
-                      value={daystart}
-                      onChange={handleDayStartChange}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="day" style={{ cursor: "pointer" }}>
-                    Ngày kết thúc:
-                  </label>
-
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      id="dayend"
-                      minDateTime={
-                        daystart ? dayjs(daystart).add(1, "hour") : dayjs()
-                      }
-                      value={dayend}
-                      onChange={handleDayendChange}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={4}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label htmlFor="city" style={{ cursor: "pointer" }}>
-                    Chọn nơi đón
-                  </label>
-                  <Select
-                    name="city"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="city"
-                    value={city}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setCity(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
+                      display: "flex",
+                      padding: "10px",
+                      alignItems: "center",
+                      width: "100%",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <MenuItem value="">Tỉnh</MenuItem>
-                    {listcity.map((item) => (
-                      <MenuItem value={item.code} key={item.code}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label
-                    htmlFor="lastname"
-                    style={{ cursor: "pointer", opacity: "0" }}
-                  >
-                    Chọn nơi đón
-                  </label>
-                  <Select
-                    name="district"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="district"
-                    value={district}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Huyện</MenuItem>
-                    {listdistrict.map((item) => (
-                      <MenuItem value={item.code} key={item.code}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid
-                  item
-                  xs={4}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                  }}
-                >
-                  <label
-                    htmlFor="lastname"
-                    style={{ cursor: "pointer", opacity: "0" }}
-                  >
-                    Chọn nơi đón
-                  </label>
-                  <Select
-                    name="ward"
-                    displayEmpty
-                    labelId="demo-simple-select-label"
-                    id="ward"
-                    value={ward}
-                    style={{ height: "40px", width: "100%" }}
-                    onChange={(e) => setWard(e.target.value)}
-                    MenuProps={{
-                      getcontentanchorel: null,
-                      anchorOrigin: {
-                        vertical: "bottom",
-                        horizontal: "center",
-                      },
-                      PaperProps: {
-                        style: {
-                          maxHeight: 100,
-                          width: "auto",
-                        },
-                      },
-                    }}
-                  >
-                    <MenuItem value="">Xã</MenuItem>
-                    {listward.map((item) => (
-                      <MenuItem value={item.name} key={item.name}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
+                    <span style={{ fontWeight: "bold" }}>Tổng cộng</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {totalPrice(
+                        insCar,
+                        handleCostCar(priceInitial, hourHire)
+                      ) <= 0 ? (
+                        <span
+                          style={{
+                            color: "red",
+                            fontWeight: "200",
+                            fontSize: "12px",
+                          }}
+                        >
+                          Thời gian không hợp lệ
+                        </span>
+                      ) : (
+                        formatter.format(
+                          totalPrice(
+                            insCar,
+                            handleCostCar(priceInitial, hourHire)
+                          )
+                        )
+                      )}
+                    </span>
+                  </div>
+                </div>
               </Grid>
               <Grid
-                container
+                item
+                xs={7}
+                md={7}
                 style={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: "10px",
+                  padding: "0 12px",
                 }}
               >
-                {avaiable ? (
-                  <>
-                    <button className="btn_hire" onClick={() => alert("hi")}>
-                      Thuê
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button className="btn_disabled" disabled={true}>
-                      Đã được thuê
-                    </button>
-                  </>
-                )}
+                <h3>Nhập thông tin để thuê xe</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    width: "100%",
+                    gap: "10px",
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <Grid
+                      item
+                      xs={2}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="sex" style={{ cursor: "pointer" }}>
+                        Giới tính:
+                      </label>
+                      <Select
+                        name="role"
+                        labelId="demo-simple-select-label"
+                        id="sex"
+                        value={sex}
+                        style={{ height: "40px" }}
+                        onChange={(e) => setSex(e.target.value)}
+                      >
+                        <MenuItem value={"male"}>Nam</MenuItem>
+                        <MenuItem value={"female"}>Nữ</MenuItem>
+                      </Select>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="firstname" style={{ cursor: "pointer" }}>
+                        Tên:
+                      </label>
+                      <input
+                        id="firstname"
+                        type="text"
+                        style={{
+                          display: "block",
+                          height: "40px",
+                          border: "none",
+                          outline: "0.5px solid #f0f0f0",
+                          padding: "0 5px",
+                        }}
+                      ></input>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="lastname" style={{ cursor: "pointer" }}>
+                        Họ:
+                      </label>
+                      <input
+                        id="lastname"
+                        type="text"
+                        style={{
+                          display: "block",
+                          height: "40px",
+                          padding: "0 5px",
+                          border: "none",
+                          outline: "0.5px solid #f0f0f0",
+                        }}
+                      ></input>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="email" style={{ cursor: "pointer" }}>
+                        Email:
+                      </label>
+                      <input
+                        id="email"
+                        type="text"
+                        style={{
+                          display: "block",
+                          height: "40px",
+                          padding: "0 5px",
+                          border: "none",
+                          outline: "0.5px solid #f0f0f0",
+                        }}
+                      ></input>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="phone" style={{ cursor: "pointer" }}>
+                        Số điện thoại:
+                      </label>
+                      <input
+                        id="phone"
+                        type="text"
+                        style={{
+                          display: "block",
+                          height: "40px",
+                          padding: "0 5px",
+                          border: "none",
+                          outline: "0.5px solid #f0f0f0",
+                        }}
+                      ></input>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="day" style={{ cursor: "pointer" }}>
+                        Ngày bắt đầu:
+                      </label>
+
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateTimePicker
+                          id="daystart"
+                          minDateTime={dayjs()}
+                          value={daystart}
+                          onChange={handleDayStartChange}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={6}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="day" style={{ cursor: "pointer" }}>
+                        Ngày kết thúc:
+                      </label>
+
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateTimePicker
+                          id="dayend"
+                          minDateTime={
+                            daystart ? dayjs(daystart).add(1, "hour") : dayjs()
+                          }
+                          value={dayend}
+                          onChange={handleDayendChange}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid
+                      item
+                      xs={4}
+                      md={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label htmlFor="city" style={{ cursor: "pointer" }}>
+                        Chọn nơi đón
+                      </label>
+                      <Select
+                        name="city"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="city"
+                        value={city}
+                        style={{ height: "40px", width: "100%" }}
+                        onChange={(e) => setCity(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Tỉnh</MenuItem>
+                        {listcity.map((item) => (
+                          <MenuItem value={item.code} key={item.code}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={4}
+                      md={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label
+                        htmlFor="lastname"
+                        style={{ cursor: "pointer", opacity: "0" }}
+                      >
+                        Chọn nơi đón
+                      </label>
+                      <Select
+                        name="district"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="district"
+                        value={district}
+                        style={{ height: "40px", width: "100%" }}
+                        onChange={(e) => setDistrict(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Huyện</MenuItem>
+                        {listdistrict.map((item) => (
+                          <MenuItem value={item.code} key={item.code}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={4}
+                      md={4}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "5px",
+                      }}
+                    >
+                      <label
+                        htmlFor="lastname"
+                        style={{ cursor: "pointer", opacity: "0" }}
+                      >
+                        Chọn nơi đón
+                      </label>
+                      <Select
+                        name="ward"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="ward"
+                        value={ward}
+                        style={{ height: "40px", width: "100%" }}
+                        onChange={(e) => setWard(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Xã</MenuItem>
+                        {listward.map((item) => (
+                          <MenuItem value={item.name} key={item.name}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                    }}
+                  >
+                    {avaiable ? (
+                      <>
+                        <button
+                          className="btn_hire"
+                          onClick={() => alert("hi")}
+                        >
+                          Thuê
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="btn_disabled" disabled={true}>
+                          Đã được thuê
+                        </button>
+                      </>
+                    )}
+                  </Grid>
+                </div>
               </Grid>
-            </div>
-          </Grid>
-        </Grid>
-      </Card>
+            </Grid>
+          </Card>
+        </>
+      ) : (
+        <></>
+      )}
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
         <Grid container>
           <Grid item xs={12} md={12}>

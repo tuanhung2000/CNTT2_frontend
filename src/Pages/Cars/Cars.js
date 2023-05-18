@@ -1,9 +1,17 @@
-import { Button, Card, Checkbox, FormControlLabel, Grid } from "@mui/material";
+import {
+  Button,
+  Card,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Input,
+} from "@mui/material";
 import { Rate } from "antd";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { COLORS } from "../../assets/color";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 function Cars() {
   const navigate = useNavigate();
   const [checked, setChecked] = React.useState(true);
@@ -16,6 +24,35 @@ function Cars() {
     <CarsComponent>
       <Grid container>
         <Grid item xs={2} md={2} style={{ paddingRight: "20px" }}>
+          <Grid
+            item
+            xs={12}
+            md={12}
+            style={{
+              borderTop: "1px solid gray",
+            }}
+          >
+            <h4>Tìm kiếm</h4>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+              }}
+            >
+              <Input
+                style={{ boxSizing: "border-box", padding: "5px 5px 5px 30px" }}
+              />
+              <SearchIcon
+                style={{
+                  position: "absolute",
+                  top: "5px",
+                  left: "0px",
+                  fontSize: "30px",
+                }}
+              />
+            </div>
+          </Grid>
           <Grid
             item
             xs={12}

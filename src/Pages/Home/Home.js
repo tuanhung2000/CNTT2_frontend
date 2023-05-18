@@ -263,7 +263,9 @@ const HomeSectionTop = styled.section`
   align-items: center;
   position: relative;
   background: url("https://www.mioto.vn/static/media/bg-main.1e128ccf.jpg");
-  background-position: center bottom;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
 const Title = styled.h1`
   color: #4b4d52;

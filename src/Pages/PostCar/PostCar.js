@@ -77,32 +77,39 @@ function PostCar() {
 
   return (
     <PostContainer>
-      <Card style={{ backgroundColor: "#f0f0f0", padding: "20px" }}>
-        <Grid container>
+      <Card
+        style={{
+          backgroundColor: "#f0f0f0",
+          padding: "20px",
+          minHeight: "calc(100vh - 200px)",
+        }}
+      >
+        <Grid container style={{ margin: "0 auto" }}>
           <Grid
             item
             xs={4}
             md={4}
             style={{
               display: "flex",
-              justifyContent: "center",
+              width: "100%",
+              padding: "20px 20px 20px 40px",
               alignItems: "center",
             }}
           >
-            <div style={{ width: "400px", position: "relative" }}>
+            <div style={{ width: "421px", position: "relative" }}>
               {loading ? (
                 <>
                   <div
                     style={{
                       width: "100%",
-                      height: "400px",
+                      height: "421px",
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
                       position: "relative",
                     }}
                   >
-                    <Skeleton variant="rectangular" width={400} height={400} />
+                    <Skeleton variant="rectangular" width={421} height={400} />
                     <CircularProgress style={{ position: "absolute" }} />
                   </div>
                 </>
@@ -113,6 +120,7 @@ function PostCar() {
                     height="400"
                     image={img}
                     alt="Paella dish"
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                   />
                   <input
                     onChange={handleFileChange}
