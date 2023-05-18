@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import useAuth from "./hooks/useAuth";
 import PostCar from "./Pages/PostCar/PostCar";
 import OwnerProfile from "./Pages/Profile/OwnerProfile";
+import Payment from "./Pages/Payment/Payment";
 function App() {
   // useEffect(() => {
   //   // Add event listener to the beforeunload event
@@ -51,6 +52,7 @@ function App() {
           <Route element={<PrivateComponent />}>
             <Route path="profile" element={<Profile />} />
             <Route path="/post" element={<PostCar />} />
+            <Route path="/payment/:id" element={<Payment />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

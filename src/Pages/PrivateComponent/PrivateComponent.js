@@ -16,6 +16,8 @@ function PrivateComponent() {
   }
   if (role === "customer" && location.pathname === "/post") {
     return <NotFound />; // Render a "Not Found" component or handle it as desired
+  } else if (role === "owner" && location.pathname.startsWith("/payment/")) {
+    return <NotFound />; // Render a "Not Found" component or handle it as desired
   }
   return (
     <>

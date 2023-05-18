@@ -14,7 +14,7 @@ function Footer() {
     </FooterContainer>
   );
 }
-const FooterContainer = styled.section`
+const FooterContainer = styled.footer`
   height: 100px;
   width: 100%;
   bottom: 0;

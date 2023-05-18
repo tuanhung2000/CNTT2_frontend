@@ -11,9 +11,10 @@ import Rating from "@mui/material/Rating";
 import { COLORS } from "../../assets/color";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { DateField } from "@mui/x-date-pickers";
-
+import { useNavigate } from "react-router-dom";
 function CarDetail() {
   const { username, role } = useAuth();
+  const navigate = useNavigate();
   const [sex, setSex] = useState("");
   const [year, setYear] = useState([]);
   const [day, setDay] = useState("");
@@ -482,7 +483,9 @@ function CarDetail() {
           </Grid>
         </Grid>
       </Card>
-      {!role === "owner" ? (
+      {role === "owner" ? (
+        <></>
+      ) : (
         <>
           <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
             <Grid container>
@@ -822,7 +825,7 @@ function CarDetail() {
                           },
                         }}
                       >
-                        <MenuItem value="">Tỉnh</MenuItem>
+                        <MenuItem value="">Tỉnh/Thành phố</MenuItem>
                         {listcity.map((item) => (
                           <MenuItem value={item.code} key={item.code}>
                             {item.name}
@@ -868,7 +871,7 @@ function CarDetail() {
                           },
                         }}
                       >
-                        <MenuItem value="">Huyện</MenuItem>
+                        <MenuItem value="">Quận/Huyện</MenuItem>
                         {listdistrict.map((item) => (
                           <MenuItem value={item.code} key={item.code}>
                             {item.name}
@@ -914,7 +917,7 @@ function CarDetail() {
                           },
                         }}
                       >
-                        <MenuItem value="">Xã</MenuItem>
+                        <MenuItem value="">Phường/Xã/Thị trấn</MenuItem>
                         {listward.map((item) => (
                           <MenuItem value={item.name} key={item.name}>
                             {item.name}
@@ -935,7 +938,7 @@ function CarDetail() {
                       <>
                         <button
                           className="btn_hire"
-                          onClick={() => alert("hi")}
+                          onClick={() => navigate(`/payment/${12}`)}
                         >
                           Thuê
                         </button>
@@ -953,8 +956,6 @@ function CarDetail() {
             </Grid>
           </Card>
         </>
-      ) : (
-        <></>
       )}
       <Card style={{ backgroundColor: "ButtonFace", padding: "20px" }}>
         <Grid container>
