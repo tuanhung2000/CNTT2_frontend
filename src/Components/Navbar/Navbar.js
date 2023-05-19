@@ -58,10 +58,9 @@ function Navbar() {
             </IconSection>
           </div>
           <div>
-            <IconSection>
-              <ion-icon name="call-outline"></ion-icon>
-              1900 9217
-            </IconSection>
+            <Bao to="/aboutus">
+              <span className="hidden">Về Micar</span>
+            </Bao>
           </div>
         </ContactSection>
       </NavbarLeft>
@@ -74,7 +73,7 @@ function Navbar() {
         </section>
         <section className="product" style={{ marginLeft: "20px" }}>
           <Bao to="/products">
-            <ion-icon name="car-sport-outline"></ion-icon>
+            <ion-icon name="people-outline"></ion-icon>
             {username ? (
               <>
                 <span className="hidden">Xe của bạn</span>

@@ -255,7 +255,7 @@ const HomeSection = styled.section`
   }
 `;
 const HomeSectionTop = styled.section`
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   width: 100%;
   display: flex;
   flex-direction: column;

@@ -19,6 +19,7 @@ import useAuth from "./hooks/useAuth";
 import PostCar from "./Pages/PostCar/PostCar";
 import OwnerProfile from "./Pages/Profile/OwnerProfile";
 import Payment from "./Pages/Payment/Payment";
+import Aboutus from "./Pages/Aboutus/Aboutus";
 function App() {
   // useEffect(() => {
   //   // Add event listener to the beforeunload event
@@ -71,7 +72,7 @@ function App() {
             <Route path="/listcars" element={<Cars />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/listcars/id" element={<CarDetail />}></Route>
-            <Route path="/bao" element={<Bao />}></Route>
+            <Route path="/aboutus" element={<Aboutus />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

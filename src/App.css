@@ -2,6 +2,8 @@
   min-height: 100vh;
   position: relative;
 }
+html {
+}
 .accordion-header {
   background-color: red;
   display: flex;
