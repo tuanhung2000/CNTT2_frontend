@@ -1,45 +1,102 @@
 import React from "react";
 import styled from "styled-components";
+import img from "../../assets/logo.png";
 function Footer() {
   return (
     <FooterContainer>
-      <FooterLeft>
-        <h3>Công ty Cổ phần Hùng</h3>
-        <p>Loremahai</p>
-      </FooterLeft>
-      <FooterRight>
-        Địa chỉ: Văn phòng 02, Tầng 08, Tòa nhà Pearl Plaza, Số 561A Điện Biên
-        Phủ, Phường 25, Quận Bình Thạnh, Thành phố Hồ Chí Minh, Việt Nam.
-      </FooterRight>
+      <div style={{ display: "flex", width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            margin: "0px 42px 0px 0",
+            gap: "20px",
+          }}
+        >
+          <img src={img} alt="" width={250} height={50} />
+          <div style={{ padding: "0 5px" }}>
+            <p>1900 9217</p>
+            <p>Hỗ trợ 9AM-9PM T2-T7</p>
+          </div>
+          <div style={{ padding: "0 5px" }}>
+            <p>contact@micar.vn</p>
+            <p>Đặt câu hỏi cho Micar</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            lineHeight: "24px",
+            width: "100%",
+          }}
+        >
+          <div className="item_four">
+            <p className="main">Chính sách</p>
+            <div className="item-sub">
+              <p>Chính sách và quy định</p>
+              <p>Quy chế hoạt động</p>
+              <p>Bảo mật thông tin</p>
+              <p>Giải quyết tranh chấp</p>
+            </div>
+          </div>
+          <div className="item_four">
+            <p className="main">Tìm hiểu thêm</p>
+            <div className="item-sub">
+              <p>Hướng dẫn chung</p>
+              <p>Hướng dẫn đặt xe</p>
+            </div>
+          </div>
+          <div className="item_four">
+            <p className="main1">ddd</p>
+            <div className="item-sub">
+              <p>Hỏi và trả lời</p>
+              <p>Micar blog</p>
+            </div>
+          </div>
+          <div className="item_four">
+            <p className="main">Đối tác</p>
+            <div className="item-sub">
+              <p>Đăng ký chủ xe Micar</p>
+              <p>Đăng ký thuê xe Micar</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </FooterContainer>
   );
 }
 const FooterContainer = styled.footer`
-  height: 100px;
   width: 100%;
-  bottom: 0;
-  left: 0;
-  background-color: #000000;
+  color: #6f6f6f;
   display: flex;
-  align-items: center;
-  padding: 15px;
+  padding: 40px;
   box-sizing: border-box;
-  color: white;
+  color: #6f6f6f;
+  border-top: 0.5px solid #f0f0f0;
+  .item_four {
+    width: calc(25% - 15px);
+  }
+  .main {
+    color: #242420;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 32px;
+  }
+  .main1 {
+    color: #242420;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 32px;
+    opacity: 0;
+  }
+  .item-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    p {
+      font-size: 16px;
+    }
+  }
 `;
-const FooterLeft = styled.div`
-  width: 40%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-const FooterRight = styled.div`
-  width: 60%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0.5rem 0.3rem;
-  justify-content: center;
-`;
+
 export default Footer;

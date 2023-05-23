@@ -2,6 +2,9 @@
   min-height: 100vh;
   position: relative;
 }
+* {
+  font-family: Manrope;
+}
 html {
 }
 .accordion-header {
