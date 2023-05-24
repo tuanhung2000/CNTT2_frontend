@@ -1,14 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Carousel } from "antd";
+import dayjs from "dayjs";
 import useAuth from "../../hooks/useAuth";
+import { MenuItem, Select } from "@mui/material";
+import axios from "axios";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 function Home() {
   const [open, setOpen] = useState("close");
+  const [city, setCity] = useState("");
+  const [active, setActive] = useState(1);
+  const [listcity, setListCity] = useState([]);
+  const [currentDate, setCurrentDate] = useState(dayjs());
+  const [daystart, setDaystart] = useState(null);
+  const [dayend, setDayend] = useState(null);
+  useEffect(() => {
+    axios.get("https://provinces.open-api.vn/api/").then((response) => {
+      setListCity(response.data);
+    });
+  }, []);
   // const scrollTop = () => {
   //   window.scrollTo(0, 0);
   // };
   // var targetElm = document.querySelector("HomeSectionBottom");
+  const handleDayStartChange = (newValue) => {
+    setDaystart(newValue);
+
+    if (dayend && dayjs(dayend).isBefore(dayjs(newValue))) {
+      setDayend(dayjs(newValue).add(1, "hour"));
+    }
+  };
+  const handleDayendChange = (newValue) => {
+    setDayend(newValue);
+  };
   const openDialog = () => {
     if (open === "close") {
       setOpen("open");
@@ -21,62 +47,495 @@ function Home() {
   console.log(username);
   return (
     <HomeSection>
-      <HomeSectionTop>
-        <ContainerTop>
-          <Title>Bicycle - Cùng bạn trên mọi hành trình</Title>
-          <SearchSection>
-            <SearchLeft>
-              <div className="van">
-                <ion-icon name="bicycle-outline"></ion-icon>
-                <p>Xe đạp</p>
+      <HomeSectionTop
+        style={{ marginBottom: active === 1 ? "100px" : "200px" }}
+      >
+        <div
+          style={{ margin: "0 auto", maxWidth: "1140px", position: "relative" }}
+        >
+          <div className="img_first">
+            <h1
+              style={{
+                position: "absolute",
+                bottom: "200px",
+                width: "100%",
+                textAlign: "center",
+                fontSize: "50px",
+                lineHeight: "50px",
+                color: "white",
+              }}
+            >
+              Micar - Cùng Bạn Đến Mọi Hành Trình
+            </h1>
+          </div>
+          <div className="container_search">
+            <div style={{ width: "40%", display: "flex" }}>
+              <div
+                onClick={() => {
+                  setActive(1);
+                }}
+                style={{
+                  borderRadius: "16px 0 0",
+                  width: "100%",
+                  padding: "16px",
+                  display: "flex",
+                  gap: "8px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: active === 1 ? "#5fcf86" : "white",
+                  cursor: "pointer",
+                }}
+              >
+                <ion-icon
+                  name="car-sport-outline"
+                  style={{
+                    color: active === 1 ? "white" : "black",
+                    backgroundColor: active === 1 ? "#5fcf86" : "white",
+                  }}
+                ></ion-icon>
+                <p
+                  style={{
+                    color: active === 1 ? "white" : "black",
+                    backgroundColor: active === 1 ? "#5fcf86" : "white",
+                  }}
+                  className="name"
+                >
+                  Xe tự lái
+                </p>
               </div>
-            </SearchLeft>
-            <SearchRight>
-              <section className="form">
-                <div className="form-group">
-                  <label className="label-content" htmlFor="name-city">
-                    Địa điểm
-                  </label>
-                  <div className="form-content">
-                    <ion-icon name="location-outline"></ion-icon>
-                    <input
-                      type="text"
-                      id="name-city"
-                      placeholder="Nhập thành phố, quận ..."
-                    ></input>
+              <div
+                onClick={() => {
+                  setActive(2);
+                }}
+                style={{
+                  width: "100%",
+                  padding: "16px",
+                  display: "flex",
+                  gap: "8px",
+                  cursor: "pointer",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: active === 2 ? "#5fcf86" : "white",
+                  borderRadius: "0px 16px 0px 0px",
+                }}
+              >
+                <ion-icon
+                  name="car-sport-outline"
+                  style={{
+                    color: active === 2 ? "white" : "black",
+                    backgroundColor: active === 2 ? "#5fcf86" : "white",
+                  }}
+                ></ion-icon>
+                <p
+                  style={{
+                    color: active === 2 ? "white" : "black",
+                    backgroundColor: active === 2 ? "#5fcf86" : "white",
+                  }}
+                  className="name"
+                >
+                  Xe có tài xế
+                </p>
+              </div>
+            </div>
+            {active === 1 ? (
+              <>
+                <div className="search">
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="car-sport-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Địa điểm</p>
+                    </div>
+                    <div className="input">
+                      {" "}
+                      <Select
+                        name="city"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="city"
+                        value={city}
+                        style={{ height: "56px", width: "100%" }}
+                        onChange={(e) => setCity(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Tỉnh/Thành phố</MenuItem>
+                        {listcity.map((item) => (
+                          <MenuItem value={item.code} key={item.code}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Bắt đầu</p>
+                    </div>
+                    <div className="input">
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        style={{ backgroundColor: "red" }}
+                      >
+                        <DateTimePicker
+                          id="daystart"
+                          minDateTime={dayjs()}
+                          value={daystart}
+                          onChange={handleDayStartChange}
+                        />
+                      </LocalizationProvider>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        width: "100%",
+                        justifyContent: "space-between",
+                        gap: "12px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "80%",
+                        }}
+                      >
+                        <div className="title">
+                          <ion-icon name="calendar-outline"></ion-icon>
+                          <p style={{ color: "black" }}>Kết thúc</p>
+                        </div>
+                        <div className="input">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimePicker
+                              id="dayend"
+                              minDateTime={
+                                daystart
+                                  ? dayjs(daystart).add(1, "hour")
+                                  : dayjs()
+                              }
+                              value={dayend}
+                              onChange={handleDayendChange}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                      </div>
+                      <button
+                        style={{
+                          width: "20%",
+                          padding: "10px",
+                          backgroundColor: "#5fcf86",
+                          border: "none",
+                          height: "56px",
+                          outline: "none",
+                          borderRadius: "5px",
+                          color: "white",
+                          display: "flex",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Tìm kiếm
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="form-group">
-                  <label className="label-content" htmlFor="TimeStart">
-                    Bắt đầu
-                  </label>
-                  <div className="form-content">
-                    <ion-icon name="time-outline"></ion-icon>
-                    <input
-                      type="text"
-                      id="TimeStart"
-                      placeholder="Nhập thành phố, quận ..."
-                    ></input>
+              </>
+            ) : (
+              <>
+                <div className="search">
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="car-sport-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Địa điểm đón</p>
+                    </div>
+                    <div className="input">
+                      {" "}
+                      <Select
+                        name="city"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="city"
+                        value={city}
+                        style={{ height: "56px", width: "100%" }}
+                        onChange={(e) => setCity(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Tỉnh/Thành phố</MenuItem>
+                        {listcity.map((item) => (
+                          <MenuItem value={item.code} key={item.code}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Bắt đầu</p>
+                    </div>
+                    <div className="input">
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        style={{ backgroundColor: "red" }}
+                      >
+                        <DateTimePicker
+                          id="daystart"
+                          minDateTime={dayjs()}
+                          value={daystart}
+                          onChange={handleDayStartChange}
+                        />
+                      </LocalizationProvider>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        width: "100%",
+                        justifyContent: "space-between",
+                        gap: "12px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "80%",
+                        }}
+                      >
+                        <div className="title">
+                          <ion-icon name="calendar-outline"></ion-icon>
+                          <p style={{ color: "black" }}>Kết thúc</p>
+                        </div>
+                        <div className="input">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimePicker
+                              id="dayend"
+                              minDateTime={
+                                daystart
+                                  ? dayjs(daystart).add(1, "hour")
+                                  : dayjs()
+                              }
+                              value={dayend}
+                              onChange={handleDayendChange}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                      </div>
+                      <button
+                        style={{
+                          width: "20%",
+                          padding: "10px",
+                          backgroundColor: "#5fcf86",
+                          border: "none",
+                          height: "56px",
+                          outline: "none",
+                          borderRadius: "5px",
+                          color: "white",
+                          display: "flex",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Tìm kiếm
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="form-group">
-                  <label className="label-content" htmlFor="TimeBegin">
-                    Kết thúc
-                  </label>
-                  <div className="form-content">
-                    <ion-icon name="timer-outline"></ion-icon>
-                    <input
-                      type="text"
-                      id="TimeBegin"
-                      placeholder="Nhập thành phố, quận ..."
-                    ></input>
+                <div className="search">
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="car-sport-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Địa điểm đón</p>
+                    </div>
+                    <div className="input">
+                      {" "}
+                      <Select
+                        name="city"
+                        displayEmpty
+                        labelId="demo-simple-select-label"
+                        id="city"
+                        value={city}
+                        style={{ height: "56px", width: "100%" }}
+                        onChange={(e) => setCity(e.target.value)}
+                        MenuProps={{
+                          getcontentanchorel: null,
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "center",
+                          },
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              width: "auto",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="">Tỉnh/Thành phố</MenuItem>
+                        {listcity.map((item) => (
+                          <MenuItem value={item.code} key={item.code}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div className="title">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                      <p style={{ color: "black" }}>Bắt đầu</p>
+                    </div>
+                    <div className="input">
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        style={{ backgroundColor: "red" }}
+                      >
+                        <DateTimePicker
+                          id="daystart"
+                          minDateTime={dayjs()}
+                          value={daystart}
+                          onChange={handleDayStartChange}
+                        />
+                      </LocalizationProvider>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        width: "100%",
+                        justifyContent: "space-between",
+                        gap: "12px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "80%",
+                        }}
+                      >
+                        <div className="title">
+                          <ion-icon name="calendar-outline"></ion-icon>
+                          <p style={{ color: "black" }}>Kết thúc</p>
+                        </div>
+                        <div className="input">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimePicker
+                              id="dayend"
+                              minDateTime={
+                                daystart
+                                  ? dayjs(daystart).add(1, "hour")
+                                  : dayjs()
+                              }
+                              value={dayend}
+                              onChange={handleDayendChange}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                      </div>
+                      <button
+                        style={{
+                          width: "20%",
+                          padding: "10px",
+                          backgroundColor: "#5fcf86",
+                          border: "none",
+                          height: "56px",
+                          outline: "none",
+                          borderRadius: "5px",
+                          color: "white",
+                          display: "flex",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Tìm kiếm
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <button className="button-search">Tìm xe ngay</button>
-              </section>
-            </SearchRight>
-          </SearchSection>
-        </ContainerTop>
+              </>
+            )}
+          </div>
+        </div>
       </HomeSectionTop>
       <HomeSectionBottom>
         <Titleh3>Ưu đãi hiện hành</Titleh3>
@@ -255,17 +714,79 @@ const HomeSection = styled.section`
   }
 `;
 const HomeSectionTop = styled.section`
-  min-height: calc(100vh - 60px);
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background: url("https://www.mioto.vn/static/media/bg-main.1e128ccf.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  margin-bottom: 100px;
+  .img_first {
+    background-position: 50% 50%;
+    background-size: cover;
+    border-radius: 16px;
+    line-height: 24px;
+    padding: 80px 0px;
+    background-image: url("https://www.mioto.vn/static/media/bg-landingpage-1.f91d3a0d.png");
+    position: relative;
+    height: 720px;
+    width: 100%;
+    z-index: 1;
+    display: flex;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
+    border-radius: 16px;
+  }
+  .container_search {
+    position: absolute;
+    bottom: -50px;
+    z-index: 10;
+    height: 186px;
+    color: red;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .name {
+    }
+    .search {
+      box-sizing: border-box;
+      width: 90%;
+      box-shadow: 0px 3px 8px rgb(100, 100, 100);
+      background-color: #ffffff;
+      border-radius: 16px;
+      display: flex;
+      height: 136px;
+      margin: 0px 16px;
+      padding: 25px;
+      .search-item {
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+        box-sizing: border-box;
+      }
+      .title {
+        display: flex;
+        height: 25px;
+        margin-bottom: 5px;
+        line-height: 25px;
+        align-items: center;
+        gap: 5px;
+      }
+      .input {
+        height: 56px;
+      }
+      .search-item:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        box-sizing: border-box;
+      }
+      .search-item:nth-child(3) {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        box-sizing: border-box;
+      }
+    }
+  }
 `;
 const Title = styled.h1`
   color: #4b4d52;

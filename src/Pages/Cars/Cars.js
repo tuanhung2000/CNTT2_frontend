@@ -14,12 +14,12 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 function Cars() {
   const navigate = useNavigate();
-  const [checked, setChecked] = React.useState(true);
-  const [star, setStar] = React.useState();
+  // const [checked, setChecked] = React.useState(true);
+  // const [star, setStar] = React.useState();
   const [rateScore, setRateScore] = useState(3);
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-  };
+  // const handleChange = (event) => {
+  //   setChecked(event.target.checked);
+  // };
   return (
     <CarsComponent>
       <Grid container>
@@ -136,7 +136,10 @@ function Cars() {
             gap: "20px",
           }}
         >
-          <Card style={{ backgroundColor: "ButtonFace", padding: "10px" }}>
+          <Card
+            style={{ backgroundColor: "ButtonFace", padding: "10px" }}
+            data-aos="fade-in"
+          >
             <Grid
               container
               style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
@@ -523,7 +526,10 @@ function Cars() {
               </div>
             </Grid>
           </Card>
-          <Card style={{ backgroundColor: "ButtonFace", padding: "10px" }}>
+          <Card
+            style={{ backgroundColor: "ButtonFace", padding: "10px" }}
+            data-aos="fade-in"
+          >
             <Grid
               container
               style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
@@ -910,7 +916,10 @@ function Cars() {
               </div>
             </Grid>
           </Card>
-          <Card style={{ backgroundColor: "ButtonFace", padding: "10px" }}>
+          <Card
+            style={{ backgroundColor: "ButtonFace", padding: "10px" }}
+            data-aos="fade-in"
+          >
             <Grid
               container
               style={{ paddingBottom: "10px", borderBottom: "1px solid white" }}
