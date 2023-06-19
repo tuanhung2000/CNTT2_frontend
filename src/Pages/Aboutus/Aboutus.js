@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import car from "../../assets/car3.png";
+import AboutusImg from "../../assets/aboutus.png";
 function Aboutus() {
   const listAds = [
     {
@@ -23,6 +25,18 @@ function Aboutus() {
       url: "data:image/png;base64,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",
     },
   ];
+  const [delay, setDelay] = useState(0);
+  const [delaytime, setDelayTime] = useState(0);
+  useEffect(() => {
+    listAds.forEach((item, index) => {
+      const duration = (index + 1) * 1000 + 1000;
+      const delaytime = duration + 1000;
+      setTimeout(() => {
+        setDelay(duration);
+        setDelayTime(delaytime);
+      }, duration);
+    });
+  }, []);
   return (
     <AboutusComponent>
       <div style={{ padding: "80px 0" }}>
@@ -39,13 +53,15 @@ function Aboutus() {
           >
             Micar - Cùng bạn đến mọi hành trình
           </h1>
-          <div style={{ width: "calc(95% - 400px)" }}>
+          <div style={{ width: "calc(95% - 400px)", overflowX: "hidden" }}>
             <p
               style={{
                 fontSize: "18px",
                 lineHeight: "28px",
                 padding: "15px 0px 0px",
               }}
+              data-aos="fade-left"
+              data-aos-duration="1000"
             >
               Công ty Cổ phần Micar Asia hoạt động trên nền tảng ứng dụng cho
               thuê xe tự lái 4-7 chỗ, theo mô hình kinh tế sẻ chia.
@@ -56,6 +72,8 @@ function Aboutus() {
                 lineHeight: "28px",
                 padding: "15px 0px 0px",
               }}
+              data-aos="fade-left"
+              data-aos-duration="2000"
             >
               Micar được thành lập với sứ mệnh mang đến nền tảng công nghệ hiện
               đại kết nối chủ xe ô tô và hành khách theo cách Nhanh Nhất, An
@@ -67,6 +85,8 @@ function Aboutus() {
                 lineHeight: "28px",
                 padding: "15px 0px 0px",
               }}
+              data-aos="fade-left"
+              data-aos-duration="3000"
             >
               Micar hướng tới việc xây dựng một cộng đồng chia sẻ ô tô văn minh
               với nhiều tiện ích thông qua ứng dụng trên di động, nhằm nâng cao
@@ -78,13 +98,13 @@ function Aboutus() {
       <div style={{ margin: "0 0 100px" }}>
         <div style={{ display: "flex", margin: "0 60px" }}>
           <img
-            src="https://www.mioto.vn/static/media/aboutus1.4c31a699.png"
+            src={AboutusImg}
             style={{ width: "100%", height: "auto" }}
             alt=""
           />
         </div>
       </div>
-      <div style={{ margin: "0 60px" }}>
+      <div style={{ margin: "0 60px 80px" }}>
         <h2
           style={{
             margin: "0px 0px 30px",
@@ -97,21 +117,165 @@ function Aboutus() {
           Lợi thế của Micar
         </h2>
         <div className="list_ads">
-          {listAds.map((item, index) => {
-            return (
-              <div className="ads_item">
-                <img
-                  style={{ margin: "0px 0px 24px", lineHeight: "24px" }}
-                  src={item.url}
-                  alt=""
-                  width={190}
-                  height={200}
-                ></img>
-                <p className="text">{item.name}</p>
-              </div>
-            );
-          })}
+          {listAds.map((item, index) => (
+            <div
+              className="ads_item"
+              key={index}
+              data-aos="fade-up"
+              data-aos-easing="ease-in"
+              data-aos-duration="1000"
+            >
+              <img
+                style={{ margin: "0px 0px 24px", lineHeight: "24px" }}
+                src={item.url}
+                alt=""
+                width={190}
+                height={200}
+              />
+              <p className="text">{item.name}</p>
+            </div>
+          ))}
         </div>
+      </div>
+      <div
+        style={{
+          margin: "0",
+          boxSizing: "border-box",
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            height: "200px",
+            width: "60%",
+            position: "relative",
+            textAlign: "center",
+          }}
+        >
+          <img
+            src={car}
+            width={600}
+            height={200}
+            alt=""
+            style={{ position: "relative", zIndex: 2 }}
+          ></img>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              gap: "10%",
+
+              alignItems: "flex-end",
+              boxSizing: "border-box",
+              height: "300px",
+            }}
+          >
+            <span
+              style={{ fontSize: "300px", lineHeight: "300px", color: "black" }}
+            >
+              C
+            </span>{" "}
+            <span
+              style={{
+                fontSize: "300px",
+                lineHeight: "300px",
+                color: "black",
+                // backgroundColor: "#00a550",
+              }}
+            >
+              {" "}
+              A{" "}
+            </span>{" "}
+            <span
+              style={{ fontSize: "300px", lineHeight: "300px", color: "black" }}
+            >
+              R
+            </span>
+          </div>
+        </div>
+        <div style={{ marginTop: "20px", fontSize: "20px" }}>
+          Hãy để chúng tôi giúp bạn có những trải nghiệm tốt nhất!
+        </div>
+        <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <span>Mazda</span>
+            <span>Toyota</span>
+            <span>BMW</span>
+          </div>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <span>Ford</span>
+            <span>Mercedes-Benz</span>
+            <span>Volkswagen</span>
+          </div>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <span>Honda</span>
+            <span>Nissan</span>
+            <span>Chevrolet</span>
+          </div>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <span>Audi</span>
+            <span>Hyundai</span>
+            <span>Kia</span>
+          </div>
+        </div>
+        {/* <div
+          style={{
+            position: "relative",
+            // backgroundColor: "red",
+            zIndex: 0,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={car}
+            width={600}
+            height={200}
+            alt=""
+            style={{ position: "relative", zIndex: 2 }}
+          ></img>
+          <p
+            style={{
+              height: "400px",
+              padding: "0",
+              position: "absolute",
+              zIndex: 1,
+              bottom: 0,
+              display: "block",
+              lineHeight: "400px",
+              fontSize: "400px",
+            }}
+          >
+            C
+            <span style={{ backgroundColor: "#00a550", height: "400px" }}>
+              {" "}
+              A{" "}
+            </span>
+            R
+          </p>
+        </div>
+        <div style={{ marginTop: "20px", fontSize: "20px" }}>
+          Hãy để chúng tôi giúp bạn có những trải nghiệm tốt nhất!
+        </div>
+        <div style={{ marginTop: "20px", display: "flex" }}>
+          Life's too short to drive boring cars
+        </div> */}
       </div>
     </AboutusComponent>
   );
@@ -120,6 +284,10 @@ function Aboutus() {
 const AboutusComponent = styled.section`
   min-height: calc(100vh - 160px);
   width: 100%;
+  span {
+    color: gray;
+    font-size: 12px;
+  }
   .list_ads {
     display: flex;
     flex-wrap: wrap;

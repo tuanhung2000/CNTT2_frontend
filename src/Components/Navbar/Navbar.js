@@ -148,7 +148,7 @@ function Navbar() {
                   left: "-45px",
                   top: "60px",
                   width: "140px",
-                  backgroundColor: "black",
+                  backgroundColor: "white",
                   border: "1px solid black",
                 }}
               >
@@ -318,31 +318,35 @@ function Navbar() {
 }
 const NavbarContainer = styled.section`
   display: flex;
+  ${"" /* overflow-x: hidden; */}
+  border-bottom: 1px solid #e0e0e0;
   justify-content: space-between;
   align-items: center;
   height: 60px;
   width: 100%;
-  background-color: #141414;
-  color: white;
+  background-color: #fff;
+  color: black;
   .menu-item:hover {
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
   }
   .menu-item {
-    color: white;
+    color: black;
   }
   .menu-item .link_item {
-    color: white;
+    color: black;
   }
   .menu-item:hover .link_item {
-    color: black;
+    color: white;
+    background-color: black;
   }
   .text_menu-item:hover {
-    color: black;
+    color: white;
+    background-color: black;
   }
 `;
 const ButtonChange = styled.section`
-  color: white;
+  color: black;
   background-color: black;
   text-align: center;
   cursor: pointer;
@@ -375,12 +379,12 @@ const Green = styled.span`
 `;
 const ContactSection = styled.section`
   display: flex;
-  flex-direction: row
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding-left: 50px;
-  gap:30px;
-  font-weight: bold
+  gap: 30px;
+  font-weight: bold;
 `;
 const NavbarRight = styled.section`
   padding-right: 50px;
@@ -403,6 +407,7 @@ const NavbarRight = styled.section`
       right: 0;
       width: 100%;
       height: 100vh;
+      ${"" /* overflow-x: hidden; */}
       background-color: #141414;
       flex-direction: column;
       transform: translateX(100%);
@@ -453,21 +458,21 @@ const NavbarRight = styled.section`
   }
 `;
 const LinkCustom = styled(Link)`
-  color: white;
+  color: black;
   padding: 10px;
   font-weight: bold;
   &:hover {
     color: #00a550;
     .green {
-      color: white;
+      color: black;
     }
   }
 `;
 const ButtonSignup = styled(Link)`
-  color: white;
+  color: black;
   padding: 10px;
   font-weight: bold;
-  border: 1px solid white;
+  border: 1px solid black;
   &:hover {
     color: #00a550;
     border-color: #00a550;
@@ -475,7 +480,7 @@ const ButtonSignup = styled(Link)`
 `;
 const Bao = styled(Link)`
   display: flex;
-  color: white;
+  color: black;
   flex-direction: row;
   align-items: center;
   gap: 2px;
@@ -501,7 +506,7 @@ const Bao = styled(Link)`
 // IconSection;
 const IconSection = styled(Link)`
   display: flex;
-  color: white;
+  color: black;
   flex-direction: row;
   align-items: center;
   gap: 5px;

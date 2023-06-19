@@ -63,13 +63,15 @@ const Profile = () => {
   };
   return (
     <ProfileComponent>
-      <Card
+      <section
         style={{
           backgroundColor: "#f0f0f0",
-          minHeight: "calc(100vh - 200px)",
+          // minHeight: "calc(100vh - 200px)",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          width: "100%",
+          padding: "20px",
         }}
       >
         <Grid container>
@@ -276,15 +278,16 @@ const Profile = () => {
             />
           </Grid>
         </Grid>
-      </Card>
+      </section>
     </ProfileComponent>
   );
 };
 
 const ProfileComponent = styled.section`
-  min-height: calc(100vh - 160px);
+  min-height: calc(100vh - 60px);
+  display:flex;
+  align-items:center
   width: 100%;
-  padding: 20px;
   label {
     cursor: pointer;
     color: gray;

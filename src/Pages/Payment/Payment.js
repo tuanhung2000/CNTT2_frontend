@@ -132,272 +132,263 @@ function Payment() {
             justifyContent: "center",
           }}
         >
-          <Grid container>
-            <Grid item xs={12} md={12}>
-              <Grid
-                container
-                style={{ display: "flex", boxSizing: "border-box" }}
-              >
+          {activeStep === 2 ? (
+            <Grid container>
+              <Grid item xs={12} md={12}>
                 <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
                 >
-                  <label>Tên</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Họ</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Số điện thoại</label>
-                  <input className="input"></input>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Grid
-                container
-                style={{ display: "flex", boxSizing: "border-box" }}
-              >
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Tên xe</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Loại xe</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Biển số xe</label>
-                  <input className="input"></input>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tên</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Họ</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Số điện thoại</label>
+                    <input className="input"></input>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Grid
-                container
-                style={{ display: "flex", boxSizing: "border-box" }}
-              >
+              <Grid item xs={12} md={12}>
                 <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
                 >
-                  <label>Giá giờ thuê</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={3}
-                  md={3}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Số giờ thuê</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Tổng chi phí</label>
-                  <input className="input"></input>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Grid
-                container
-                style={{ display: "flex", boxSizing: "border-box" }}
-              >
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Ngày bắt đầu</label>
-                  <input className="input" value={daystart}></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={6}
-                  md={6}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Ngày kết thúc</label>
-                  <input className="input"></input>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tên xe</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Loại xe</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Biển số xe</label>
+                    <input className="input"></input>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <Grid
-                container
-                style={{ display: "flex", boxSizing: "border-box" }}
-              >
+              <Grid item xs={12} md={12}>
                 <Grid
-                  item
-                  xs={12}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
                 >
-                  <label>Tỉnh</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Quận/Huyện</label>
-                  <input className="input"></input>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={4}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    boxSizing: "border-box",
-                    padding: "10px",
-                    gap: "10px",
-                  }}
-                >
-                  <label>Phường/Xã/Thị trấn</label>
-                  <input className="input"></input>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Giá giờ thuê</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Số giờ thuê</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tổng chi phí</label>
+                    <input className="input"></input>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={12}
-              style={{
-                padding: "10px",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              {activeStep === 3 ? (
-                <button
-                  className="btn_continute"
-                  onClick={() => {
-                    alert("Đã gửi yêu cầu");
-                  }}
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
                 >
-                  Thuê xe
-                </button>
-              ) : (
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Ngày bắt đầu</label>
+                    <input className="input" value={daystart}></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Ngày kết thúc</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tỉnh</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Quận/Huyện</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Phường/Xã/Thị trấn</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={12}
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
                 <button
                   className="btn_continute"
                   onClick={() => {
@@ -406,9 +397,276 @@ function Payment() {
                 >
                   Tiếp tục
                 </button>
-              )}
+              </Grid>
             </Grid>
-          </Grid>
+          ) : (
+            <Grid container>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tên</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Họ</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Số điện thoại</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tên xe</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Loại xe</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Biển số xe</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Giá giờ thuê</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={3}
+                    md={3}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Số giờ thuê</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tổng chi phí</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Ngày bắt đầu</label>
+                    <input className="input" value={daystart}></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    md={6}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Ngày kết thúc</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Grid
+                  container
+                  style={{ display: "flex", boxSizing: "border-box" }}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Tỉnh</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Quận/Huyện</label>
+                    <input className="input"></input>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    md={4}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      boxSizing: "border-box",
+                      padding: "10px",
+                      gap: "10px",
+                    }}
+                  >
+                    <label>Phường/Xã/Thị trấn</label>
+                    <input className="input"></input>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={12}
+                style={{
+                  padding: "10px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <button
+                  className="btn_continute"
+                  onClick={() => {
+                    alert("Đã gửi yêu cầu");
+                  }}
+                >
+                  Thuê xe
+                </button>
+              </Grid>
+            </Grid>
+          )}
         </div>
       </Card>
     </PaymentContainer>
