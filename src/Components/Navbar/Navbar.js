@@ -85,6 +85,16 @@ function Navbar() {
             )}
           </Bao>
         </section>
+        {role === "customer" && (
+          <section className="product" style={{ marginLeft: "20px" }}>
+            <span>0 đ</span>
+          </section>
+        )}
+        {role === "owner" && (
+          <section className="product" style={{ marginLeft: "20px" }}>
+            <span>0 đ</span>
+          </section>
+        )}
         <section className="product" style={{ marginLeft: "20px" }}>
           {role === "owner" ? (
             <>
@@ -184,6 +194,21 @@ function Navbar() {
                       Xe của bạn
                     </Link>
                   </li>
+
+                  <li
+                    className="menu-item"
+                    onClick={() => setOpen(false)}
+                    style={{
+                      padding: "10px 10px",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Link to="/recharge" className="link_item">
+                      Nạp tiền
+                    </Link>
+                  </li>
+
                   <li
                     onClick={() => {
                       setOpenDialog(true);

@@ -19,6 +19,8 @@ import PostCar from "./Pages/PostCar/PostCar";
 import Payment from "./Pages/Payment/Payment";
 import Aboutus from "./Pages/Aboutus/Aboutus";
 import PrivateAdminComponent from "./Pages/PrivateComponent/PrivateAdminComponent";
+import Recharge from "./Pages/Recharge/Recharge";
+import ScrollToTop from "./ScrollToTop";
 function App() {
   const { username, role } = useAuth();
   const [role1, setRole1] = useState("");
@@ -34,7 +36,8 @@ function App() {
     <div className="App">
       <BrowserRouter>
         {/* <Navbar /> */}
-        <Routes>
+
+        <Routes onUpdate={() => window.scrollTo(0, 0)}>
           <Route element={<PrivateComponent />}>
             <Route path="profile" element={<Profile />} />
             <Route path="/post" element={<PostCar />} />
@@ -44,6 +47,7 @@ function App() {
             <Route path="/admin/user" element={<ManageUser />} />
             <Route path="/admin/request" element={<ManageRequest />} />
           </Route>
+          {username && <Route path="/recharge" element={<Recharge />} />}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />}></Route>

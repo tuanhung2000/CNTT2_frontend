@@ -54,11 +54,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-
+            height: 400px;
             img {
               width: 100%;
               height: 100%;
               object-fit: cover;
+              object-position: center;
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 10;
             }
           }
         }
@@ -73,6 +79,16 @@
           align-items: center;
           padding: 20px;
           border: 1px solid $border-color;
+          cursor: pointer;
+          gap: 5px;
+        }
+        .item-active {
+          display: flex;
+          flex-direction: column;
+          margin: 5px;
+          align-items: center;
+          padding: 20px;
+          border: 1px solid #5fcf86;
           cursor: pointer;
           gap: 5px;
         }

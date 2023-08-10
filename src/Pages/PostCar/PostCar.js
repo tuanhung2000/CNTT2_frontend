@@ -1,31 +1,15 @@
-import {
-  Card,
-  CardMedia,
-  Grid,
-  MenuItem,
-  Select,
-  Skeleton,
-  Step,
-  StepLabel,
-  Stepper,
-  Switch,
-} from "@mui/material";
-import faPlus from "@fortawesome/free-regular-svg-icons";
+import { Grid, Step, StepLabel, Stepper, Switch } from "@mui/material";
+
 import "./PostCar.scss";
+import { nameCar, modelCar, yearCar, fuel } from "../../APIFake/ApiFake";
 import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-const listPan = [
-  { name: "Có", value: true },
-  { name: "Không", value: false },
-];
-const listChairs = [1, 2, 3, 4, 5];
-const listDoor = [1, 2, 3, 4];
-const listSeftDrive = [
-  { name: "Có", value: true },
-  { name: "Không", value: false },
-];
+import Swal from "sweetalert2";
+import { COLORS } from "../../assets/color";
+import { useNavigate } from "react-router-dom";
+
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -77,10 +61,7 @@ const IOSSwitch = styled((props) => (
   },
 }));
 function PostCar() {
-  const [pan, setPan] = useState("");
-  const [chair, setChair] = useState("");
-  const [door, setDoor] = useState("");
-  const [selfDr, setSelfDr] = useState("");
+  const navigate = useNavigate();
   const [desc, setDesc] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [img, setImg] = useState(
@@ -88,7 +69,34 @@ function PostCar() {
   );
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
 
+  const [provinces, setProvinces] = useState("");
+  const [map, setMap] = useState(false);
+  const [bluetooth, setBluetooth] = useState(false);
+  const [camera360, setCamera360] = useState(false);
+  const [cameratruoc, setCameratruoc] = useState(false);
+  const [cameratrip, setCameratrip] = useState(false);
+  const [camerasau, setCamerasau] = useState(false);
+  const [cuaso, setCuaso] = useState(false);
+  const [gps, setGps] = useState(false);
+  const [ghe, setGhe] = useState(false);
+  const [lop, setLop] = useState(false);
+  const [manhinh, setManhinh] = useState(false);
+  const [tuikhi, setTuikhi] = useState(false);
+  const [listCity, setListCity] = useState("");
+  const [listDistrict, setListDistrict] = useState("");
+  const [listWard, setListWard] = useState("");
+  const [img1, setImg1] = useState("");
+  const [img2, setImg2] = useState("");
+  const [img3, setImg3] = useState("");
+  const [img4, setImg4] = useState("");
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+  const [loading3, setLoading3] = useState(false);
+  const [loading4, setLoading4] = useState(false);
+  const [urlImg, setUrlImg] = useState("");
   useEffect(() => {
     if (desc) {
       const textarea = document.querySelector("#text_des");
@@ -100,7 +108,38 @@ function PostCar() {
       }
     }
   }, [desc]);
-
+  useEffect(() => {
+    axios.get("https://provinces.open-api.vn/api/").then((response) => {
+      setListCity(response.data);
+    });
+  }, []);
+  useEffect(() => {
+    if (city) {
+      axios
+        .get(`https://provinces.open-api.vn/api/p/${city}?depth=2`)
+        .then((response) => {
+          setListDistrict(response.data.districts);
+          setListWard("");
+        });
+    } else {
+      setListDistrict("");
+      setListWard("");
+    }
+  }, [city]);
+  useEffect(() => {
+    if (district) {
+      axios
+        .get(
+          `https://provinces.open-api.vn/api/d/${district}?depth=2
+      `
+        )
+        .then((response) => {
+          setListWard(response.data.wards);
+        });
+    } else {
+      setListWard("");
+    }
+  }, [district]);
   function uploadImageToCloudinary(file) {
     const formData = new FormData();
     formData.append("file", file);
@@ -143,6 +182,87 @@ function PostCar() {
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
+  };
+  function handleImg1(event) {
+    setLoading1(true);
+    const selectedFile = event.target.files[0];
+    uploadImageToCloudinary(selectedFile)
+      .then((url) => {
+        setLoading1(false);
+        setImg1(url);
+      })
+      .catch((error) => {
+        setLoading1(false);
+        console.error(error);
+      });
+  }
+  function handleImg2(event) {
+    setLoading2(true);
+    const selectedFile = event.target.files[0];
+    uploadImageToCloudinary(selectedFile)
+      .then((url) => {
+        setLoading2(false);
+        setImg2(url);
+      })
+      .catch((error) => {
+        setLoading2(false);
+        console.error(error);
+      });
+  }
+  function handleImg3(event) {
+    setLoading3(true);
+    const selectedFile = event.target.files[0];
+    uploadImageToCloudinary(selectedFile)
+      .then((url) => {
+        setLoading3(false);
+        setImg3(url);
+      })
+      .catch((error) => {
+        setLoading3(false);
+        console.error(error);
+      });
+  }
+  function handleImg4(event) {
+    setLoading4(true);
+    const selectedFile = event.target.files[0];
+    uploadImageToCloudinary(selectedFile)
+      .then((url) => {
+        setLoading4(false);
+        setImg4(url);
+      })
+      .catch((error) => {
+        setLoading4(false);
+        console.error(error);
+      });
+  }
+  function uploadImageToCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "pzoe2lzh"); // replace with your Cloudinary upload preset
+
+    return axios
+      .post("https://api.cloudinary.com/v1_1/djhhzmcps/image/upload", formData)
+      .then((response) => {
+        setUrlImg(response.data.url);
+        return response.data.url; // return the URL of the uploaded image
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  }
+  const handlePostCar = () => {
+    Swal.fire({
+      title: "Thành công!",
+      text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+      icon: "success",
+      confirmButtonColor: `${COLORS.main}`,
+      confirmButtonText: "Đồng ý",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementsByClassName("postContainer").scrollIntoView();
+      }
+    });
   };
   return (
     <section className="postContainer">
@@ -287,10 +407,17 @@ function PostCar() {
                 >
                   <label>Hãng xe</label>
                   <select name="cars" id="cars" className="select">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="" defaultValue>
+                      Chọn hãng xe
+                    </option>
+                    {nameCar &&
+                      nameCar.map((car) => {
+                        return (
+                          <option value={car.name} key={car.id}>
+                            {car.name.toUpperCase()}
+                          </option>
+                        );
+                      })}
                   </select>
                 </div>
                 <div
@@ -301,10 +428,17 @@ function PostCar() {
                 >
                   <label>Mẫu xe</label>
                   <select name="cars" id="cars" className="select">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="" defaultValue>
+                      Chọn mẫu xe
+                    </option>
+                    {modelCar &&
+                      modelCar.map((model) => {
+                        return (
+                          <option value={model.name} key={model.id}>
+                            {model.name.toUpperCase()}
+                          </option>
+                        );
+                      })}
                   </select>
                 </div>
               </div>
@@ -317,10 +451,11 @@ function PostCar() {
                 >
                   <label>Số ghế</label>
                   <select name="cars" id="cars" className="select">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="">Chọn số ghế</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
                   </select>
                 </div>
                 <div
@@ -330,11 +465,18 @@ function PostCar() {
                   }}
                 >
                   <label>Năm sản xuất</label>
-                  <select name="cars" id="cars" className="select">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                  <select name="year" id="year" className="select">
+                    <option value="" defaultValue>
+                      Chọn năm sản xuất
+                    </option>
+                    {yearCar &&
+                      yearCar.map((year) => {
+                        return (
+                          <option value={year.value} key={year.id}>
+                            {year.value}
+                          </option>
+                        );
+                      })}
                   </select>
                 </div>
               </div>
@@ -347,10 +489,9 @@ function PostCar() {
                 >
                   <label>Truyền động</label>
                   <select name="cars" id="cars" className="select">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="">Chọn loại truyền động</option>
+                    <option value="auto">Số tự động</option>
+                    <option value="physic">Số sàn</option>
                   </select>
                 </div>
                 <div
@@ -361,10 +502,15 @@ function PostCar() {
                 >
                   <label>Loại nhiên liệu</label>
                   <select className="select" name="cars" id="cars">
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="">Chọn nhiên liệu</option>
+                    {fuel &&
+                      fuel.map((fuel) => {
+                        return (
+                          <option value={fuel.name} key={fuel.id}>
+                            {fuel.name}
+                          </option>
+                        );
+                      })}
                   </select>
                 </div>
               </div>
@@ -466,7 +612,16 @@ function PostCar() {
               </div>
               <div style={{ width: "100%" }}>
                 <div className="list">
-                  <div className="item">
+                  <div
+                    className={map ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (map) {
+                        setMap(false);
+                      } else {
+                        setMap(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/map-v2.png"
                       alt=""
@@ -475,16 +630,34 @@ function PostCar() {
                     />
                     <span>Bản đồ</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={bluetooth ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (bluetooth) {
+                        setBluetooth(false);
+                      } else {
+                        setBluetooth(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/bluetooth-v2.png"
                       alt=""
                       width={30}
                       height={30}
                     />
-                    <span>Bản đồ</span>
+                    <span>Bluetooth</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={camera360 ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (camera360) {
+                        setCamera360(false);
+                      } else {
+                        setCamera360(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/360_camera-v2.png"
                       alt=""
@@ -494,7 +667,16 @@ function PostCar() {
                     <span>Camera 360</span>
                   </div>
 
-                  <div className="item">
+                  <div
+                    className={cameratruoc ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (cameratruoc) {
+                        setCameratruoc(false);
+                      } else {
+                        setCameratruoc(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/parking_camera-v2.png"
                       alt=""
@@ -503,7 +685,16 @@ function PostCar() {
                     />
                     <span>Camera cập lề</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={cameratrip ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (cameratrip) {
+                        setCameratrip(false);
+                      } else {
+                        setCameratrip(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/dash_camera-v2.png"
                       alt=""
@@ -512,7 +703,16 @@ function PostCar() {
                     />
                     <span>Camera hành trình</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={camerasau ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (camerasau) {
+                        setCamerasau(false);
+                      } else {
+                        setCamerasau(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/reverse_camera-v2.png"
                       alt=""
@@ -521,7 +721,16 @@ function PostCar() {
                     />
                     <span>Camera lùi</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={cuaso ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (cuaso) {
+                        setCuaso(false);
+                      } else {
+                        setCuaso(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/sunroof-v2.png"
                       alt=""
@@ -530,7 +739,16 @@ function PostCar() {
                     />
                     <span>Cửa sổ trời</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={gps ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (gps) {
+                        setGps(false);
+                      } else {
+                        setGps(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/gps-v2.png"
                       alt=""
@@ -539,7 +757,16 @@ function PostCar() {
                     />
                     <span>Định vị GPS</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={ghe ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (ghe) {
+                        setGhe(false);
+                      } else {
+                        setGhe(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/babyseat-v2.png"
                       alt=""
@@ -549,7 +776,16 @@ function PostCar() {
                     <span>Ghế trẻ em</span>
                   </div>
 
-                  <div className="item">
+                  <div
+                    className={lop ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (lop) {
+                        setLop(false);
+                      } else {
+                        setLop(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/spare_tire-v2.png"
                       alt=""
@@ -558,7 +794,16 @@ function PostCar() {
                     />
                     <span>Lốp dự phòng</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={manhinh ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (manhinh) {
+                        setManhinh(false);
+                      } else {
+                        setManhinh(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/dvd-v2.png"
                       alt=""
@@ -567,7 +812,16 @@ function PostCar() {
                     />
                     <span>Màn hình DVD</span>
                   </div>
-                  <div className="item">
+                  <div
+                    className={tuikhi ? "item-active" : "item"}
+                    onClick={(e) => {
+                      if (tuikhi) {
+                        setTuikhi(false);
+                      } else {
+                        setTuikhi(true);
+                      }
+                    }}
+                  >
                     <img
                       src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/airbags-v2.png"
                       alt=""
@@ -709,33 +963,55 @@ function PostCar() {
                       id="cars"
                       className="select"
                       style={{ flex: 1 }}
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
                     >
                       <option value="">Tỉnh/Thành phố</option>
-                      <option value="saab">Saab</option>
-                      <option value="mercedes">Mercedes</option>
-                      <option value="audi">Audi</option>
+
+                      {listCity &&
+                        listCity.map((city, index) => {
+                          return (
+                            <option value={city.code} key={city.code}>
+                              {city.name}
+                            </option>
+                          );
+                        })}
                     </select>
                     <select
                       name="cars"
                       id="cars"
                       className="select"
                       style={{ flex: 1 }}
+                      value={district}
+                      onChange={(e) => setDistrict(e.target.value)}
                     >
                       <option value="">Quận/Huyện</option>
-                      <option value="saab">Saab</option>
-                      <option value="mercedes">Mercedes</option>
-                      <option value="audi">Audi</option>
+                      {listDistrict &&
+                        listDistrict.map((item, index) => {
+                          return (
+                            <option value={item.code} key={item.code}>
+                              {item.name}
+                            </option>
+                          );
+                        })}
                     </select>
                     <select
                       name="cars"
                       id="cars"
                       style={{ flex: 1 }}
                       className="select"
+                      value={provinces}
+                      onChange={(e) => setProvinces(e.target.value)}
                     >
                       <option value="">Xã/Phường/Thị trấn</option>
-                      <option value="saab">Saab</option>
-                      <option value="mercedes">Mercedes</option>
-                      <option value="audi">Audi</option>
+                      {listWard &&
+                        listWard.map((item) => {
+                          return (
+                            <option value={item.code} key={item.code}>
+                              {item.name}
+                            </option>
+                          );
+                        })}
                     </select>
                   </div>
                 </div>
@@ -832,34 +1108,199 @@ function PostCar() {
                           justifyContent: "center",
                           alignItems: "center",
                           flexDirection: "column",
+                          boxSizing: "border-box",
                           gap: "10px",
+                          position: "relative",
                         }}
                       >
-                        <ion-icon name="add-circle-outline"></ion-icon>
-                        <span>Mặt trước của xe</span>
+                        <input
+                          onChange={handleImg1}
+                          type="file"
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            width: "100%",
+                            height: "100%",
+                            opacity: "0",
+                            cursor: "pointer",
+                            zIndex: "11",
+                          }}
+                        ></input>
+                        {loading1 ? (
+                          <CircularProgress />
+                        ) : (
+                          <img
+                            alt="1"
+                            src={img1}
+                            style={{ opacity: img1 ? "" : "0" }}
+                          ></img>
+                        )}
+                        {!loading1 && (
+                          <>
+                            <ion-icon
+                              name="add-circle-outline"
+                              style={{ opacity: img1 ? "0" : "" }}
+                            ></ion-icon>
+                            <span style={{ opacity: img1 ? "0" : "" }}>
+                              Mặt trước của xe
+                            </span>
+                          </>
+                        )}
                       </div>
-                      {/* <img
-                        src="https://plus.unsplash.com/premium_photo-1671656349204-950bf60fdadb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMnx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60"
-                        alt="Image 1"
-                      /> */}
                     </div>
                     <div class="grid-item">
-                      <img
-                        src="https://plus.unsplash.com/premium_photo-1671656349204-950bf60fdadb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMnx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60"
-                        alt="Image 1"
-                      />
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#f0f0f0",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          boxSizing: "border-box",
+                          gap: "10px",
+                          position: "relative",
+                        }}
+                      >
+                        <input
+                          onChange={handleImg2}
+                          type="file"
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            width: "100%",
+                            height: "100%",
+                            opacity: "0",
+                            cursor: "pointer",
+                            zIndex: "11",
+                          }}
+                        ></input>
+                        {loading2 ? (
+                          <CircularProgress />
+                        ) : (
+                          <img
+                            alt="1"
+                            src={img2}
+                            style={{ opacity: img2 ? "" : "0" }}
+                          ></img>
+                        )}
+                        {!loading2 && (
+                          <>
+                            <ion-icon
+                              name="add-circle-outline"
+                              style={{ opacity: img2 ? "0" : "" }}
+                            ></ion-icon>
+                            <span style={{ opacity: img2 ? "0" : "" }}>
+                              Mặt sau của xe
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                     <div class="grid-item">
-                      <img
-                        src="https://plus.unsplash.com/premium_photo-1671656349204-950bf60fdadb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMnx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60"
-                        alt="Image 1"
-                      />
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#f0f0f0",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          boxSizing: "border-box",
+                          gap: "10px",
+                          position: "relative",
+                        }}
+                      >
+                        <input
+                          onChange={handleImg3}
+                          type="file"
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            width: "100%",
+                            height: "100%",
+                            opacity: "0",
+                            cursor: "pointer",
+                            zIndex: "11",
+                          }}
+                        ></input>
+                        {loading3 ? (
+                          <CircularProgress />
+                        ) : (
+                          <img
+                            alt="1"
+                            src={img3}
+                            style={{ opacity: img3 ? "" : "0" }}
+                          ></img>
+                        )}
+                        {!loading3 && (
+                          <>
+                            <ion-icon
+                              name="add-circle-outline"
+                              style={{ opacity: img3 ? "0" : "" }}
+                            ></ion-icon>
+                            <span style={{ opacity: img3 ? "0" : "" }}>
+                              Nội thất của xe
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                     <div class="grid-item">
-                      <img
-                        src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/toyota_veloz_cross_2022/p/g/2023/02/14/15/4iz300-Bam8UfjxmkzenNw.jpg"
-                        alt="Image 1"
-                      />
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#f0f0f0",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          boxSizing: "border-box",
+                          gap: "10px",
+                          position: "relative",
+                        }}
+                      >
+                        <input
+                          onChange={handleImg4}
+                          type="file"
+                          style={{
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            width: "100%",
+                            height: "100%",
+                            opacity: "0",
+                            cursor: "pointer",
+                            zIndex: "11",
+                          }}
+                        ></input>
+                        {loading4 ? (
+                          <CircularProgress />
+                        ) : (
+                          <img
+                            alt="1"
+                            src={img4}
+                            style={{ opacity: img4 ? "" : "0" }}
+                          ></img>
+                        )}
+                        {!loading4 && (
+                          <>
+                            <ion-icon
+                              name="add-circle-outline"
+                              style={{ opacity: img4 ? "0" : "" }}
+                            ></ion-icon>
+                            <span style={{ opacity: img4 ? "0" : "" }}>
+                              Tổng quan của xe
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -896,11 +1337,9 @@ function PostCar() {
                       color: "white",
                     }}
                     className="button"
-                    onClick={() => {
-                      alert("đăng ký thành công");
-                    }}
+                    onClick={handlePostCar}
                   >
-                    Tiếp tục
+                    Đăng xe
                   </button>
                 </div>
               </div>
