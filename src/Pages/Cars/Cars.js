@@ -12,9 +12,9 @@ import {
   MdElectricCar,
   MdStar,
 } from "react-icons/md";
-
+import { nameCar } from "../../APIFake/ApiFake";
 import React, { useEffect, useState } from "react";
-import { FaShieldHeart } from "react-icons/fa6";
+import { FaShieldHeart, FaXmark } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router";
 import { RiCarLine } from "react-icons/ri";
@@ -39,7 +39,9 @@ function Cars() {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [city, setCity] = useState("");
-
+  const [typeCar, setTypeCar] = useState(0);
+  const [openBranch, setOpenBranch] = useState(false);
+  const [branchCar, setBranchCar] = useState(0);
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -58,7 +60,7 @@ function Cars() {
       setListCity(response.data);
     });
   }, []);
-  console.log(listCity);
+  console.log(nameCar);
   useEffect(() => {
     if (listCity && searchTerm) {
       const filteredResults = listCity.filter((item) =>
@@ -81,6 +83,12 @@ function Cars() {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleClickOpenBranch = (item) => {
+    setOpenBranch(true);
+  };
+  const handleCloseBranch = () => {
+    setOpenBranch(false);
   };
   return (
     <section className="car-page">
@@ -152,7 +160,7 @@ function Cars() {
             <FaCarSide />
             <span>Loại xe</span>
           </div>
-          <div className="item">
+          <div className="item" onClick={() => handleClickOpenBranch()}>
             <FaRegWindowMaximize />
             <span>Hãng xe</span>
           </div>
@@ -583,18 +591,30 @@ function Cars() {
           }}
         >
           Loại xe
-          <FaRegTimesCircle
+          <div
             onClick={handleClose}
             style={{
               position: "absolute",
               top: "10px",
               right: "20px",
-              height: "30px",
-              width: "30px",
+              display: "flex",
+              justifyContent: "center",
+              padding: "10px",
+              alignItems: "center",
               cursor: "pointer",
-              color: "black",
+              border: "1px solid #c6c6c6",
+              borderRadius: "50%",
             }}
-          />
+          >
+            <FaXmark
+              style={{
+                height: "15px",
+                width: "15px",
+
+                color: "black",
+              }}
+            />
+          </div>
         </DialogTitle>
         <DialogContent
           style={{
@@ -616,7 +636,15 @@ function Cars() {
               cursor: "pointer",
               borderRadius: "5px",
               gap: "10px",
-              backgroundColor: "#effaf3",
+              backgroundColor: typeCar === 2 ? "#effaf3" : "white",
+              borderColor: typeCar === 2 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 2) {
+                setTypeCar(2);
+              } else {
+                setTypeCar(0);
+              }
             }}
           >
             <FaCarSide
@@ -635,6 +663,15 @@ function Cars() {
               cursor: "pointer",
               borderRadius: "5px",
               gap: "10px",
+              backgroundColor: typeCar === 4 ? "#effaf3" : "white",
+              borderColor: typeCar === 4 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 4) {
+                setTypeCar(4);
+              } else {
+                setTypeCar(0);
+              }
             }}
           >
             <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
@@ -651,6 +688,15 @@ function Cars() {
               cursor: "pointer",
               borderRadius: "5px",
               gap: "10px",
+              backgroundColor: typeCar === 5 ? "#effaf3" : "white",
+              borderColor: typeCar === 5 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 5) {
+                setTypeCar(5);
+              } else {
+                setTypeCar(0);
+              }
             }}
           >
             <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
@@ -667,6 +713,203 @@ function Cars() {
               cursor: "pointer",
               borderRadius: "5px",
               gap: "10px",
+              backgroundColor: typeCar === 7 ? "#effaf3" : "white",
+              borderColor: typeCar === 7 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 7) {
+                setTypeCar(7);
+              } else {
+                setTypeCar(0);
+              }
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>7 chỗ</span>
+          </div>
+        </DialogContent>
+        <DialogActions style={{ padding: "10px 20px" }}>
+          <button
+            style={{
+              width: "100%",
+              backgroundColor: "#00a550",
+              color: "#fff",
+              padding: "20px",
+              border: "1px solid #00a550",
+              cursor: "pointer",
+              borderRadius: "5px",
+              fontSize: "15px",
+              fontWeight: "bold",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = "#fff";
+              e.target.style.color = "#00a550"; // Change color on hover
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = "#00a550";
+              e.target.style.color = "#fff"; // Revert color when not hovered
+            }}
+          >
+            Áp dụng
+          </button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openBranch}
+        onClose={handleCloseBranch}
+        className="dialog-container"
+        sx={{
+          "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
+            width: "600px", /// edit here
+          },
+        }}
+      >
+        <DialogTitle
+          className="dialog-title"
+          style={{
+            color: "black",
+            fontSize: "20px",
+            fontWeight: "600",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            padding: "20px 10px 10px 10px",
+            height: "60px",
+          }}
+        >
+          Hãng xe
+          <div
+            onClick={handleCloseBranch}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+              display: "flex",
+              justifyContent: "center",
+              padding: "10px",
+              alignItems: "center",
+              cursor: "pointer",
+              border: "1px solid #c6c6c6",
+              borderRadius: "50%",
+            }}
+          >
+            <FaXmark
+              style={{
+                height: "15px",
+                width: "15px",
+
+                color: "black",
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "20px",
+            padding: "0 20px 10px 20px",
+          }}
+          className="dialog-content"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+              backgroundColor: typeCar === 2 ? "#effaf3" : "white",
+              borderColor: typeCar === 2 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 2) {
+                setTypeCar(2);
+              } else {
+                setTypeCar(0);
+              }
+            }}
+          >
+            <FaCarSide
+              style={{ fontSize: "50px", color: "GrayText", fontWeight: "400" }}
+            />
+            <span style={{ fontWeight: "bold" }}>2 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+              backgroundColor: typeCar === 4 ? "#effaf3" : "white",
+              borderColor: typeCar === 4 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 4) {
+                setTypeCar(4);
+              } else {
+                setTypeCar(0);
+              }
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>43 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+              backgroundColor: typeCar === 5 ? "#effaf3" : "white",
+              borderColor: typeCar === 5 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 5) {
+                setTypeCar(5);
+              } else {
+                setTypeCar(0);
+              }
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>5 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+              backgroundColor: typeCar === 7 ? "#effaf3" : "white",
+              borderColor: typeCar === 7 ? "#00a550" : "#c6c6c6",
+            }}
+            onClick={() => {
+              if (typeCar !== 7) {
+                setTypeCar(7);
+              } else {
+                setTypeCar(0);
+              }
             }}
           >
             <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
