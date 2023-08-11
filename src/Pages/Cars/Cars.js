@@ -1,12 +1,10 @@
 import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Button,
-  Card,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  Input,
 } from "@mui/material";
-import { Rate } from "antd";
 import {
   MdAttachMoney,
   MdBackpack,
@@ -16,18 +14,16 @@ import {
 } from "react-icons/md";
 
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { FaShieldHeart } from "react-icons/fa6";
-import { COLORS } from "../../assets/color";
 import { Link, useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
 import { useLocation } from "react-router";
+import { RiCarLine } from "react-icons/ri";
 import {
   FaCarSide,
   FaCodeBranch,
-  FaLocationArrow,
   FaMapMarkerAlt,
   FaMoneyBillAlt,
+  FaRegTimesCircle,
   FaRegWindowMaximize,
   FaUndoAlt,
 } from "react-icons/fa";
@@ -38,16 +34,11 @@ function Cars() {
   const { pathname } = useLocation();
   const [isSticky, setIsSticky] = useState(false);
   const [listCity, setListCity] = useState("");
+  const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [city, setCity] = useState("");
-  // const [checked, setChecked] = React.useState(true);
-  // const [star, setStar] = React.useState();
-  const [rateScore, setRateScore] = useState(3);
-  // const handleChange = (event) => {
-  //   setChecked(event.target.checked);
-  // };
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,6 +75,12 @@ function Cars() {
   const handleCitySelect = (city) => {
     setSearchTerm(city.name);
     setSelectedCity(city);
+  };
+  const handleClickOpen = (item) => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
   return (
     <section className="car-page">
@@ -151,7 +148,7 @@ function Cars() {
           <div className="item">
             <FaUndoAlt />
           </div>
-          <div className="item">
+          <div className="item" onClick={() => handleClickOpen()}>
             <FaCarSide />
             <span>Loại xe</span>
           </div>
@@ -561,6 +558,147 @@ function Cars() {
           </div>
         </Link>
       </section>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="dialog-container"
+        sx={{
+          "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
+            width: "600px", /// edit here
+          },
+        }}
+      >
+        <DialogTitle
+          className="dialog-title"
+          style={{
+            color: "black",
+            fontSize: "20px",
+            fontWeight: "600",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            padding: "20px 10px 10px 10px",
+            height: "60px",
+          }}
+        >
+          Loại xe
+          <FaRegTimesCircle
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+              height: "30px",
+              width: "30px",
+              cursor: "pointer",
+              color: "black",
+            }}
+          />
+        </DialogTitle>
+        <DialogContent
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "20px",
+            padding: "0 20px 10px 20px",
+          }}
+          className="dialog-content"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+              backgroundColor: "#effaf3",
+            }}
+          >
+            <FaCarSide
+              style={{ fontSize: "50px", color: "GrayText", fontWeight: "400" }}
+            />
+            <span style={{ fontWeight: "bold" }}>2 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>4 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>5 chỗ</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "10px",
+              border: "1px solid #c6c6c6",
+              cursor: "pointer",
+              borderRadius: "5px",
+              gap: "10px",
+            }}
+          >
+            <FaCarSide style={{ fontSize: "50px", color: "GrayText" }} />
+            <span style={{ fontWeight: "bold" }}>7 chỗ</span>
+          </div>
+        </DialogContent>
+        <DialogActions style={{ padding: "10px 20px" }}>
+          <button
+            style={{
+              width: "100%",
+              backgroundColor: "#00a550",
+              color: "#fff",
+              padding: "20px",
+              border: "1px solid #00a550",
+              cursor: "pointer",
+              borderRadius: "5px",
+              fontSize: "15px",
+              fontWeight: "bold",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = "#fff";
+              e.target.style.color = "#00a550"; // Change color on hover
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = "#00a550";
+              e.target.style.color = "#fff"; // Revert color when not hovered
+            }}
+          >
+            Áp dụng
+          </button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }
