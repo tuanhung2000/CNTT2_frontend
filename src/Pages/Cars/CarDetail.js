@@ -11,7 +11,7 @@ import Rating from "@mui/material/Rating";
 import { COLORS } from "../../assets/color";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 function CarDetail() {
   const { role } = useAuth();
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function CarDetail() {
   const [listcity, setListCity] = useState([]);
   const [listdistrict, setListDistrict] = useState([]);
   const [listward, setListWard] = useState([]);
-
+  const pathname = useLocation();
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
   useEffect(() => {
@@ -51,11 +51,15 @@ function CarDetail() {
     const dayList = Array.from({ length: 31 }, (v, i) => i + 1);
     setDays(dayList);
   }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   // useEffect(() => {
   //   const monthList = Array.from({ length: 12 }, (v, i) => i + 1);
   //   setMonths(monthList);
   // }, []);
   useEffect(() => {
+    window.scrollTo(0, 0);
     axios
       .get("https://provinces.open-api.vn/api/")
       .then((response) => {
