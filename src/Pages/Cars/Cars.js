@@ -113,6 +113,8 @@ function Cars() {
       setActiveFilter(0);
     } else {
       setActiveFilter(3);
+      const filtered = listCar.filter((car) => car.required_rent === true);
+      setFilteredCars(filtered.length > 0 ? filtered : []);
     }
   };
   const handleClickOpenMotor = (item) => {
@@ -141,10 +143,10 @@ function Cars() {
     }
   };
   const handleClickOpenMoney = (item) => {
-    if (activeFilter === 7) {
+    if (activeFilter === 5) {
       setActiveFilter(0);
     } else {
-      setActiveFilter(7);
+      setActiveFilter(5);
     }
     setOpenMoney(true);
   };
@@ -158,9 +160,30 @@ function Cars() {
   const handleFilterBranch = (item) => {
     if (item === "all") {
       setFilteredCars(null);
+    } else {
+      const filtered = listCar.filter((car) => car.branchCar === item);
+      setFilteredCars(filtered.length > 0 ? filtered : []);
     }
-    setFilteredCars(listCar.filter((car) => car.branchCar === item));
-    console.log(filteredCars === true);
+  };
+  const handleFilterTypeCar = (item) => {
+    const filtered = listCar.filter((car) => car.countChairs === item);
+    setFilteredCars(filtered.length > 0 ? filtered : []);
+  };
+  const handleUndo = (item) => {
+    setFilteredCars(null);
+    setActiveFilter(0);
+  };
+  const handleFilterMotor = (item) => {
+    if (item === "all") {
+      setFilteredCars(null);
+    } else {
+      const filtered = listCar.filter((car) => car.motor === item);
+      setFilteredCars(filtered.length > 0 ? filtered : []);
+    }
+  };
+  const handleFilterMoney = (item) => {
+    const filtered = listCar.filter((car) => car.price < item);
+    setFilteredCars(filtered.length > 0 ? filtered : []);
   };
   return (
     <section className="car-page">
@@ -225,7 +248,7 @@ function Cars() {
           </div>
         </div>
         <div className="bottom-filter">
-          <div className="item">
+          <div className="item" onClick={() => handleUndo()}>
             <FaUndoAlt />
           </div>
           <div
@@ -272,33 +295,12 @@ function Cars() {
             <FaCodeBranch />
             <span>Truyền động</span>
           </div>
+
           <div
             className="item"
             style={{
               border:
                 activeFilter === 5 ? "1px solid #00a550" : "1px solid #c6c6c6",
-            }}
-            onClick={() => handleElectric()}
-          >
-            <MdElectricCar />
-            <span>Xe điện</span>
-          </div>
-          <div
-            className="item"
-            style={{
-              border:
-                activeFilter === 6 ? "1px solid #00a550" : "1px solid #c6c6c6",
-            }}
-            onClick={() => handlePhysic()}
-          >
-            <MdDirectionsCarFilled />
-            <span>Xe số sàn</span>
-          </div>
-          <div
-            className="item"
-            style={{
-              border:
-                activeFilter === 7 ? "1px solid #00a550" : "1px solid #c6c6c6",
             }}
             onClick={() => handleClickOpenMoney()}
           >
@@ -308,16 +310,158 @@ function Cars() {
         </div>
       </section>
       <section className="container-body">
-        {filteredCars === null || filteredCars.length === 0
+        {filteredCars === null ? (
+          listCar.map((item, index) => {
+            return (
+              <Link className="item" to={`/listcars/${item.id}`}>
+                <img alt="" src={item.img[0].url} />
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    gap: "5px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <p
+                    style={{
+                      textTransform: "uppercase",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {item.branchCar} {item.typeCar} {item.date}
+                  </p>
+                  <FaShieldHeart style={{ color: "#00a550" }} />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <FaMapMarkerAlt />
+                  <p>{item.address.city}</p>
+                </div>
+                <div className="bottom">
+                  <div className="bottom-left">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MdStar style={{ color: "yellow" }} />
+                      <span style={{ color: "#767676", fontSize: "13px" }}>
+                        {item.rate}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MdBackpack style={{ color: "green" }} />
+                      <span style={{ color: "#767676", fontSize: "13px" }}>
+                        {item.total_trip} chuyến
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bottom-right">
+                    <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
+                      {calculate(item.price)}K
+                    </span>
+                    <span>/ngày</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })
+        ) : filteredCars.length === 0 ? (
+          <div className="no-data">Không có dữ liệu</div>
+        ) : (
+          filteredCars.map((item, index) => {
+            return (
+              <Link className="item" to={`/listcars/${item.id}`}>
+                <img alt="" src={item.img[0].url} />
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    gap: "5px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <p
+                    style={{
+                      textTransform: "uppercase",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {item.branchCar} {item.typeCar} {item.date}
+                  </p>
+                  <FaShieldHeart style={{ color: "#00a550" }} />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <FaMapMarkerAlt />
+                  <p>{item.address.city}</p>
+                </div>
+                <div className="bottom">
+                  <div className="bottom-left">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MdStar style={{ color: "yellow" }} />
+                      <span style={{ color: "#767676", fontSize: "13px" }}>
+                        {item.rate}
+                      </span>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MdBackpack style={{ color: "green" }} />
+                      <span style={{ color: "#767676", fontSize: "13px" }}>
+                        {item.total_trip} chuyến
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bottom-right">
+                    <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
+                      {calculate(item.price)}K
+                    </span>
+                    <span>/ngày</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })
+        )}
+        {/* {filteredCars === null || filteredCars.length === 0
           ? listCar.map((item, index) => {
               return (
                 <Link className="item" to={`/listcars/${item.id}`}>
                   <img alt="" src={item.img[0].url} />
-                  {/* <div className="rent">
-              <span>Miễn thế chấp</span>
-              <FaMoneyBillAlt style={{ color: "#00a550" }} />
-            </div> */}
-
                   <div
                     style={{
                       width: "100%",
@@ -389,10 +533,6 @@ function Cars() {
               return (
                 <Link className="item" to={`/listcars/${item.id}`}>
                   <img alt="" src={item.img[0].url} />
-                  {/* <div className="rent">
-              <span>Miễn thế chấp</span>
-              <FaMoneyBillAlt style={{ color: "#00a550" }} />
-            </div> */}
 
                   <div
                     style={{
@@ -460,512 +600,7 @@ function Cars() {
                   </div>
                 </Link>
               );
-            })}
-        {/* <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link>
-        <Link className="item" to="/listcars/id">
-          <img
-            alt=""
-            src="https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_hochiminh/vinfast_vf8_eco_2023/p/g/2023/04/24/13/8aWfyau14UiKwz0nOKgCzg.jpg"
-          />
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              gap: "5px",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-              vinfast_vf8_eco_2023
-            </p>
-            <FaShieldHeart style={{ color: "#00a550" }} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FaMapMarkerAlt />
-            <p>Hồ Chí Minh</p>
-          </div>
-          <div className="bottom">
-            <div className="bottom-left">
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdStar style={{ color: "yellow" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>5.0</span>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <MdBackpack style={{ color: "green" }} />
-                <span style={{ color: "#767676", fontSize: "13px" }}>
-                  7 chuyến
-                </span>
-              </div>
-            </div>
-            <div className="bottom-right">
-              <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                1550K
-              </span>
-              <span>/ngày</span>
-            </div>
-          </div>
-        </Link> */}
+            })} */}
       </section>
       {/* ==========================================TOTAL CHAIR====================================================== */}
       <Dialog
@@ -1044,8 +679,10 @@ function Cars() {
             onClick={() => {
               if (typeCar !== 2) {
                 setTypeCar(2);
+                setSelectedCar(2);
               } else {
                 setTypeCar(0);
+                setSelectedCar(0);
               }
             }}
           >
@@ -1071,8 +708,10 @@ function Cars() {
             onClick={() => {
               if (typeCar !== 4) {
                 setTypeCar(4);
+                setSelectedCar(4);
               } else {
                 setTypeCar(0);
+                setSelectedCar(0);
               }
             }}
           >
@@ -1096,8 +735,11 @@ function Cars() {
             onClick={() => {
               if (typeCar !== 5) {
                 setTypeCar(5);
+                setSelectedCar(5);
               } else {
                 setTypeCar(0);
+
+                setSelectedCar(0);
               }
             }}
           >
@@ -1121,8 +763,10 @@ function Cars() {
             onClick={() => {
               if (typeCar !== 7) {
                 setTypeCar(7);
+                setSelectedCar(7);
               } else {
                 setTypeCar(0);
+                setSelectedCar(0);
               }
             }}
           >
@@ -1143,6 +787,7 @@ function Cars() {
               fontSize: "15px",
               fontWeight: "bold",
             }}
+            onClick={() => handleFilterTypeCar(selectedCar)}
             onMouseOver={(e) => {
               e.target.style.backgroundColor = "#fff";
               e.target.style.color = "#00a550"; // Change color on hover
@@ -1398,7 +1043,7 @@ function Cars() {
               id="all-motor"
               name="motor-type"
               value={"all"}
-              onChange={(e) => setSelectedMotor(e.target.value)}
+              onChange={(e) => setSelectedCar("all")}
             ></input>
             <label htmlFor="all-motor" style={{ cursor: "pointer" }}>
               Tất cả
@@ -1418,7 +1063,7 @@ function Cars() {
               id="auto-motor"
               name="motor-type"
               value={"auto"}
-              onChange={(e) => setSelectedMotor(e.target.value)}
+              onChange={(e) => setSelectedCar("Số tự động")}
             ></input>
             <label htmlFor="auto-motor" style={{ cursor: "pointer" }}>
               Số tự động
@@ -1438,7 +1083,7 @@ function Cars() {
               id="physic-motor"
               value={"physic"}
               name="motor-type"
-              onChange={(e) => setSelectedMotor(e.target.value)}
+              onChange={(e) => setSelectedCar("Số sàn")}
             ></input>
             <label htmlFor="physic-motor" style={{ cursor: "pointer" }}>
               Số sàn
@@ -1447,7 +1092,7 @@ function Cars() {
         </DialogContent>
         <DialogActions style={{ padding: "10px 20px" }}>
           <button
-            onClick={() => alert(selectedMotor)}
+            onClick={() => handleFilterMotor(selectedCar)}
             style={{
               width: "100%",
               backgroundColor: "#00a550",
@@ -1534,13 +1179,13 @@ function Cars() {
           className="dialog-content"
         >
           <input
-            value={selectedMoney}
-            onChange={(e) => setSelectedMoney(e.target.value)}
+            // value={selectedMoney}
+            onChange={(e) => setSelectedCar(e.target.value)}
             type="range"
             id="vol"
             name="vol"
-            min="300"
-            max="3000"
+            min="300000"
+            max="3000000"
             style={{
               width: "100%",
               cursor: "pointer",
@@ -1555,7 +1200,7 @@ function Cars() {
               width: "100%",
             }}
           >
-            <span>Giá đang chọn : {selectedMoney}K</span>
+            <span>Giá đang chọn : {calculate(selectedCar)}K</span>
           </div>
           <div
             style={{
@@ -1571,7 +1216,7 @@ function Cars() {
         </DialogContent>
         <DialogActions style={{ padding: "10px 20px" }}>
           <button
-            onClick={() => alert(selectedMoney)}
+            onClick={() => handleFilterMoney(selectedCar)}
             style={{
               width: "100%",
               backgroundColor: "#00a550",

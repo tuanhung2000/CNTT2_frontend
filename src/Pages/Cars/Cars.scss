@@ -91,6 +91,13 @@
         }
       }
     }
+    .no-data {
+      grid-column: span 3; /* Span all three columns */
+      width: 100%;
+      text-align: center;
+      background-color: #f2f2f2; /* Optional background color */
+      padding: 10px; /* Optional padding */
+    }
   }
   .dialog-container {
     .dialog-title {
