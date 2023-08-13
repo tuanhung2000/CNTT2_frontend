@@ -46,7 +46,7 @@ function Cars() {
   const [activeFilter, setActiveFilter] = useState(0);
   const [openMotor, setOpenMotor] = useState(false);
   const [selectedMotor, setSelectedMotor] = useState("");
-  const [filteredCars, setFilteredCars] = useState("");
+  const [filteredCars, setFilteredCars] = useState(null);
   const [openMoney, setOpenMoney] = useState(false);
   const [selectedMoney, setSelectedMoney] = useState("");
   React.useEffect(() => {
@@ -185,6 +185,7 @@ function Cars() {
     const filtered = listCar.filter((car) => car.price < item);
     setFilteredCars(filtered.length > 0 ? filtered : []);
   };
+  console.log(filteredCars);
   return (
     <section className="car-page">
       <section
