@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { MultiInputDateTimeRangeField } from "@mui/x-date-pickers-pro/MultiInputDateTimeRangeField";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -31,6 +32,7 @@ import {
   FaUser,
   FaXmark,
 } from "react-icons/fa6";
+import { DateTimeField } from "@mui/x-date-pickers";
 function CarDetail() {
   const { role } = useAuth();
   const navigate = useNavigate();
@@ -44,7 +46,8 @@ function CarDetail() {
   const [days, setDays] = useState([]);
   const [months, setMonths] = useState([]);
   const [province, setProvince] = useState("");
-  const [hourHire, setHourHire] = useState(1);
+  const [hourHire, setHourHire] = useState(0);
+  const [minuteHire, setMinuteHire] = useState(0);
   const [insCar, setInsCar] = useState(20000);
   const [priceInitial, setPriceInitial] = useState(50000);
   const [provinces, setProvinces] = useState([]);
@@ -63,6 +66,7 @@ function CarDetail() {
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
   const [openRent, setOpenRent] = useState(true);
+  const [totalMoney, setTotalMoney] = useState(0);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
@@ -152,8 +156,12 @@ function CarDetail() {
     if (daystart && dayend) {
       const formattedDateTime = dayjs(daystart).format("DD/MM/YYYY HH:mm:ss");
       const formattedDateTime1 = dayjs(dayend).format("DD/MM/YYYY HH:mm:ss  ");
-      const duration = dayjs(dayend).diff(dayjs(daystart), "hour");
-      setHourHire(duration);
+      const duration = dayend.diff(daystart, "minute");
+
+      const hours = Math.floor(duration / 60);
+      const minutes = duration % 60;
+      setHourHire(hours);
+      setMinuteHire(minutes);
       console.log("Ngày bắt đầu", formattedDateTime);
       console.log("Ngày kết thúc", formattedDateTime1);
     }
@@ -176,6 +184,16 @@ function CarDetail() {
   };
   const handleClose = () => {
     setOpenRent(false);
+  };
+  useEffect(() => {
+    if (hourHire > 0) {
+      setTotalMoney(
+        hourHire * 600000 + (minuteHire / 60) * 600000 + 100000 + 200000
+      );
+    }
+  }, [minuteHire, hourHire]);
+  const handleRent = () => {
+    alert(totalMoney);
   };
   return (
     // <CarDetailComponent>
@@ -1624,52 +1642,190 @@ function CarDetail() {
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "space-between",
+            width: "100%",
             justifyContent: "center",
             gap: "10px",
-            padding: "0 20px 10px 20px",
+            padding: "0 40px 10px 40px",
           }}
           className="dialog-content"
         >
-          <input
-            // value={selectedMoney}
-            // onChange={(e) => setSelectedCar(e.target.value)}
-            type="range"
-            id="vol"
-            name="vol"
-            min="300000"
-            max="3000000"
-            style={{
-              width: "100%",
-              cursor: "pointer",
-              padding: "10px 0",
-            }}
-          ></input>
           <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               alignItems: "center",
-              width: "100%",
             }}
           >
-            {/* <span>Giá đang chọn : {calculate(selectedCar)}K</span> */}
+            <span>Tên xe</span>
+            <span style={{ fontWeight: "bold" }}>TOYOTA</span>
           </div>
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              width: "100%",
             }}
           >
-            <span>Giá thấp nhất : 300K</span>
-            <span>Giá cao nhất : 3000K</span>
+            <span>Biển số xe</span>
+            <span style={{ fontWeight: "bold" }}>51A41234</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Loại xe</span>
+            <span style={{ fontWeight: "bold" }}>Số tự động</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Chủ xe</span>
+            <span style={{ fontWeight: "bold" }}>Minh Bảo</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Giá thuê xe</span>
+            <span style={{ fontWeight: "bold" }}>800,000</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Nơi nhận xe</span>
+            <span style={{ fontWeight: "bold" }}>Quận 4, HCM</span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <div
+              style={{
+                width: "50%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimeField
+                  label="Ngày bắt đầu"
+                  value={daystart}
+                  minDateTime={dayjs()}
+                  onChange={handleDayStartChange}
+                />
+              </LocalizationProvider>
+            </div>
+            <div
+              style={{
+                width: "50%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimeField
+                  label="Ngày kết thúc"
+                  value={dayend}
+                  onChange={handleDayendChange}
+                  minDateTime={
+                    daystart ? dayjs(daystart).add(1, "hour") : dayjs()
+                  }
+                />
+                {/* <DateTimePicker
+                  id="dayend"
+                  minDateTime={
+                    daystart ? dayjs(daystart).add(1, "hour") : dayjs()
+                  }
+                  value={dayend}
+                  onChange={handleDayendChange}
+                /> */}
+              </LocalizationProvider>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Số giờ thuê</span>
+            <span style={{ fontWeight: "bold" }}>
+              {hourHire > 0 ? (
+                <>
+                  {hourHire}:{minuteHire < 10 ? `0${minuteHire}` : minuteHire}{" "}
+                  giờ
+                </>
+              ) : (
+                <>0 giờ</>
+              )}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Phí dịch vụ</span>
+            <span style={{ fontWeight: "bold" }}>
+              {formatter.format(100000)}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Phí bảo hiểm</span>
+            <span style={{ fontWeight: "bold" }}>
+              {formatter.format(200000)}
+            </span>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>Tổng giá tiền</span>
+            <span>{formatter.format(totalMoney)}</span>
           </div>
         </DialogContent>
         <DialogActions style={{ padding: "10px 20px" }}>
           <button
-            // onClick={() => handleFilterMoney(selectedCar)}
+            onClick={() => handleRent()}
             style={{
               width: "100%",
               backgroundColor: "#00a550",
@@ -1690,7 +1846,7 @@ function CarDetail() {
               e.target.style.color = "#fff"; // Revert color when not hovered
             }}
           >
-            Áp dụng
+            Thuê xe
           </button>
         </DialogActions>
       </Dialog>
