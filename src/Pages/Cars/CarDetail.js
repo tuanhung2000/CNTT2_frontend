@@ -1518,7 +1518,36 @@ function CarDetail() {
             </div>
           </div>
         </section>
-        <section className="right"></section>
+        <section className="right">
+          <section className="price-container">
+            <h3>880K/ngày</h3>
+            <section className="address">
+              <h6>Địa điểm giao nhận xe</h6>
+              <p>Quận 4, Hồ Chí Minh</p>
+            </section>
+            <section className="total-price">
+              <div className="item">
+                <span>Đơn giá thuê</span>
+                <span className="price">880 000đ/ ngày</span>
+              </div>
+              <div className="item">
+                <span>Phí dịch vụ</span>
+                <span className="price">100 000đ/ ngày</span>
+              </div>
+              <div className="item item-last">
+                <span>Phí bảo hiệm</span>
+                <span className="price">880 000đ/ ngày</span>
+              </div>
+              <div className="item">
+                <span style={{ fontWeight: "bold" }}>Tổng phí thuê xe</span>
+                <span className="price">1 880 000đ x 1 ngày</span>
+              </div>
+              <div className="btn-container">
+                <button className="btn">Thuê xe</button>
+              </div>
+            </section>
+          </section>
+        </section>
       </section>
     </section>
   );
