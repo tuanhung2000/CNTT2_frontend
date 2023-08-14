@@ -1,4 +1,11 @@
 import { Card, Grid, MenuItem, Select } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -22,6 +29,7 @@ import {
   FaGasPump,
   FaIdCardClip,
   FaUser,
+  FaXmark,
 } from "react-icons/fa6";
 function CarDetail() {
   const { role } = useAuth();
@@ -54,6 +62,7 @@ function CarDetail() {
   const pathname = useLocation();
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
+  const [openRent, setOpenRent] = useState(true);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     const yearList = Array.from({ length: 60 }, (v, i) => currentYear - i);
@@ -150,12 +159,23 @@ function CarDetail() {
     }
   }, [daystart, dayend]);
   console.log(daystart);
-  const handleHire = () => {
-    const dataUser = {
-      daystart: daystart,
-      dayend: dayend,
-    };
-    navigate(`/payment/${12}`, { state: dataUser });
+  // const handleHire = () => {
+  //   const dataUser = {
+  //     daystart: daystart,
+  //     dayend: dayend,
+  //   };
+  //   navigate(`/payment/${12}`, { state: dataUser });
+  // };
+  const handleClickOpen = (item) => {
+    // if (activeFilter === 1) {
+    //   setActiveFilter(0);
+    // } else {
+    //   setActiveFilter(1);
+    // }
+    setOpenRent(true);
+  };
+  const handleClose = () => {
+    setOpenRent(false);
   };
   return (
     // <CarDetailComponent>
@@ -1543,12 +1563,137 @@ function CarDetail() {
                 <span className="price">1 880 000đ x 1 ngày</span>
               </div>
               <div className="btn-container">
-                <button className="btn">Thuê xe</button>
+                <button className="btn" onClick={() => handleClickOpen()}>
+                  Thuê xe
+                </button>
               </div>
             </section>
           </section>
         </section>
       </section>
+      <Dialog
+        open={openRent}
+        onClose={handleClose}
+        className="dialog-container"
+        sx={{
+          "& .css-1t1j96h-MuiPaper-root-MuiDialog-paper": {
+            width: "500px", /// edit here
+          },
+        }}
+      >
+        <DialogTitle
+          className="dialog-title"
+          style={{
+            color: "black",
+            fontSize: "20px",
+            fontWeight: "600",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            padding: "20px 10px 10px 10px",
+            height: "60px",
+          }}
+        >
+          Thuê xe
+          <div
+            onClick={handleClose}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+              display: "flex",
+              justifyContent: "center",
+              padding: "10px",
+              alignItems: "center",
+              cursor: "pointer",
+              border: "1px solid #c6c6c6",
+              borderRadius: "50%",
+            }}
+          >
+            <FaXmark
+              style={{
+                height: "15px",
+                width: "15px",
+                color: "black",
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "space-between",
+            justifyContent: "center",
+            gap: "10px",
+            padding: "0 20px 10px 20px",
+          }}
+          className="dialog-content"
+        >
+          <input
+            // value={selectedMoney}
+            // onChange={(e) => setSelectedCar(e.target.value)}
+            type="range"
+            id="vol"
+            name="vol"
+            min="300000"
+            max="3000000"
+            style={{
+              width: "100%",
+              cursor: "pointer",
+              padding: "10px 0",
+            }}
+          ></input>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {/* <span>Giá đang chọn : {calculate(selectedCar)}K</span> */}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <span>Giá thấp nhất : 300K</span>
+            <span>Giá cao nhất : 3000K</span>
+          </div>
+        </DialogContent>
+        <DialogActions style={{ padding: "10px 20px" }}>
+          <button
+            // onClick={() => handleFilterMoney(selectedCar)}
+            style={{
+              width: "100%",
+              backgroundColor: "#00a550",
+              color: "#fff",
+              padding: "20px",
+              border: "1px solid #00a550",
+              cursor: "pointer",
+              borderRadius: "5px",
+              fontSize: "15px",
+              fontWeight: "bold",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = "#fff";
+              e.target.style.color = "#00a550"; // Change color on hover
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = "#00a550";
+              e.target.style.color = "#fff"; // Revert color when not hovered
+            }}
+          >
+            Áp dụng
+          </button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }
