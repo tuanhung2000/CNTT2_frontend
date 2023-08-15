@@ -36,6 +36,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    // forgotPassword: bui
   }),
 });
 
