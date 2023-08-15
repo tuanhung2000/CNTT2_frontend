@@ -496,7 +496,7 @@ function Home() {
             <div>
               <div
                 className="carousel carousel_1"
-                // onClick={openDialog}
+              // onClick={openDialog}
               ></div>
             </div>
             <div>
