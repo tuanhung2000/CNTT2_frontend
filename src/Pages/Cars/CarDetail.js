@@ -30,9 +30,11 @@ import {
   FaGasPump,
   FaIdCardClip,
   FaUser,
+  FaUserAstronaut,
   FaXmark,
 } from "react-icons/fa6";
 import { DateTimeField } from "@mui/x-date-pickers";
+import Swal from "sweetalert2";
 function CarDetail() {
   const { role } = useAuth();
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ function CarDetail() {
   const pathname = useLocation();
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
-  const [openRent, setOpenRent] = useState(true);
+  const [openRent, setOpenRent] = useState(false);
   const [totalMoney, setTotalMoney] = useState(0);
   useEffect(() => {
     const currentYear = new Date().getFullYear();
@@ -193,7 +195,19 @@ function CarDetail() {
     }
   }, [minuteHire, hourHire]);
   const handleRent = () => {
-    alert(totalMoney);
+    setOpenRent(false);
+    Swal.fire({
+      title: "Thành công!",
+      text: "Yêu cầu thuê xe đã được gửi",
+      icon: "success",
+      confirmButtonColor: `${COLORS.main}`,
+      confirmButtonText: "Đồng ý",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/listcars");
+        window.scrollTo(0, 0);
+      }
+    });
   };
   return (
     // <CarDetailComponent>
@@ -1389,6 +1403,49 @@ function CarDetail() {
               <div className="left">
                 <div className="img">
                   <FaUser style={{ fontSize: "20px" }} />
+                </div>
+                <div className="content">
+                  <h4>Cao Minh Bảo</h4>
+                  <div className="content-body">
+                    <div className="item">
+                      <MdStar style={{ color: "yellow" }} />
+                      <span style={{ color: "#767676", fontSize: "16px" }}>
+                        5.0
+                      </span>
+                    </div>
+                    <div className="item">
+                      <MdBackpack style={{ color: "green" }} />
+                      <span style={{ color: "#767676", fontSize: "16px" }}>
+                        33 chuyến
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="right">
+                <div className="item">
+                  <span style={{ fontSize: "20px" }}>Tỉ lệ phản hồi</span>
+                  <span>100%</span>
+                </div>
+
+                <div className="item">
+                  <span style={{ fontSize: "20px" }}>Tỉ lệ đồng ý</span>
+                  <span>100%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="owner">
+            <h3>Tài xế lái</h3>
+            <div className="infor">
+              <div className="left">
+                <div className="img" style={{ backgroundColor: "#00a550" }}>
+                  <FaUserAstronaut
+                    style={{
+                      fontSize: "20px",
+                      color: "white",
+                    }}
+                  />
                 </div>
                 <div className="content">
                   <h4>Cao Minh Bảo</h4>

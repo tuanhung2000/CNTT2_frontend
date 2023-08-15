@@ -51,7 +51,7 @@ function Cars() {
   const [selectedMoney, setSelectedMoney] = useState("");
   React.useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, []);
   React.useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY >= 60);
