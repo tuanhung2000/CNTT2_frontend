@@ -9,7 +9,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { COLORS } from "../../assets/color";
 import { useNavigate } from "react-router-dom";
-
+import { useCreateVehicleQuery } from "../../features/user/userApiSlice";
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -97,6 +97,13 @@ function PostCar() {
   const [loading3, setLoading3] = useState(false);
   const [loading4, setLoading4] = useState(false);
   const [urlImg, setUrlImg] = useState("");
+  const url = "http://localhost:9090/vehicle/";
+  const token = localStorage.getItem("token");
+  const opts = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
   useEffect(() => {
     if (desc) {
       const textarea = document.querySelector("#text_des");
@@ -251,18 +258,19 @@ function PostCar() {
         return null;
       });
   }
-  const handlePostCar = () => {
-    Swal.fire({
-      title: "Thành công!",
-      text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Đồng ý",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementsByClassName("postContainer").scrollIntoView();
-      }
-    });
+  const handlePostCar = (e) => {
+    e.preventDefault();
+    // Swal.fire({
+    //   title: "Thành công!",
+    //   text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+    //   icon: "success",
+    //   confirmButtonColor: `${COLORS.main}`,
+    //   confirmButtonText: "Đồng ý",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     document.getElementsByClassName("postContainer").scrollIntoView();
+    //   }
+    // });
   };
   return (
     <section className="postContainer">

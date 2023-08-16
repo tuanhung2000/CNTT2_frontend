@@ -28,10 +28,11 @@ import {
   useGetReviewQuery,
   usePostReviewQuery,
   useEditReviewQuery,
-  useDeleteReviewQuery
+  useDeleteReviewQuery,
 } from "../../features/user/userApiSlice";
 import axios from "axios";
 import Swal from "sweetalert2";
+import useAuth from "../../hooks/useAuth";
 
 const Profile = () => {
   const isXsScreen = useMediaQuery("(max-width: 599px)");
@@ -43,7 +44,7 @@ const Profile = () => {
   const [inputEnabled, setInputEnabled] = useState(true);
   const { data } = useGetUserQuery();
   const token = localStorage.getItem("token");
-
+  const { role } = useAuth();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data1 = {};
@@ -86,10 +87,10 @@ const Profile = () => {
     }
   };
   // vehicle
-  const { data: alluser } = useGetAllUsersQuery()
-  const { data: allvehicle } = useGetAllVehiclesQuery()
-  let vehicleID = '6448cec38950138240553c50'
-  const { data: vehicle } = useGetVehicleQuery(vehicleID)
+  const { data: alluser } = useGetAllUsersQuery();
+  const { data: allvehicle } = useGetAllVehiclesQuery();
+  let vehicleID = "6448cec38950138240553c50";
+  const { data: vehicle } = useGetVehicleQuery(vehicleID);
   // const { data: createVehicle } = useCreateVehicleQuery({
   //   image: [],
   //   licensePlate: '12',
@@ -140,45 +141,42 @@ const Profile = () => {
   //   vehicleID: '6448cec38950138240553c53',
   //   orderID: '64db24464f82e171a42f6989'
   // })-- ok
-  // const { data: responseOrder } = useResponseOrderQuery({ 
-  //   vehicleID: '6448cec38950138240553c53', 
-  //   orderID: '64db24494f82e171a42f698d', 
-  //   isAvailable: false, 
-  //   isCompleted: false 
+  // const { data: responseOrder } = useResponseOrderQuery({
+  //   vehicleID: '6448cec38950138240553c53',
+  //   orderID: '64db24494f82e171a42f698d',
+  //   isAvailable: false,
+  //   isCompleted: false
   // })--ok
 
   // REVIEW
   const { data: getReview } = useGetReviewQuery({
-    contentID: '644790d461b6bf36ecdc3b3a'
-  })
+    contentID: "644790d461b6bf36ecdc3b3a",
+  });
   const { data: postReview } = usePostReviewQuery({
-    type: 'typeNotNeed',
-    typeID: '644790d461b6bf36ecdc3b3a',
-    rate: '4',
-    content: 'good'
-  })
+    type: "typeNotNeed",
+    typeID: "644790d461b6bf36ecdc3b3a",
+    rate: "4",
+    content: "good",
+  });
   // const { data: editReview } = useEditReviewQuery()
   // const { data: deleteReview } = useDeleteReviewQuery()
   // console.log('alluser', alluser)
-  // 
+  //
   // console.log('allvehicle', allvehicle)
-
 
   // console.log('updateVehicle', updateVehicle)
   // console.log('deleteVehicle', deleteVehicle)
-  // // 
+  // //
   // console.log('allOrders', allOrders)
   // console.log('requestOrder', requestOrder)
   // console.log('updateOrder', updateOrder)
   // console.log('deleteOrder', deleteOrder)
   // console.log('responseOrder', responseOrder)
-  // // 
-  console.log('getReview', getReview)
-  console.log('postReview', postReview)
+  // //
+  console.log("getReview", getReview);
+  console.log("postReview", postReview);
   // console.log('editReview', editReview)
   // console.log('deleteReview', deleteReview)
-
-
 
   return (
     <ProfileComponent>
@@ -205,7 +203,9 @@ const Profile = () => {
               alignItems: "flex-start",
             }}
           >
-            <h3>Thông tin cá nhân</h3>
+            <h3>
+              Thông tin cá nhân của {role === "owner" ? "Chủ xe" : "Khách hàng"}
+            </h3>
             {!data ? (
               <Box
                 sx={{

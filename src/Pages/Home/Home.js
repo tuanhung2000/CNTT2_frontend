@@ -14,7 +14,7 @@ function Home() {
   const [city, setCity] = useState("");
   const [active, setActive] = useState(1);
   const [listcity, setListCity] = useState([]);
-
+  const { role } = useAuth();
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
   const [ward, setWard] = useState("");
@@ -496,7 +496,7 @@ function Home() {
             <div>
               <div
                 className="carousel carousel_1"
-              // onClick={openDialog}
+                // onClick={openDialog}
               ></div>
             </div>
             <div>
@@ -615,7 +615,7 @@ function Home() {
       <HomeExtra>
         <section className="bao1">
           <div className="TitleExtra">
-            <h3>Bạn muốn cho thuê xe</h3>
+            <h3>Bạn muốn {role === "customer" ? "" : "cho"} thuê xe</h3>
           </div>
           <div>
             <p>
@@ -625,7 +625,12 @@ function Home() {
           </div>
           <LinkArea>
             <LinkExtra to="">Tìm hiểu ngay</LinkExtra>
-            <LinkExtra to="">Đăng ký xe</LinkExtra>
+
+            {role === "customer" ? (
+              <LinkExtra to="/listcars">Thuê xe</LinkExtra>
+            ) : (
+              <LinkExtra to="/signup">Đăng ký xe</LinkExtra>
+            )}
           </LinkArea>
         </section>
       </HomeExtra>

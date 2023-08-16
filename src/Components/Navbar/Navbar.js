@@ -163,24 +163,26 @@ function Navbar() {
                 }}
               >
                 <ul>
-                  <li
-                    onClick={() => setOpen(false)}
-                    className="menu-item"
-                    style={{
-                      width: "100%",
-                      padding: "10px 10px",
-                      fontWeight: "500",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Link
-                      to="/profile"
-                      className="link_item"
-                      style={{ width: "100%" }}
+                  {(role === "owner" || role === "customer") && (
+                    <li
+                      onClick={() => setOpen(false)}
+                      className="menu-item"
+                      style={{
+                        width: "100%",
+                        padding: "10px 10px",
+                        fontWeight: "500",
+                        textAlign: "center",
+                      }}
                     >
-                      Trang cá nhân
-                    </Link>
-                  </li>
+                      <Link
+                        to="/profile"
+                        className="link_item"
+                        style={{ width: "100%" }}
+                      >
+                        Trang cá nhân
+                      </Link>
+                    </li>
+                  )}
                   <li
                     className="menu-item"
                     onClick={() => setOpen(false)}
@@ -191,7 +193,7 @@ function Navbar() {
                     }}
                   >
                     <Link to="products" className="link_item">
-                      Xe của bạn
+                      {role === "admin" ? "Quản lý" : "Xe của bạn"}
                     </Link>
                   </li>
 

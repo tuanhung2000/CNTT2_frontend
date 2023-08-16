@@ -917,7 +917,136 @@ function Product() {
                 ></Table>
               </TabPanel>
             </TabPanel>
-            <TabPanel value="2">Danh sách yêu cầu</TabPanel>
+            <TabPanel value="2">
+              {" "}
+              <TabPanel
+                value="2"
+                style={{
+                  minHeight: "calc(100vh - 51px)",
+                  boxSizing: "border-box",
+                }}
+              >
+                <Input.Search
+                  placeholder="Nhập thông tin cần tìm..."
+                  style={{ marginBottom: "20px" }}
+                  onSearch={(value) => {
+                    setSearchText(value);
+                  }}
+                  onChange={(e) => {
+                    setSearchText(e.target.value);
+                  }}
+                />
+                <Table
+                  columns={[
+                    { title: "STT", dataIndex: "index" },
+                    {
+                      title: "Tên",
+                      dataIndex: "name",
+                      filteredValue: [searchText],
+                      onFilter: (value, record) => {
+                        return (
+                          String(record.name)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.owner)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.desc)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.price)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.status)
+                            .toLowerCase()
+                            .includes(value.toLowerCase()) ||
+                          String(record.times)
+                            .toLowerCase()
+                            .includes(value.toLowerCase())
+                        );
+                      },
+                    },
+                    {
+                      title: "Ảnh",
+                      dataIndex: "image",
+                      render: (image) => (
+                        <Image
+                          src={image}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                        />
+                      ),
+                    },
+
+                    {
+                      title: "Giá giờ thuê",
+                      dataIndex: "price",
+                      render: (price) => formatter.format(price),
+                      sorter: (a, b) => a.price - b.price,
+                    },
+                    {
+                      title: "Trạng thái",
+                      dataIndex: "status",
+                      render: (status) => {
+                        if (status === "Đang thuê") {
+                          return <Tag color="green">{status}</Tag>;
+                        } else if (status === "Đang ở bãi") {
+                          return <Tag color="red">{status}</Tag>;
+                        } else {
+                          return <p>{status}</p>;
+                        }
+                      },
+                    },
+                    {
+                      title: "",
+                      render: (record) => {
+                        return (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                                alignItems: "center",
+                              }}
+                            >
+                              <EditOutlined
+                                style={{
+                                  fontSize: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => onEditCar(record)}
+                              />
+                              <DeleteOutlined
+                                style={{
+                                  color: "red",
+                                  fontSize: "20px",
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => onDeleteCar(record)}
+                              />
+                            </div>
+                          </>
+                        );
+                      },
+                    },
+                  ]}
+                  dataSource={listCarOwner}
+                  onChange={onChange}
+                  locale={{
+                    triggerDesc: "Giảm dần",
+                    triggerAsc: "Tăng dần",
+                    cancelSort: "Hủy",
+                    emptyText: "Không có dữ liệu",
+                  }}
+                  bordered
+                  pagination={paginationConfig}
+                ></Table>
+              </TabPanel>
+            </TabPanel>
             <TabPanel value="3">Phản hồi</TabPanel>
           </TabContext>
         </>
