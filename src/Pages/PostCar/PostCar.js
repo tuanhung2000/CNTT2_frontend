@@ -67,12 +67,22 @@ function PostCar() {
   const [img, setImg] = useState(
     "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
   );
+  const [price, setPrice] = useState(0);
+  const [isSelfDrive, setIsSelfDrive] = useState(false);
+  const [make, setMake] = useState("");
+  const [type, setType] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
-
+  const [licensePlate, setLicensePlate] = useState("");
   const [provinces, setProvinces] = useState("");
+  const [fuelType, setFuelType] = useState("");
+  const [numberConstructor, setNumberConstructor] = useState("");
+  const [numberChair, setNumberChair] = useState("");
+  ////////////////
   const [map, setMap] = useState(false);
   const [bluetooth, setBluetooth] = useState(false);
   const [camera360, setCamera360] = useState(false);
@@ -85,6 +95,8 @@ function PostCar() {
   const [lop, setLop] = useState(false);
   const [manhinh, setManhinh] = useState(false);
   const [tuikhi, setTuikhi] = useState(false);
+  const [listFeatures, setListFeatures] = useState([]);
+  ////////////////////////////////////////////////////////////////////////
   const [listCity, setListCity] = useState("");
   const [listDistrict, setListDistrict] = useState("");
   const [listWard, setListWard] = useState("");
@@ -92,6 +104,7 @@ function PostCar() {
   const [img2, setImg2] = useState("");
   const [img3, setImg3] = useState("");
   const [img4, setImg4] = useState("");
+  const listImg = [];
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
@@ -178,6 +191,24 @@ function PostCar() {
       });
   }
   function handleStep(step) {
+    if (step === 1) {
+      const featureList = [
+        { id: 1, value: map },
+        { id: 2, value: bluetooth },
+        { id: 3, value: camera360 },
+        { id: 4, value: cameratruoc },
+        { id: 5, value: cameratrip },
+        { id: 6, value: camerasau },
+        { id: 7, value: cuaso },
+        { id: 8, value: gps },
+        { id: 9, value: ghe },
+        { id: 10, value: lop },
+        { id: 11, value: manhinh },
+        { id: 12, value: tuikhi },
+      ];
+
+      setListFeatures(featureList);
+    }
     setActiveStep(step);
     window.scrollTo(0, 0);
   }
@@ -258,19 +289,65 @@ function PostCar() {
         return null;
       });
   }
+  useEffect(() => {
+    if (img1 && img2 && img3 && img4) {
+      listImg.push(img1);
+      listImg.push(img2);
+      listImg.push(img3);
+      listImg.push(img4);
+    }
+  }, [img1, img2, img3, img4]);
+
+  const handlePushedFeature = () => {};
   const handlePostCar = (e) => {
     e.preventDefault();
-    // Swal.fire({
-    //   title: "Thành công!",
-    //   text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
-    //   icon: "success",
-    //   confirmButtonColor: `${COLORS.main}`,
-    //   confirmButtonText: "Đồng ý",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     document.getElementsByClassName("postContainer").scrollIntoView();
-    //   }
-    // });
+    axios
+      .post(
+        url,
+        {
+          image: listImg,
+          licensePlate: licensePlate,
+          price: price,
+          extraFee: 150000,
+          isSelfDrive: isSelfDrive,
+          make: make,
+          type: type,
+          model: model,
+          year: year,
+          feature: listFeatures,
+          description: desc,
+          powers: "500hp",
+          fuelType: fuelType,
+          // numberConstructor: numberConstructor,
+          insurance: "1201234",
+          consumption: 20,
+          maxSpeed: numberChair,
+        },
+        opts
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/listcars");
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
   };
   return (
     <section className="postContainer">
@@ -371,6 +448,10 @@ function PostCar() {
                     Lưu ý: Biển số sẽ không thể thay đổi sau khi đăng kí.
                   </span>
                   <input
+                    value={licensePlate}
+                    onChange={(e) => {
+                      setLicensePlate(e.target.value);
+                    }}
                     style={{
                       width: "100%",
                       border: "1px solid #e5e5e5",
@@ -414,7 +495,15 @@ function PostCar() {
                   }}
                 >
                   <label>Hãng xe</label>
-                  <select name="cars" id="cars" className="select">
+                  <select
+                    name="cars"
+                    id="cars"
+                    className="select"
+                    value={make}
+                    onChange={(e) => {
+                      setMake(e.target.value);
+                    }}
+                  >
                     <option value="" defaultValue>
                       Chọn hãng xe
                     </option>
@@ -435,7 +524,15 @@ function PostCar() {
                   }}
                 >
                   <label>Mẫu xe</label>
-                  <select name="cars" id="cars" className="select">
+                  <select
+                    name="cars"
+                    id="cars"
+                    className="select"
+                    value={model}
+                    onChange={(e) => {
+                      setModel(e.target.value);
+                    }}
+                  >
                     <option value="" defaultValue>
                       Chọn mẫu xe
                     </option>
@@ -458,12 +555,20 @@ function PostCar() {
                   }}
                 >
                   <label>Số ghế</label>
-                  <select name="cars" id="cars" className="select">
+                  <select
+                    name="cars"
+                    id="cars"
+                    className="select"
+                    value={numberChair}
+                    onChange={(e) => {
+                      setNumberChair(e.target.value);
+                    }}
+                  >
                     <option value="">Chọn số ghế</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="7">7</option>
+                    <option value={2}>2</option>
+                    <option value={4}>4</option>
+                    <option value={5}>5</option>
+                    <option value={7}>7</option>
                   </select>
                 </div>
                 <div
@@ -473,7 +578,15 @@ function PostCar() {
                   }}
                 >
                   <label>Năm sản xuất</label>
-                  <select name="year" id="year" className="select">
+                  <select
+                    name="year"
+                    id="year"
+                    className="select"
+                    value={year}
+                    onChange={(e) => {
+                      setYear(e.target.value);
+                    }}
+                  >
                     <option value="" defaultValue>
                       Chọn năm sản xuất
                     </option>
@@ -496,7 +609,15 @@ function PostCar() {
                   }}
                 >
                   <label>Truyền động</label>
-                  <select name="cars" id="cars" className="select">
+                  <select
+                    name="cars"
+                    id="cars"
+                    className="select"
+                    value={type}
+                    onChange={(e) => {
+                      setType(e.target.value);
+                    }}
+                  >
                     <option value="">Chọn loại truyền động</option>
                     <option value="auto">Số tự động</option>
                     <option value="physic">Số sàn</option>
@@ -509,7 +630,15 @@ function PostCar() {
                   }}
                 >
                   <label>Loại nhiên liệu</label>
-                  <select className="select" name="cars" id="cars">
+                  <select
+                    className="select"
+                    name="cars"
+                    id="cars"
+                    value={fuelType}
+                    onChange={(e) => {
+                      setFuelType(e.target.value);
+                    }}
+                  >
                     <option value="">Chọn nhiên liệu</option>
                     {fuel &&
                       fuel.map((fuel) => {
@@ -539,6 +668,10 @@ function PostCar() {
                       padding: "10px",
                       borderRadius: "5px",
                     }}
+                    value={numberConstructor}
+                    onChange={(e) => {
+                      setNumberConstructor(e.target.value);
+                    }}
                   ></input>
                 </div>
                 <div
@@ -548,10 +681,18 @@ function PostCar() {
                   }}
                 >
                   <label>Có tài xế</label>
-                  <select className="select" name="cars" id="cars">
+                  <select
+                    className="select"
+                    name="cars"
+                    id="cars"
+                    value={isSelfDrive}
+                    onChange={(e) => {
+                      setIsSelfDrive(e.target.value);
+                    }}
+                  >
                     <option value="">Chọn hình thức</option>
-                    <option value="saab">Có tài xế</option>
-                    <option value="mercedes">Không có tài xế</option>
+                    <option value={true}>Có tài xế</option>
+                    <option value={false}>Không có tài xế</option>
                   </select>
                 </div>
               </div>
@@ -603,6 +744,10 @@ function PostCar() {
                   </label>
 
                   <textarea
+                    onChange={(e) => {
+                      setDesc(e.target.value);
+                    }}
+                    value={desc}
                     style={{
                       width: "100%",
                       border: "1px solid #e5e5e5",
@@ -622,7 +767,7 @@ function PostCar() {
                 <div className="list">
                   <div
                     className={map ? "item-active" : "item"}
-                    onClick={(e) => {
+                    onClick={() => {
                       if (map) {
                         setMap(false);
                       } else {
@@ -933,6 +1078,10 @@ function PostCar() {
                         className="input"
                         type="number"
                         placeholder="Ví dụ: 2,500,000"
+                        value={price}
+                        onChange={(e) => {
+                          setPrice(e.target.value);
+                        }}
                       ></input>
                       <div
                         style={{

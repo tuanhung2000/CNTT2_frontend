@@ -1,7 +1,16 @@
 import React, { useState, useMemo, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import Icon, { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import Icon, {
+  DeleteOutlined,
+  DownloadOutlined,
+  EditOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
+  SwapOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import MaterialReactTable from "material-react-table";
@@ -122,6 +131,7 @@ function Product() {
   const [value1, setValue1] = React.useState("1");
   const [searchText, setSearchText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditImg, setIsEditImg] = useState(false);
   const [edit, setEdit] = useState(null);
 
   const handleChange = (event, newValue) => {
@@ -150,6 +160,9 @@ function Product() {
         });
       },
     });
+  };
+  const onDownload = () => {
+    alert("Downloading");
   };
   return (
     <ProductComponent>
@@ -1052,6 +1065,8 @@ function Product() {
         </>
       )}
       <Modal
+        className="modal"
+        width={1000}
         title="Chỉnh sửa thông tin"
         visible={isEditing}
         okText="Cập nhật"
@@ -1063,7 +1078,7 @@ function Product() {
           setIsEditing(false);
         }}
       >
-        <div
+        {/* <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -1134,6 +1149,173 @@ function Product() {
             </div>
           </div>
           <Input value={edit?.name}></Input>
+        </div> */}
+        <div
+          style={{
+            padding: "10px 0",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            // backgroundColor: "gold",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <div
+              style={{
+                width: "60%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                style={{
+                  width: "560px",
+                  height: "auto",
+                  maxHeight: "300px",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                  borderRadius: "8px",
+                }}
+                src={edit?.image}
+              />
+            </div>
+            <div
+              style={{
+                width: "40%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "372px",
+                  height: "auto",
+                  maxHeight: "93px",
+                  position: "relative",
+                }}
+              >
+                <Image
+                  style={{
+                    width: "372px",
+                    height: "auto",
+                    maxHeight: "93px",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    display: "block",
+                    borderRadius: "8px",
+                  }}
+                  src={edit?.image}
+                />
+                <button
+                  onClick={() => {
+                    setIsEditing(false);
+                    setIsEditImg(true);
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    cursor: "pointer",
+                    padding: "5px 10px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Cập nhật
+                </button>
+              </div>
+              <Image
+                style={{
+                  width: "372px",
+                  height: "auto",
+                  maxHeight: "93px",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                  borderRadius: "8px",
+                }}
+                src={edit?.image}
+              />
+              <Image
+                style={{
+                  width: "372px",
+                  height: "auto",
+                  maxHeight: "93px",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                  borderRadius: "8px",
+                }}
+                src={edit?.image}
+              />
+            </div>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        className="modal"
+        width={500}
+        title="Cập nhật hình ảnh"
+        visible={isEditImg}
+        okText="Cập nhật"
+        cancelText="Hủy"
+        onCancel={() => {
+          setIsEditImg(false);
+        }}
+        onOk={() => {
+          setIsEditImg(false);
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            padding: "20px",
+            position: "relative",
+          }}
+        >
+          <img
+            src="https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60"
+            style={{
+              display: "block",
+              width: "412px",
+              maxHeight: "300px",
+              height: "auto",
+              objectFit: "cover",
+              objectPosition: "center",
+            }}
+            alt=""
+          />
+          <input
+            type="file"
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              display: "block",
+              opacity: "0",
+              cursor: "pointer",
+            }}
+          ></input>
         </div>
       </Modal>
     </ProductComponent>
@@ -1142,6 +1324,7 @@ function Product() {
 const ProductComponent = styled.section`
   min-height: 100vh;
   width: 100%;
+
   .centered-pagination {
     display: flex;
     justify-content: center;
@@ -1345,8 +1528,10 @@ const ProductComponent = styled.section`
       }
     }
   }
-  ..css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected {
-    color: red;
+  ${
+    "" /* ..css-h0q0iv-MuiButtonBase-root-MuiTab-root.Mui-selected {
+    color: yellow;
+  } */
   }
 `;
 const ProductComponent2 = styled.section``;
