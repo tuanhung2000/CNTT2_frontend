@@ -795,7 +795,16 @@ function CarDetail() {
                   </div>
                   <div className="item">
                     <span style={{ fontWeight: "bold" }}>Tổng phí thuê xe</span>
-                    <span className="price">1 880 000đ x 1 ngày</span>
+                    <span className="price">
+                      {formatter.format(
+                        handleTotalCost(
+                          parseInt(vehicle.Vehicle.extraFee),
+                          parseInt(vehicle.VehicleSpec.insurance),
+                          parseInt(vehicle.Vehicle.price)
+                        )
+                      )}{" "}
+                      x 1 ngày
+                    </span>
                   </div>
                   <div className="btn-container">
                     <button className="btn" onClick={() => handleClickOpen()}>
@@ -874,7 +883,10 @@ function CarDetail() {
                 }}
               >
                 <span>Tên xe</span>
-                <span style={{ fontWeight: "bold" }}>TOYOTA</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {vehicle.Vehicle.make} {vehicle.Vehicle.model}{" "}
+                  {vehicle.Vehicle.year}
+                </span>
               </div>
               <div
                 style={{

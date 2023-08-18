@@ -321,7 +321,9 @@ function PostCar() {
           // numberConstructor: numberConstructor,
           insurance: "1201234",
           consumption: 20,
-          maxSpeed: numberChair,
+          maxSpeed: 100,
+          isSelfDrive: isSelfDrive,
+          numberConstructor: numberChair,
         },
         opts
       )
@@ -565,10 +567,10 @@ function PostCar() {
                     }}
                   >
                     <option value="">Chọn số ghế</option>
-                    <option value={2}>2</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
-                    <option value={7}>7</option>
+                    <option value={"2"}>2</option>
+                    <option value={"4"}>4</option>
+                    <option value={"5"}>5</option>
+                    <option value={"7"}>7</option>
                   </select>
                 </div>
                 <div
