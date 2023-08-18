@@ -165,7 +165,7 @@ function Cars() {
     if (item === "all") {
       setFilteredCars(null);
     } else {
-      const filtered = allvehicle.Vehicle.filter(
+      const filtered = allvehicle.result.filter(
         (car) => car.make.toUpperCase() === item
       );
       setFilteredCars(filtered.length > 0 ? filtered : []);
@@ -343,7 +343,7 @@ function Cars() {
           </section>
           <section className="container-body">
             {filteredCars === null ? (
-              allvehicle.Vehicle.map((item, index) => {
+              allvehicle.result.map((item, index) => {
                 return (
                   <Link className="item" to={`/listcars/${item._id}`}>
                     <img alt="" src={item.image[0]} />
@@ -489,150 +489,6 @@ function Cars() {
                 );
               })
             )}
-            {/* {filteredCars === null || filteredCars.length === 0
-          ? listCar.map((item, index) => {
-              return (
-                <Link className="item" to={`/listcars/${item.id}`}>
-                  <img alt="" src={item.img[0].url} />
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      gap: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <p
-                      style={{
-                        textTransform: "uppercase",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {item.branchCar} {item.typeCar} {item.date}
-                    </p>
-                    <FaShieldHeart style={{ color: "#00a550" }} />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                  >
-                    <FaMapMarkerAlt />
-                    <p>{item.address.city}</p>
-                  </div>
-                  <div className="bottom">
-                    <div className="bottom-left">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <MdStar style={{ color: "yellow" }} />
-                        <span style={{ color: "#767676", fontSize: "13px" }}>
-                          {item.rate}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <MdBackpack style={{ color: "green" }} />
-                        <span style={{ color: "#767676", fontSize: "13px" }}>
-                          {item.total_trip} chuyến
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bottom-right">
-                      <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                        {calculate(item.price)}K
-                      </span>
-                      <span>/ngày</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })
-          : filteredCars.map((item, index) => {
-              return (
-                <Link className="item" to={`/listcars/${item.id}`}>
-                  <img alt="" src={item.img[0].url} />
-
-                  <div
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      gap: "5px",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <p
-                      style={{
-                        textTransform: "uppercase",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {item.branchCar} {item.typeCar} {item.date}
-                    </p>
-                    <FaShieldHeart style={{ color: "#00a550" }} />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      width: "100%",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      gap: "5px",
-                    }}
-                  >
-                    <FaMapMarkerAlt />
-                    <p>{item.address.city}</p>
-                  </div>
-                  <div className="bottom">
-                    <div className="bottom-left">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <MdStar style={{ color: "yellow" }} />
-                        <span style={{ color: "#767676", fontSize: "13px" }}>
-                          {item.rate}
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <MdBackpack style={{ color: "green" }} />
-                        <span style={{ color: "#767676", fontSize: "13px" }}>
-                          {item.total_trip} chuyến
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bottom-right">
-                      <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                        {calculate(item.price)}K
-                      </span>
-                      <span>/ngày</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })} */}
           </section>
           {/* ==========================================TOTAL CHAIR====================================================== */}
           <Dialog

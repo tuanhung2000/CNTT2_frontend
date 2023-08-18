@@ -38,6 +38,13 @@ import Swal from "sweetalert2";
 import { useGetVehicleQuery } from "../../features/user/userApiSlice";
 import { AmazonOutlined } from "@ant-design/icons";
 function CarDetail() {
+  const url = "http://localhost:9090/vehicle/";
+  const token = localStorage.getItem("token");
+  const opts = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
   const { vehicleID } = useParams();
   const { data: vehicle } = useGetVehicleQuery(vehicleID);
   const { role } = useAuth();
@@ -137,7 +144,11 @@ function CarDetail() {
     currency: "VND",
   });
   const handleCostCar = (hours, price) => {
-    return hours * price;
+    return (
+      hours * parseInt(vehicle.Vehicle.price) +
+      parseInt(vehicle.Vehicle.extraFee) +
+      parseInt(vehicle.VehicleSpec.insurance)
+    );
   };
   const totalPrice = (totalCost, insCar) => {
     return totalCost + insCar;
@@ -172,7 +183,7 @@ function CarDetail() {
       console.log("Ngày kết thúc", formattedDateTime1);
     }
   }, [daystart, dayend]);
-  console.log(daystart);
+
   // const handleHire = () => {
   //   const dataUser = {
   //     daystart: daystart,
@@ -194,24 +205,38 @@ function CarDetail() {
   useEffect(() => {
     if (hourHire > 0) {
       setTotalMoney(
-        hourHire * 600000 + (minuteHire / 60) * 600000 + 100000 + 200000
+        hourHire * parseInt(vehicle.Vehicle.price) +
+          (minuteHire / 60) * parseInt(vehicle.Vehicle.price) +
+          parseInt(vehicle.Vehicle.extraFee) +
+          parseInt(vehicle.VehicleSpec.insurance)
       );
     }
   }, [minuteHire, hourHire]);
   const handleRent = () => {
     setOpenRent(false);
-    Swal.fire({
-      title: "Thành công!",
-      text: "Yêu cầu thuê xe đã được gửi",
-      icon: "success",
-      confirmButtonColor: `${COLORS.main}`,
-      confirmButtonText: "Đồng ý",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/listcars");
-        window.scrollTo(0, 0);
-      }
-    });
+    var dateStart = new Date(daystart.$d);
+    var dateEnd = new Date(dayend.$d);
+    //vehicleID
+    //from
+    //to
+    //totalTime
+    //total
+    //address
+    //serviceType
+    //clientRequire
+    // Swal.fire({
+
+    //   title: "Thành công!",
+    //   text: "Yêu cầu thuê xe đã được gửi",
+    //   icon: "success",
+    //   confirmButtonColor: `${COLORS.main}`,
+    //   confirmButtonText: "Đồng ý",
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     navigate("/listcars");
+    //     window.scrollTo(0, 0);
+    //   }
+    // });
   };
   const formatMoney = (amount) => {
     return amount / 1000;
@@ -219,6 +244,7 @@ function CarDetail() {
   const handleTotalCost = (num1, num2, num3) => {
     return num1 + num2 + num3;
   };
+
   return (
     <section className="carDetail-container">
       {vehicle === undefined ? (
@@ -545,8 +571,18 @@ function CarDetail() {
                     <span>GPLX (đối chiếu) & Passport (giữ lại)</span>
                   </div>
                 </div>
-                <h3 style={{ marginTop: "20px" }}>Tài sản thuế chấp</h3>
-                <div className="asset">
+                <h3
+                  style={{
+                    marginTop: "20px",
+                    display: vehicle.Vehicle.rent ? "" : "none",
+                  }}
+                >
+                  Tài sản thuế chấp
+                </h3>
+                <div
+                  className="asset"
+                  style={{ display: vehicle.Vehicle.rent ? "" : "none" }}
+                >
                   15 triệu (tiền mặt/chuyển khoản cho chủ xe khi nhận xe) hoặc
                   Xe máy (kèm cà vẹt gốc) giá trị 15 triệu
                 </div>
@@ -772,7 +808,9 @@ function CarDetail() {
                 <h3>{formatMoney(vehicle.Vehicle.price)}K/ngày</h3>
                 <section className="address">
                   <h6>Địa điểm giao nhận xe</h6>
-                  <p>Quận 4, Hồ Chí Minh</p>
+                  <p>
+                    {vehicle.Vehicle.address[1]}, {vehicle.Vehicle.address[0]}
+                  </p>
                 </section>
                 <section className="total-price">
                   <div className="item">
@@ -896,7 +934,9 @@ function CarDetail() {
                 }}
               >
                 <span>Biển số xe</span>
-                <span style={{ fontWeight: "bold" }}>51A41234</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {vehicle.Vehicle.licensePlate}
+                </span>
               </div>
               <div
                 style={{
@@ -906,7 +946,11 @@ function CarDetail() {
                 }}
               >
                 <span>Loại xe</span>
-                <span style={{ fontWeight: "bold" }}>Số tự động</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {vehicle.VehicleSpec.type === "auto"
+                    ? "Số tự động"
+                    : "Số sàn"}
+                </span>
               </div>
               <div
                 style={{
@@ -926,7 +970,10 @@ function CarDetail() {
                 }}
               >
                 <span>Giá thuê xe</span>
-                <span style={{ fontWeight: "bold" }}>800,000</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {" "}
+                  {formatter.format(vehicle.Vehicle.price)}
+                </span>
               </div>
               <div
                 style={{
@@ -936,7 +983,9 @@ function CarDetail() {
                 }}
               >
                 <span>Nơi nhận xe</span>
-                <span style={{ fontWeight: "bold" }}>Quận 4, HCM</span>
+                <span style={{ fontWeight: "bold" }}>
+                  {vehicle.Vehicle.address[1]}, {vehicle.Vehicle.address[0]}
+                </span>
               </div>
               <div
                 style={{
@@ -1024,7 +1073,7 @@ function CarDetail() {
               >
                 <span>Phí dịch vụ</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(100000)}
+                  {formatter.format(vehicle.Vehicle.extraFee)}
                 </span>
               </div>
               <div
@@ -1037,7 +1086,7 @@ function CarDetail() {
               >
                 <span>Phí bảo hiểm</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(200000)}
+                  {formatter.format(vehicle.VehicleSpec.insurance)}
                 </span>
               </div>
               <div

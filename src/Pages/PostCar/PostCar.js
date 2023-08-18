@@ -75,10 +75,10 @@ function PostCar() {
   const [year, setYear] = useState("");
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [city, setCity] = useState("");
-  const [district, setDistrict] = useState("");
+  const [city, setCity] = useState({ code: "", name: "" });
+  const [district, setDistrict] = useState({ code: "", name: "" });
+  const [provinces, setProvinces] = useState({ code: "", name: "" });
   const [licensePlate, setLicensePlate] = useState("");
-  const [provinces, setProvinces] = useState("");
   const [fuelType, setFuelType] = useState("");
   const [numberConstructor, setNumberConstructor] = useState("");
   const [numberChair, setNumberChair] = useState("");
@@ -96,6 +96,7 @@ function PostCar() {
   const [manhinh, setManhinh] = useState(false);
   const [tuikhi, setTuikhi] = useState(false);
   const [listFeatures, setListFeatures] = useState([]);
+  const [address, setAddress] = useState([]);
   ////////////////////////////////////////////////////////////////////////
   const [listCity, setListCity] = useState("");
   const [listDistrict, setListDistrict] = useState("");
@@ -128,6 +129,21 @@ function PostCar() {
       }
     }
   }, [desc]);
+  const handleCityChange = (e) => {
+    const selectedCityCode = e.target.value;
+    const selectedCityName = e.target.options[e.target.selectedIndex].text;
+    setCity({ code: selectedCityCode, name: selectedCityName });
+  };
+  const handleDistrictChange = (e) => {
+    const selectedDistrictCode = e.target.value;
+    const selectedDistrictName = e.target.options[e.target.selectedIndex].text;
+    setDistrict({ code: selectedDistrictCode, name: selectedDistrictName });
+  };
+  const handleProvincesChange = (e) => {
+    const selectedProvincesCode = e.target.value;
+    const selectedProvincesName = e.target.options[e.target.selectedIndex].text;
+    setProvinces({ code: selectedProvincesCode, name: selectedProvincesName });
+  };
   useEffect(() => {
     axios.get("https://provinces.open-api.vn/api/").then((response) => {
       setListCity(response.data);
@@ -136,7 +152,7 @@ function PostCar() {
   useEffect(() => {
     if (city) {
       axios
-        .get(`https://provinces.open-api.vn/api/p/${city}?depth=2`)
+        .get(`https://provinces.open-api.vn/api/p/${city.code}?depth=2`)
         .then((response) => {
           setListDistrict(response.data.districts);
           setListWard("");
@@ -146,11 +162,12 @@ function PostCar() {
       setListWard("");
     }
   }, [city]);
+  console.log("address", address);
   useEffect(() => {
     if (district) {
       axios
         .get(
-          `https://provinces.open-api.vn/api/d/${district}?depth=2
+          `https://provinces.open-api.vn/api/d/${district.code}?depth=2
       `
         )
         .then((response) => {
@@ -208,6 +225,13 @@ function PostCar() {
       ];
 
       setListFeatures(featureList);
+    } else if (step === 2) {
+      setAddress((prevAddress) => [
+        ...prevAddress,
+        city.name,
+        provinces.name,
+        district.name,
+      ]);
     }
     setActiveStep(step);
     window.scrollTo(0, 0);
@@ -323,7 +347,10 @@ function PostCar() {
           consumption: 20,
           maxSpeed: 100,
           isSelfDrive: isSelfDrive,
-          numberConstructor: numberChair,
+          numberConstructor: numberConstructor,
+          seatNumbers: numberChair,
+          rent: checked,
+          address: address,
         },
         opts
       )
@@ -1122,8 +1149,8 @@ function PostCar() {
                       id="cars"
                       className="select"
                       style={{ flex: 1 }}
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
+                      value={city.code}
+                      onChange={handleCityChange}
                     >
                       <option value="">Tỉnh/Thành phố</option>
 
@@ -1141,8 +1168,8 @@ function PostCar() {
                       id="cars"
                       className="select"
                       style={{ flex: 1 }}
-                      value={district}
-                      onChange={(e) => setDistrict(e.target.value)}
+                      value={district.code}
+                      onChange={handleDistrictChange}
                     >
                       <option value="">Quận/Huyện</option>
                       {listDistrict &&
@@ -1159,8 +1186,8 @@ function PostCar() {
                       id="cars"
                       style={{ flex: 1 }}
                       className="select"
-                      value={provinces}
-                      onChange={(e) => setProvinces(e.target.value)}
+                      value={provinces.code}
+                      onChange={handleProvincesChange}
                     >
                       <option value="">Xã/Phường/Thị trấn</option>
                       {listWard &&
@@ -1256,8 +1283,8 @@ function PostCar() {
                   >
                     Lưu ý: Hãy chọn tối thiểu 4 tấm ảnh.
                   </span>
-                  <div class="grid-container">
-                    <div class="grid-item">
+                  <div className="grid-container">
+                    <div className="grid-item">
                       <div
                         style={{
                           width: "100%",
@@ -1308,7 +1335,7 @@ function PostCar() {
                         )}
                       </div>
                     </div>
-                    <div class="grid-item">
+                    <div className="grid-item">
                       <div
                         style={{
                           width: "100%",
@@ -1359,7 +1386,7 @@ function PostCar() {
                         )}
                       </div>
                     </div>
-                    <div class="grid-item">
+                    <div className="grid-item">
                       <div
                         style={{
                           width: "100%",
@@ -1410,7 +1437,7 @@ function PostCar() {
                         )}
                       </div>
                     </div>
-                    <div class="grid-item">
+                    <div className="grid-item">
                       <div
                         style={{
                           width: "100%",
