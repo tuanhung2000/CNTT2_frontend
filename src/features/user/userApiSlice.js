@@ -6,7 +6,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => {
         return {
           url: `/user/details`,
-          method: 'GET'
+          method: "GET",
         };
       },
     }),
@@ -14,7 +14,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => {
         return {
           url: `/user/all-users`,
-          method: 'GET'
+          method: "GET",
         };
       },
     }),
@@ -24,33 +24,34 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => {
         return {
           url: `/vehicle/`,
-          method: 'GET'
+          method: "GET",
         };
       },
     }),
     getVehicle: build.query({
       query: (val) => {
         // const { id } = val
-        console.log('-----------', val)
+        console.log("-----------", val);
         // console.log(id)
         return {
           url: `/vehicle/${val}`,
-          method: 'GET'
+          method: "GET",
         };
       },
     }),
-    // createVehicleList: build.query({
-    //   query: () => {
-    //     return {
-    //       url: `/vehicle/vehicle_list`,
-    //       method: 'GET'
-    //     };
-    //   },
-    // }),
+    getVehicleOwner: build.query({
+      query: (val) => {
+        return {
+          url: `/vehicle/owned`,
+          method: "GET",
+        };
+      },
+    }),
     createVehicle: build.query({
       query: (val) => {
-        console.log(val)
-        const { image,
+        console.log(val);
+        const {
+          image,
           licensePlate,
           price,
           extraFee,
@@ -64,10 +65,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
           fuelType,
           insurance,
           consumption,
-          maxSpeed, } = val
+          maxSpeed,
+        } = val;
         return {
           url: `/vehicle/`,
-          method: 'POST',
+          method: "POST",
           body: {
             image,
             licensePlate,
@@ -84,19 +86,23 @@ export const userApiSlice = apiSlice.injectEndpoints({
             insurance,
             consumption,
             maxSpeed,
-          }
+          },
         };
       },
     }),
     updateVehicle: build.query({
       query: (val) => {
-        const { id, image, price, extraFee, feature, description } = val
+        const { id, image, price, extraFee, feature, description } = val;
         return {
           url: `/vehicle/${id}`,
-          method: 'PATCH',
+          method: "PATCH",
           body: {
-            image, price, extraFee, feature, description
-          }
+            image,
+            price,
+            extraFee,
+            feature,
+            description,
+          },
         };
       },
     }),
@@ -104,7 +110,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (val) => {
         return {
           url: `/vehicle/${val}`,
-          method: 'DELETE'
+          method: "DELETE",
         };
       },
     }),
@@ -114,13 +120,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => {
         return {
           url: `/order/all-orders`,
-          method: 'GET'
+          method: "GET",
         };
       },
     }),
     requestOrder: build.query({
       query: (val) => {
-        console.log(val)
+        console.log(val);
         const {
           vehicleID,
           from,
@@ -129,10 +135,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
           total,
           address,
           serviceType,
-          clientRequire, } = val
+          clientRequire,
+        } = val;
         return {
           url: `/order/requestOrder`,
-          method: 'POST',
+          method: "POST",
           body: {
             vehicleID,
             from,
@@ -142,13 +149,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
             address,
             serviceType,
             clientRequire,
-          }
+          },
         };
       },
     }),
     updateOrder: build.query({
       query: (val) => {
-        const { vehicleID,
+        const {
+          vehicleID,
           from,
           to,
           totalTime,
@@ -156,10 +164,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
           address,
           serviceType,
           clientRequire,
-          orderID, } = val
+          orderID,
+        } = val;
         return {
           url: `/order/updateOrder`,
-          method: 'PATCH',
+          method: "PATCH",
           body: {
             vehicleID,
             from,
@@ -170,31 +179,35 @@ export const userApiSlice = apiSlice.injectEndpoints({
             serviceType,
             clientRequire,
             orderID,
-          }
+          },
         };
       },
     }),
     deleteOrder: build.query({
       query: (val) => {
-        const { vehicleID, orderID } = val
+        const { vehicleID, orderID } = val;
         return {
           url: `/order/deleteOrder`,
-          method: 'DELETE',
+          method: "DELETE",
           body: {
-            vehicleID, orderID
-          }
+            vehicleID,
+            orderID,
+          },
         };
       },
     }),
     responseOrder: build.query({
       query: (val) => {
-        const { vehicleID, orderID, isAvailable, isCompleted } = val
+        const { vehicleID, orderID, isAvailable, isCompleted } = val;
         return {
           url: `/order/responseOrder`,
-          method: 'POST',
+          method: "POST",
           body: {
-            vehicleID, orderID, isAvailable, isCompleted
-          }
+            vehicleID,
+            orderID,
+            isAvailable,
+            isCompleted,
+          },
         };
       },
     }),
@@ -202,40 +215,38 @@ export const userApiSlice = apiSlice.injectEndpoints({
     // Review
     getReview: build.query({
       query: (val) => {
-        const {
-          contentID
-        } = val
+        const { contentID } = val;
         return {
           url: `/review/${contentID}`,
-          method: 'GET',
+          method: "GET",
         };
       },
     }),
     postReview: build.query({
       query: (val) => {
-        const { type, typeID, rate, content } = val
+        const { type, typeID, rate, content } = val;
         return {
           url: `/review`,
-          method: 'POST',
-          body: { type, typeID, rate, content }
+          method: "POST",
+          body: { type, typeID, rate, content },
         };
       },
     }),
     editReview: build.query({
       query: (val) => {
-        const { id } = val
+        const { id } = val;
         return {
           url: `/review`,
-          method: 'PATCH'
+          method: "PATCH",
         };
       },
     }),
     deleteReview: build.query({
       query: (val) => {
-        const { id } = val
+        const { id } = val;
         return {
           url: `/review`,
-          method: 'DELETE'
+          method: "DELETE",
         };
       },
     }),
@@ -252,7 +263,7 @@ export const {
   useCreateVehicleQuery,
   useUpdateVehicleQuery,
   useDeleteVehicleQuery,
-
+  useGetVehicleOwnerQuery,
   //Order
   useGetAllOrdersQuery,
   // useRe
@@ -265,5 +276,5 @@ export const {
   useGetReviewQuery,
   usePostReviewQuery,
   useEditReviewQuery,
-  useDeleteReviewQuery
+  useDeleteReviewQuery,
 } = userApiSlice;

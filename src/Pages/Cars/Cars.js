@@ -419,7 +419,7 @@ function Cars() {
             ) : (
               filteredCars.map((item, index) => {
                 return (
-                  <Link className="item" to={`/listcars/${item.id}`}>
+                  <Link className="item" to={`/listcars/${item._id}`}>
                     <img alt="" src={item.image[0]} />
                     <div
                       style={{

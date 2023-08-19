@@ -266,18 +266,18 @@ function CarDetail() {
           <section className="img-container">
             <section className="left">
               <div className="cover-img">
-                <img src={vehicle.Vehicle.image[0]} alt="" />
+                <img src={vehicle.vehicle.Vehicle.image[0]} alt="" />
               </div>
             </section>
             <section className="right">
               <div className="cover1-img">
-                <img src={vehicle.Vehicle.image[1]} alt="" />
+                <img src={vehicle.vehicle.Vehicle.image[1]} alt="" />
               </div>
               <div className="cover1-img">
-                <img src={vehicle.Vehicle.image[2]} alt="" />
+                <img src={vehicle.vehicle.Vehicle.image[2]} alt="" />
               </div>
               <div className="cover1-img">
-                <img src={vehicle.Vehicle.image[3]} alt="" />
+                <img src={vehicle.vehicle.Vehicle.image[3]} alt="" />
               </div>
             </section>
           </section>
@@ -285,9 +285,9 @@ function CarDetail() {
             <section className="left">
               <div className="header">
                 <h3>
-                  {vehicle.Vehicle.make.toUpperCase()}{" "}
-                  {vehicle.Vehicle.model.toUpperCase()}{" "}
-                  {vehicle.Vehicle.year.toUpperCase()}
+                  {vehicle.vehicle.Vehicle.make.toUpperCase()}{" "}
+                  {vehicle.vehicle.Vehicle.model.toUpperCase()}{" "}
+                  {vehicle.vehicle.Vehicle.year.toUpperCase()}
                 </h3>
                 <div className="group-tag">
                   <div
@@ -301,7 +301,7 @@ function CarDetail() {
                   >
                     <MdStar style={{ color: "yellow" }} />
                     <span style={{ color: "#767676", fontSize: "16px" }}>
-                      {vehicle.Vehicle.rate}
+                      {vehicle.vehicle.Vehicle.rate}
                     </span>
                   </div>
                   <div
@@ -325,7 +325,7 @@ function CarDetail() {
                       borderRadius: "5px",
                     }}
                   >
-                    {vehicle.VehicleSpec.type === "auto"
+                    {vehicle.vehicle.VehicleSpec.type === "auto"
                       ? "Số tự động"
                       : "Số sàn"}
                   </div>
@@ -346,7 +346,7 @@ function CarDetail() {
                     <div className="item-description">
                       <span className="title">Truyền động</span>
                       <span>
-                        {vehicle.VehicleSpec.type === "auto"
+                        {vehicle.vehicle.VehicleSpec.type === "auto"
                           ? "Số tự động"
                           : "Số sàn"}
                       </span>
@@ -356,21 +356,25 @@ function CarDetail() {
                     <FaFillDrip className="icon" />
                     <div className="item-description">
                       <span className="title">Nhiên liệu</span>
-                      <span>{vehicle.VehicleSpec.fuelType}</span>
+                      <span>{vehicle.vehicle.VehicleSpec.fuelType}</span>
                     </div>
                   </div>
                   <div className="item">
                     <FaGasPump className="icon" />
                     <div className="item-description">
                       <span className="title">Tiêu hao</span>
-                      <span>{vehicle.VehicleSpec.consumption} lít/100km</span>
+                      <span>
+                        {vehicle.vehicle.VehicleSpec.consumption} lít/100km
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="describe">
                 <h3>Mô tả</h3>
-                <div className="content">{vehicle.Vehicle.description}</div>
+                <div className="content">
+                  {vehicle.vehicle.Vehicle.description}
+                </div>
               </div>
               <div className="features">
                 <h3>Các tiện nghi khác</h3>
@@ -378,7 +382,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[0].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[0].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -392,7 +398,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[1].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[1].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -406,7 +414,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[2].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[2].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -421,7 +431,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[3].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[3].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -435,7 +447,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[4].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[4].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -449,7 +463,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[5].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[5].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -463,7 +479,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[6].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[6].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -477,7 +495,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[7].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[7].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -491,7 +511,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[8].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[8].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -506,7 +528,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[9].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[9].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -520,7 +544,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[10].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[10].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -534,7 +560,9 @@ function CarDetail() {
                   <div
                     className="item"
                     style={{
-                      display: vehicle.Vehicle.feature[11].value ? "" : "none",
+                      display: vehicle.vehicle.Vehicle.feature[11].value
+                        ? ""
+                        : "none",
                     }}
                   >
                     <img
@@ -574,14 +602,16 @@ function CarDetail() {
                 <h3
                   style={{
                     marginTop: "20px",
-                    display: vehicle.Vehicle.rent ? "" : "none",
+                    display: vehicle.vehicle.Vehicle.rent ? "" : "none",
                   }}
                 >
                   Tài sản thuế chấp
                 </h3>
                 <div
                   className="asset"
-                  style={{ display: vehicle.Vehicle.rent ? "" : "none" }}
+                  style={{
+                    display: vehicle.vehicle.Vehicle.rent ? "" : "none",
+                  }}
                 >
                   15 triệu (tiền mặt/chuyển khoản cho chủ xe khi nhận xe) hoặc
                   Xe máy (kèm cà vẹt gốc) giá trị 15 triệu
@@ -805,30 +835,32 @@ function CarDetail() {
             </section>
             <section className="right">
               <section className="price-container">
-                <h3>{formatMoney(vehicle.Vehicle.price)}K/ngày</h3>
+                <h3>{formatMoney(vehicle.vehicle.Vehicle.price)}K/ngày</h3>
                 <section className="address">
                   <h6>Địa điểm giao nhận xe</h6>
                   <p>
-                    {vehicle.Vehicle.address[1]}, {vehicle.Vehicle.address[0]}
+                    {vehicle.vehicle.Vehicle.address[1]},{" "}
+                    {vehicle.vehicle.Vehicle.address[0]}
                   </p>
                 </section>
                 <section className="total-price">
                   <div className="item">
                     <span>Đơn giá thuê</span>
                     <span className="price">
-                      {formatter.format(vehicle.Vehicle.price)}/ ngày
+                      {formatter.format(vehicle.vehicle.Vehicle.price)}/ ngày
                     </span>
                   </div>
                   <div className="item">
                     <span>Phí dịch vụ</span>
                     <span className="price">
-                      {formatter.format(vehicle.Vehicle.extraFee)}/ ngày
+                      {formatter.format(vehicle.vehicle.Vehicle.extraFee)}/ ngày
                     </span>
                   </div>
                   <div className="item item-last">
                     <span>Phí bảo hiệm</span>
                     <span className="price">
-                      {formatter.format(vehicle.VehicleSpec.insurance)}/ ngày
+                      {formatter.format(vehicle.vehicle.VehicleSpec.insurance)}/
+                      ngày
                     </span>
                   </div>
                   <div className="item">
@@ -836,9 +868,9 @@ function CarDetail() {
                     <span className="price">
                       {formatter.format(
                         handleTotalCost(
-                          parseInt(vehicle.Vehicle.extraFee),
-                          parseInt(vehicle.VehicleSpec.insurance),
-                          parseInt(vehicle.Vehicle.price)
+                          parseInt(vehicle.vehicle.Vehicle.extraFee),
+                          parseInt(vehicle.vehicle.VehicleSpec.insurance),
+                          parseInt(vehicle.vehicle.Vehicle.price)
                         )
                       )}{" "}
                       x 1 ngày
@@ -922,8 +954,8 @@ function CarDetail() {
               >
                 <span>Tên xe</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {vehicle.Vehicle.make} {vehicle.Vehicle.model}{" "}
-                  {vehicle.Vehicle.year}
+                  {vehicle.vehicle.Vehicle.make} {vehicle.vehicle.Vehicle.model}{" "}
+                  {vehicle.vehicle.Vehicle.year}
                 </span>
               </div>
               <div
@@ -935,7 +967,7 @@ function CarDetail() {
               >
                 <span>Biển số xe</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {vehicle.Vehicle.licensePlate}
+                  {vehicle.vehicle.Vehicle.licensePlate}
                 </span>
               </div>
               <div
@@ -947,7 +979,7 @@ function CarDetail() {
               >
                 <span>Loại xe</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {vehicle.VehicleSpec.type === "auto"
+                  {vehicle.vehicle.VehicleSpec.type === "auto"
                     ? "Số tự động"
                     : "Số sàn"}
                 </span>
@@ -972,7 +1004,7 @@ function CarDetail() {
                 <span>Giá thuê xe</span>
                 <span style={{ fontWeight: "bold" }}>
                   {" "}
-                  {formatter.format(vehicle.Vehicle.price)}
+                  {formatter.format(vehicle.vehicle.Vehicle.price)}
                 </span>
               </div>
               <div
@@ -984,7 +1016,8 @@ function CarDetail() {
               >
                 <span>Nơi nhận xe</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {vehicle.Vehicle.address[1]}, {vehicle.Vehicle.address[0]}
+                  {vehicle.vehicle.Vehicle.address[1]},{" "}
+                  {vehicle.vehicle.Vehicle.address[0]}
                 </span>
               </div>
               <div
@@ -1073,7 +1106,7 @@ function CarDetail() {
               >
                 <span>Phí dịch vụ</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(vehicle.Vehicle.extraFee)}
+                  {formatter.format(vehicle.vehicle.Vehicle.extraFee)}
                 </span>
               </div>
               <div
@@ -1086,7 +1119,7 @@ function CarDetail() {
               >
                 <span>Phí bảo hiểm</span>
                 <span style={{ fontWeight: "bold" }}>
-                  {formatter.format(vehicle.VehicleSpec.insurance)}
+                  {formatter.format(vehicle.vehicle.VehicleSpec.insurance)}
                 </span>
               </div>
               <div
@@ -1133,50 +1166,5 @@ function CarDetail() {
     </section>
   );
 }
-// const CarDetailComponent = styled.section`
-//   min-height: calc(100vh - 160px);
-//   width: 100%;
-//   padding: 20px;
-//   box-sizing: border-box;
-//   display: flex;
-//   flex-direction: column;
-//   gap: 20px;
-//   .btn_hire {
-//     background-color: #00a550;
-//     border: 1px solid #00a550;
-//     outline: none;
-//     padding: 10px 20px;
-//     color: white;
-//     font-weight: bold;
-//     border-radius: 5px;
-//     cursor: pointer;
-//   }
-//   .btn_cmt {
-//     background-color: #00a550;
-//     border: 1px solid #00a550;
-//     outline: none;
-//     padding: 10px 20px;
-//     color: white;
-//     font-weight: bold;
-//     border-radius: 5px;
-//     cursor: pointer;
-//   }
-//   .btn_cmt:hover {
-//     background-color: white;
-//     color: #00a550;
-//   }
-//   .btn_disabled {
-//     background-color: #93bda3;
-//     border: 1px solid #93bda3;
-//     outline: none;
-//     padding: 10px 20px;
-//     color: white;
-//     font-weight: bold;
-//     border-radius: 5px;
-//   }
-//   .btn_hire:hover {
-//     background-color: white;
-//     color: #00a550;
-//   }
-// `;
+
 export default CarDetail;

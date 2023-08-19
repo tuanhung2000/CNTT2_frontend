@@ -25,7 +25,10 @@ import TabList from "@mui/lab/TabList";
 import TabContext from "@mui/lab/TabContext";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
-import { useGetAllVehiclesQuery } from "../../features/user/userApiSlice";
+import {
+  useGetAllVehiclesQuery,
+  useGetVehicleOwnerQuery,
+} from "../../features/user/userApiSlice";
 import axios from "axios";
 
 const onChange = (pagination, filters, sorter, extra) => {
@@ -214,8 +217,14 @@ function Product() {
     setImage4(imageUrl);
     setIsUpdating(4);
   };
-  //////////////////////////////////
+  //////////////////////////////////useGetVehicleOwnerQuery
   const { data: allvehicle } = useGetAllVehiclesQuery();
+  const { data: allvehicleowner } = useGetVehicleOwnerQuery();
+  useEffect(() => {
+    if (allvehicleowner !== undefined) {
+      console.log("allvehicleowner", allvehicleowner);
+    }
+  }, [allvehicleowner]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -224,15 +233,15 @@ function Product() {
   };
   const [processedData, setProcessedData] = useState([]);
   useEffect(() => {
-    if (allvehicle !== undefined) {
+    if (allvehicleowner !== undefined) {
       setProcessedData(
-        allvehicle.result.map((item, index) => ({
+        allvehicleowner.ownedVehicle.map((item, index) => ({
           ...item,
           index: index + 1,
         }))
       );
     }
-  }, [allvehicle]);
+  }, [allvehicleowner]);
 
   const paginationConfig = {
     className: "centered-pagination",
@@ -952,7 +961,7 @@ function Product() {
         ) : (
           /* Tab of owner */
           <>
-            {allvehicle === undefined ? (
+            {allvehicleowner === undefined ? (
               <>
                 <div
                   style={{
