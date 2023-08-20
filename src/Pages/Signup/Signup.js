@@ -147,7 +147,7 @@ function Signup() {
                 </p>
               </Grid>
               <Grid item xs={8} md={8} style={{ padding: "5px 5px 5px 26px" }}>
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                   <Grid xs={12} sm={6} item>
                     <TextField
                       name="firstName"
@@ -293,7 +293,9 @@ function Signup() {
                       <MenuItem value={"owner"}>Người cho thuê</MenuItem>
                     </Select>
                     {formik.errors.role && formik.touched.role ? (
-                      <span className="error">{formik.errors.role}*</span>
+                      <span className="error" style={{ marginLeft: "10px" }}>
+                        {formik.errors.role}*
+                      </span>
                     ) : (
                       <></>
                     )}

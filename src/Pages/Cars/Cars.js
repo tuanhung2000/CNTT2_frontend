@@ -117,7 +117,9 @@ function Cars() {
       setActiveFilter(0);
     } else {
       setActiveFilter(3);
-      const filtered = listCar.filter((car) => car.required_rent === true);
+      const filtered = allvehicle.vehicleList.filter(
+        (car) => car.vehicle.rent === true
+      );
       setFilteredCars(filtered.length > 0 ? filtered : []);
     }
   };
@@ -165,14 +167,16 @@ function Cars() {
     if (item === "all") {
       setFilteredCars(null);
     } else {
-      const filtered = allvehicle.result.filter(
-        (car) => car.make.toUpperCase() === item
+      const filtered = allvehicle.vehicleList.filter(
+        (car) => car.vehicle.make.toUpperCase() === item
       );
       setFilteredCars(filtered.length > 0 ? filtered : []);
     }
   };
   const handleFilterTypeCar = (item) => {
-    const filtered = listCar.filter((car) => car.countChairs === item);
+    const filtered = allvehicle.vehicleList.filter(
+      (car) => car.spec.seatNumbers === item
+    );
     setFilteredCars(filtered.length > 0 ? filtered : []);
   };
   const handleUndo = (item) => {
@@ -188,7 +192,9 @@ function Cars() {
     }
   };
   const handleFilterMoney = (item) => {
-    const filtered = listCar.filter((car) => car.price < item);
+    const filtered = allvehicle.vehicleList.filter(
+      (car) => parseInt(car.vehicle.price) < item
+    );
     setFilteredCars(filtered.length > 0 ? filtered : []);
   };
   console.log(filteredCars);
@@ -343,10 +349,10 @@ function Cars() {
           </section>
           <section className="container-body">
             {filteredCars === null ? (
-              allvehicle.result.map((item, index) => {
+              allvehicle.vehicleList.map((item, index) => {
                 return (
-                  <Link className="item" to={`/listcars/${item._id}`}>
-                    <img alt="" src={item.image[0]} />
+                  <Link className="item" to={`/listcars/${item.vehicle._id}`}>
+                    <img alt="" src={item.vehicle.image[0]} />
                     <div
                       style={{
                         width: "100%",
@@ -361,7 +367,8 @@ function Cars() {
                           fontWeight: "bold",
                         }}
                       >
-                        {item.make} {item.model} {item.year}
+                        {item.vehicle.make} {item.vehicle.model}{" "}
+                        {item.vehicle.year}
                       </p>
                       <FaShieldHeart style={{ color: "#00a550" }} />
                     </div>
@@ -375,7 +382,7 @@ function Cars() {
                       }}
                     >
                       <FaMapMarkerAlt />
-                      {/* <p>{item.address.city}</p> */}
+                      <p>{item.vehicle.address[0]}</p>
                     </div>
                     <div className="bottom">
                       <div className="bottom-left">
@@ -388,7 +395,7 @@ function Cars() {
                         >
                           <MdStar style={{ color: "yellow" }} />
                           <span style={{ color: "#767676", fontSize: "13px" }}>
-                            {item.rate}
+                            {item.vehicle.rate}
                           </span>
                         </div>
                         <div
@@ -406,7 +413,7 @@ function Cars() {
                       </div>
                       <div className="bottom-right">
                         <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                          {calculate(item.price)}K
+                          {calculate(item.vehicle.price)}K
                         </span>
                         <span>/ngày</span>
                       </div>
@@ -419,8 +426,8 @@ function Cars() {
             ) : (
               filteredCars.map((item, index) => {
                 return (
-                  <Link className="item" to={`/listcars/${item._id}`}>
-                    <img alt="" src={item.image[0]} />
+                  <Link className="item" to={`/listcars/${item.vehicle._id}`}>
+                    <img alt="" src={item.vehicle.image[0]} />
                     <div
                       style={{
                         width: "100%",
@@ -435,7 +442,8 @@ function Cars() {
                           fontWeight: "bold",
                         }}
                       >
-                        {item.make} {item.model} {item.year}
+                        {item.vehicle.make} {item.vehicle.model}{" "}
+                        {item.vehicle.year}
                       </p>
                       <FaShieldHeart style={{ color: "#00a550" }} />
                     </div>
@@ -462,7 +470,7 @@ function Cars() {
                         >
                           <MdStar style={{ color: "yellow" }} />
                           <span style={{ color: "#767676", fontSize: "13px" }}>
-                            {item.rate}
+                            {item.vehicle.rate}
                           </span>
                         </div>
                         <div
@@ -480,7 +488,7 @@ function Cars() {
                       </div>
                       <div className="bottom-right">
                         <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
-                          {calculate(item.price)}K
+                          {calculate(item.vehicle.price)}K
                         </span>
                         <span>/ngày</span>
                       </div>

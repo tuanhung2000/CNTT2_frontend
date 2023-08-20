@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import "./Product.scss";
 import Icon, {
   DeleteOutlined,
   DownloadOutlined,
@@ -11,6 +12,7 @@ import Icon, {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from "@ant-design/icons";
+import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import MaterialReactTable from "material-react-table";
@@ -26,10 +28,13 @@ import TabContext from "@mui/lab/TabContext";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
 import {
+  useDeleteVehicleQuery,
   useGetAllVehiclesQuery,
   useGetVehicleOwnerQuery,
 } from "../../features/user/userApiSlice";
 import axios from "axios";
+import Swal from "sweetalert2";
+import { COLORS } from "../../assets/color";
 
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
@@ -40,6 +45,8 @@ const formatter = new Intl.NumberFormat("vi-VN", {
 });
 
 function Product() {
+  const [editMoney, setEditMoney] = useState(false);
+  const [editMoney1, setEditMoney1] = useState(false);
   const [listCarOwner, setListCarOwner] = useState([
     {
       index: 1,
@@ -138,8 +145,32 @@ function Product() {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditImg, setIsEditImg] = useState(false);
   const [edit, setEdit] = useState(null);
+  const token = localStorage.getItem("token");
+  const opts = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+  const getVehicleOwnerQuery = useGetVehicleOwnerQuery();
+  ///////////////////////////////////
+  const [map, setMap] = useState(false);
+  const [bluetooth, setBluetooth] = useState(false);
+  const [camera360, setCamera360] = useState(false);
+  const [cameratruoc, setCameratruoc] = useState(false);
+  const [cameratrip, setCameratrip] = useState(false);
+  const [camerasau, setCamerasau] = useState(false);
+  const [cuaso, setCuaso] = useState(false);
+  const [gps, setGps] = useState(false);
+  const [ghe, setGhe] = useState(false);
+  const [lop, setLop] = useState(false);
+  const [manhinh, setManhinh] = useState(false);
+  const [tuikhi, setTuikhi] = useState(false);
+  const [price, setPrice] = useState(false);
+  const [extraFee, setExtraFee] = useState(false);
+  const [desc, setDesc] = useState("");
   //////////////////////////////////
   const [listImageUpdatem, setListImageUpdatem] = useState([]);
+  const [listFeatures, setListFeatures] = useState([]);
   const [urlImg, setUrlImg] = useState(false);
   const [isLoadingImg, setIsLoadingImg] = useState(false);
   const [isUpdating, setIsUpdating] = useState("");
@@ -175,6 +206,20 @@ function Product() {
     image3,
     image4,
   ]);
+  const featureList = [
+    { id: 1, value: map },
+    { id: 2, value: bluetooth },
+    { id: 3, value: camera360 },
+    { id: 4, value: cameratruoc },
+    { id: 5, value: cameratrip },
+    { id: 6, value: camerasau },
+    { id: 7, value: cuaso },
+    { id: 8, value: gps },
+    { id: 9, value: ghe },
+    { id: 10, value: lop },
+    { id: 11, value: manhinh },
+    { id: 12, value: tuikhi },
+  ];
   useEffect(() => {
     if (edit !== null) {
       console.log("editr", edit.image);
@@ -182,8 +227,40 @@ function Product() {
       setImage2(edit.image[1]);
       setImage3(edit.image[2]);
       setImage4(edit.image[3]);
+      setMap(edit.feature[0].value);
+      setBluetooth(edit.feature[1].value);
+      setCamera360(edit.feature[2].value);
+      setCameratruoc(edit.feature[3].value);
+      setCameratrip(edit.feature[4].value);
+      setCamerasau(edit.feature[5].value);
+      setCuaso(edit.feature[6].value);
+      setGps(edit.feature[7].value);
+      setGhe(edit.feature[8].value);
+      setLop(edit.feature[9].value);
+      setManhinh(edit.feature[10].value);
+      setTuikhi(edit.feature[11].value);
+      setPrice(edit.price);
+      setExtraFee(edit.extraFee);
+      setDesc(edit.description);
     }
   }, [edit]);
+  // useEffect(() => {
+  //   setListFeatures(featureList);
+  // }, [
+  //   map,
+  //   bluetooth,
+  //   camera360,
+  //   cameratruoc,
+  //   cameratrip,
+  //   camerasau,
+  //   cuaso,
+  //   gps,
+  //   ghe,
+  //   lop,
+  //   manhinh,
+  //   tuikhi,
+  //   featureList,
+  // ]);
   useEffect(() => {
     if (listImageUpdatem.length > 0) {
       console.log("List anh update", listImageUpdatem);
@@ -220,6 +297,7 @@ function Product() {
   //////////////////////////////////useGetVehicleOwnerQuery
   const { data: allvehicle } = useGetAllVehiclesQuery();
   const { data: allvehicleowner } = useGetVehicleOwnerQuery();
+
   useEffect(() => {
     if (allvehicleowner !== undefined) {
       console.log("allvehicleowner", allvehicleowner);
@@ -250,19 +328,33 @@ function Product() {
     setIsEditing(true);
     setEdit({ ...record });
   };
-  useEffect(() => {}, [edit]);
   const onDeleteCar = (record) => {
-    Modal.confirm({
-      title: `Bạn đang chọn xóa xe ${record.name}`,
-      okText: "Xóa",
-      cancelText: "Hủy",
-      okType: "danger",
-      onOk: () => {
-        setListCarOwner((pre) => {
-          return pre.filter((car) => car.index !== record.index);
+    const urlDelete = `http://localhost:9090/vehicle/${record._id}`;
+    axios
+      .delete(urlDelete, opts)
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getVehicleOwnerQuery.refetch();
+          }
         });
-      },
-    });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
   };
   const onDownload = () => {
     alert("Downloading");
@@ -327,6 +419,46 @@ function Product() {
         return null;
       });
   }
+  const onUpdateInformation = (e) => {
+    e.preventDefault();
+    const urlUpdate = `http://localhost:9090/vehicle/${edit._id}`;
+    axios
+      .patch(
+        urlUpdate,
+        {
+          image: listImageUpdatem,
+          price: price,
+          extraFee: extraFee,
+          feature: featureList,
+          description: desc,
+        },
+        opts
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Bạn đã cập nhật thành công!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getVehicleOwnerQuery.refetch();
+            setIsEditing(false);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
+  };
   return (
     <>
       <ProductComponent>
@@ -631,96 +763,6 @@ function Product() {
                           },
                         },
                       ]}
-                      // dataSource={[
-                      //   {
-                      //     index: 1,
-                      //     name: "Honda",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
-                      //     owner: "Thùy Vân",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 3,
-                      //     price: 1000000,
-                      //     status: "Đang giao xe",
-                      //   },
-                      //   {
-                      //     index: 2,
-                      //     name: "Mecs",
-                      //     owner: "Huỳnh Chánh",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 4,
-                      //     price: 7000000,
-                      //     status: "Đang giao xe",
-                      //   },
-                      //   {
-                      //     index: 3,
-                      //     name: "Audi",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                      //     owner: "Thùy Vân",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 20,
-                      //     price: 500000,
-                      //     status: "Đang thuê",
-                      //   },
-                      //   {
-                      //     index: 4,
-                      //     name: "Audi",
-                      //     owner: "duy",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 14,
-                      //     price: 10000030,
-                      //     status: "Đang thuê",
-                      //   },
-                      //   {
-                      //     index: 5,
-                      //     name: "Audi",
-                      //     owner: "Đăng Duy",
-                      //     image:
-                      //       "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 9,
-                      //     price: 66600000,
-                      //     status: "Đang thuê",
-                      //   },
-                      //   {
-                      //     index: 6,
-                      //     name: "Audi",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                      //     owner: "Đăng Duy",
-                      //     desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
-                      //     times: 7,
-                      //     price: 6600000,
-                      //     status: "Đang thuê",
-                      //   },
-                      //   {
-                      //     index: 7,
-                      //     name: "Audi",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-                      //     owner: "Đăng Duy",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 1,
-                      //     price: 450000,
-                      //     status: "Đang thuê",
-                      //   },
-                      //   {
-                      //     index: 8,
-                      //     name: "Audi",
-                      //     image:
-                      //       "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-                      //     owner: "Đăng Duy",
-                      //     desc: ["Rất đẹp", "Có máy lạnh"],
-                      //     times: 1,
-                      //     price: 380000,
-                      //     status: "Đang thuê",
-                      //   },
-                      // ]}
                       dataSource={allvehicle.result}
                       onChange={onChange}
                       locale={{
@@ -1289,6 +1331,7 @@ function Product() {
           </>
         )}
       </ProductComponent>
+      {/* //////////////////////////////////////////////////////////////////// */}
       <Modal
         className="modal"
         width={1000}
@@ -1296,92 +1339,27 @@ function Product() {
         open={isEditing}
         okText="Cập nhật"
         cancelText="Hủy"
+        okButtonProps={{
+          className: "buttonOk",
+          style: {
+            backgroundColor: "#00a550",
+            color: "white",
+          },
+        }}
         onCancel={() => {
           setIsEditing(false);
         }}
-        onOk={() => {
-          setIsEditing(false);
+        onOk={(e) => {
+          onUpdateInformation(e);
         }}
       >
-        {/* <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            gap: "10px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              width: "100%",
-            }}
-          >
-            <Image
-              style={{
-                width: "236px",
-                height: "auto",
-                maxHeight: "200px",
-                objectFit: "cover",
-                objectPosition: "center",
-              }}
-              src={edit?.image}
-            />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-
-                width: "200px",
-                padding: "0 10px",
-                gap: "10px",
-              }}
-            >
-              <label style={{ fontWeight: "bold", cursor: "pointer" }}>
-                Tên xe
-              </label>
-              <input
-                value={edit?.name}
-                style={{
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  outline: "none",
-                  borderRadius: "5px",
-                  border: "1px solid black",
-                }}
-              ></input>
-              <label
-                style={{
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  outline: "none",
-                }}
-              >
-                Giá giờ thuê
-              </label>
-              <input
-                value={edit?.price}
-                style={{
-                  boxSizing: "border-box",
-                  padding: "10px",
-                  outline: "none",
-                  borderRadius: "5px",
-                  border: "1px solid black",
-                }}
-              ></input>
-            </div>
-          </div>
-          <Input value={edit?.name}></Input>
-        </div> */}
         <div
           style={{
             padding: "10px 0",
             width: "100%",
             display: "flex",
             flexDirection: "column",
-            // backgroundColor: "gold",
+            gap: "10px",
           }}
         >
           <div
@@ -1563,8 +1541,561 @@ function Product() {
               </div>
             </div>
           </div>
+          <div style={{ width: "100%" }}>
+            <h3>Tính năng</h3>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "20px",
+                marginTop: "10px",
+              }}
+            >
+              <div
+                className={map ? "item-active" : "item"}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  border: map ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+
+                  color: map ? "white" : "black",
+                  backgroundColor: map ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (map) {
+                    setMap(false);
+                  } else {
+                    setMap(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/map-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Bản đồ</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: bluetooth ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: bluetooth ? "white" : "black",
+                  backgroundColor: bluetooth ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (bluetooth) {
+                    setBluetooth(false);
+                  } else {
+                    setBluetooth(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/bluetooth-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Bluetooth</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: camera360 ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: camera360 ? "white" : "black",
+                  backgroundColor: camera360 ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (camera360) {
+                    setCamera360(false);
+                  } else {
+                    setCamera360(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/360_camera-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Camera 360</span>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: cameratruoc ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: cameratruoc ? "white" : "black",
+                  backgroundColor: cameratruoc ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (cameratruoc) {
+                    setCameratruoc(false);
+                  } else {
+                    setCameratruoc(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/parking_camera-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Camera cập lề</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: cameratrip ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+
+                  color: cameratrip ? "white" : "black",
+                  backgroundColor: cameratrip ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (cameratrip) {
+                    setCameratrip(false);
+                  } else {
+                    setCameratrip(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/dash_camera-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Camera hành trình</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: camerasau ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: camerasau ? "white" : "black",
+                  backgroundColor: camerasau ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (camerasau) {
+                    setCamerasau(false);
+                  } else {
+                    setCamerasau(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/reverse_camera-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Camera lùi</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: cuaso ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: cuaso ? "white" : "black",
+                  backgroundColor: cuaso ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (cuaso) {
+                    setCuaso(false);
+                  } else {
+                    setCuaso(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/sunroof-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Cửa sổ trời</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: gps ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: gps ? "white" : "black",
+                  backgroundColor: gps ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (gps) {
+                    setGps(false);
+                  } else {
+                    setGps(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/gps-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Định vị GPS</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: ghe ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: ghe ? "white" : "black",
+                  backgroundColor: ghe ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (ghe) {
+                    setGhe(false);
+                  } else {
+                    setGhe(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/babyseat-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Ghế trẻ em</span>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: lop ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: lop ? "white" : "black",
+                  backgroundColor: lop ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (lop) {
+                    setLop(false);
+                  } else {
+                    setLop(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/spare_tire-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Lốp dự phòng</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  border: manhinh ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: manhinh ? "white" : "black",
+                  backgroundColor: manhinh ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (manhinh) {
+                    setManhinh(false);
+                  } else {
+                    setManhinh(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/dvd-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Màn hình DVD</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  border: tuikhi ? "1px solid #00a550" : "1px solid black",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  padding: "5px",
+                  color: tuikhi ? "white" : "black",
+                  backgroundColor: tuikhi ? "#00a550" : "",
+                  fontSize: "15px",
+                }}
+                onClick={(e) => {
+                  if (tuikhi) {
+                    setTuikhi(false);
+                  } else {
+                    setTuikhi(true);
+                  }
+                }}
+              >
+                <img
+                  src="https://n1-cstg.mioto.vn/v4/p/m/icons/features/airbags-v2.png"
+                  alt=""
+                  width={30}
+                  height={30}
+                />
+                <span>Túi khí an toàn</span>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ width: "100%" }}>
+            <h3>Chi phí</h3>
+            <div style={{ display: "flex", gap: "20px", width: "100%" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  width: "50%",
+                  gap: "10px",
+                }}
+              >
+                <lable style={{ fontSize: "16px" }}>Giá thuê một giờ</lable>
+                <div
+                  style={{
+                    width: "100%",
+                    position: "relative",
+                  }}
+                >
+                  <input
+                    style={{
+                      display: editMoney ? "block" : "none",
+                      width: "100%",
+                      padding: "10px ",
+                      cursor: "pointer",
+                      outline: "none",
+                      border: "1px solid black",
+                      borderRadius: "8px",
+                      height: "50px",
+                      lineHeight: "30px",
+                      fontSize: "16px",
+                    }}
+                    placeholder="Nhập giá giờ thuê mới"
+                    value={price}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                    }}
+                  ></input>
+                  <p
+                    style={{
+                      display: editMoney ? "none" : "block",
+                      padding: "10px",
+                      width: "100%",
+                      border: "1px solid black",
+                      borderRadius: "8px",
+                      height: "50px",
+                      lineHeight: "30px",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {edit?.price}
+                  </p>
+                  <FaPencilAlt
+                    style={{
+                      position: "absolute",
+                      top: "15px",
+                      right: "10px",
+                      height: "20px",
+                      width: "30px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (editMoney) {
+                        setEditMoney(false);
+                      } else {
+                        setEditMoney(true);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  width: "50%",
+                  gap: "10px",
+                }}
+              >
+                <lable style={{ fontSize: "16px" }}>Phí dịch vụ</lable>
+                <div
+                  style={{
+                    width: "100%",
+                    position: "relative",
+                  }}
+                >
+                  <input
+                    style={{
+                      display: editMoney1 ? "block" : "none",
+                      width: "100%",
+                      padding: "10px ",
+                      cursor: "pointer",
+                      outline: "none",
+                      border: "1px solid black",
+                      borderRadius: "8px",
+                      height: "50px",
+                      lineHeight: "30px",
+                      fontSize: "16px",
+                    }}
+                    placeholder="Nhập giá giờ thuê mới"
+                    value={extraFee}
+                    onChange={(e) => {
+                      setExtraFee(e.target.value);
+                    }}
+                  ></input>
+                  <p
+                    style={{
+                      display: editMoney1 ? "none" : "block",
+                      padding: "10px",
+                      width: "100%",
+                      border: "1px solid black",
+                      borderRadius: "8px",
+                      height: "50px",
+                      lineHeight: "30px",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {edit?.extraFee}
+                  </p>
+                  <FaPencilAlt
+                    style={{
+                      position: "absolute",
+                      top: "15px",
+                      right: "10px",
+                      height: "20px",
+                      width: "30px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      if (editMoney1) {
+                        setEditMoney1(false);
+                      } else {
+                        setEditMoney1(true);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style={{ width: "100%" }}>
+            <h3>Mô tả</h3>
+            <div style={{ marginTop: "10px" }}>
+              <textarea
+                value={desc}
+                onChange={(e) => {
+                  setDesc(e.target.value);
+                }}
+                style={{
+                  resize: "none",
+                  width: "100%",
+                  display: "block",
+                  padding: "10px",
+                  height: "100px",
+                  overflowX: "hidden",
+                  overflowY: "scroll",
+                  outline: "none",
+                }}
+              ></textarea>
+            </div>
+          </div>
         </div>
       </Modal>
+      {/* //////////////////////////////Update Image////////////////////////////////// */}
       <Modal
         className="modal"
         width={500}
@@ -1856,5 +2387,5 @@ const ProductComponent = styled.section`
   } */
   }
 `;
-const ProductComponent2 = styled.section``;
+
 export default Product;

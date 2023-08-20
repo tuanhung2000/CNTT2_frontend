@@ -35,7 +35,10 @@ import {
 } from "react-icons/fa6";
 import { DateTimeField } from "@mui/x-date-pickers";
 import Swal from "sweetalert2";
-import { useGetVehicleQuery } from "../../features/user/userApiSlice";
+import {
+  useGetUserQuery,
+  useGetVehicleQuery,
+} from "../../features/user/userApiSlice";
 import { AmazonOutlined } from "@ant-design/icons";
 function CarDetail() {
   const url = "http://localhost:9090/vehicle/";
@@ -47,6 +50,7 @@ function CarDetail() {
   };
   const { vehicleID } = useParams();
   const { data: vehicle } = useGetVehicleQuery(vehicleID);
+  const { data: userCurrent } = useGetUserQuery();
   const { role } = useAuth();
   const navigate = useNavigate();
   const [sex, setSex] = useState("");
@@ -625,12 +629,14 @@ function CarDetail() {
                       <FaUser style={{ fontSize: "20px" }} />
                     </div>
                     <div className="content">
-                      <h4>Cao Minh Bảo</h4>
+                      <h4>
+                        {vehicle.owner.firstName} {vehicle.owner.lastName}
+                      </h4>
                       <div className="content-body">
                         <div className="item">
                           <MdStar style={{ color: "yellow" }} />
                           <span style={{ color: "#767676", fontSize: "16px" }}>
-                            5.0
+                            {vehicle.owner.rate}
                           </span>
                         </div>
                         <div className="item">
@@ -655,49 +661,7 @@ function CarDetail() {
                   </div>
                 </div>
               </div>
-              <div className="owner">
-                <h3>Tài xế lái</h3>
-                <div className="infor">
-                  <div className="left">
-                    <div className="img" style={{ backgroundColor: "#00a550" }}>
-                      <FaUserAstronaut
-                        style={{
-                          fontSize: "20px",
-                          color: "white",
-                        }}
-                      />
-                    </div>
-                    <div className="content">
-                      <h4>Cao Minh Bảo</h4>
-                      <div className="content-body">
-                        <div className="item">
-                          <MdStar style={{ color: "yellow" }} />
-                          <span style={{ color: "#767676", fontSize: "16px" }}>
-                            5.0
-                          </span>
-                        </div>
-                        <div className="item">
-                          <MdBackpack style={{ color: "green" }} />
-                          <span style={{ color: "#767676", fontSize: "16px" }}>
-                            33 chuyến
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="right">
-                    <div className="item">
-                      <span style={{ fontSize: "20px" }}>Tỉ lệ phản hồi</span>
-                      <span>100%</span>
-                    </div>
 
-                    <div className="item">
-                      <span style={{ fontSize: "20px" }}>Tỉ lệ đồng ý</span>
-                      <span>100%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div className="rate-container">
                 <div
                   style={{
@@ -733,7 +697,10 @@ function CarDetail() {
                         }}
                       ></img>
                       <div className="infor">
-                        <span>Thinh Bui</span>
+                        <span>
+                          {userCurrent.User.lastName}{" "}
+                          {userCurrent.User.firstName}
+                        </span>
                         <Rating
                           name="simple-controlled"
                           value={star}

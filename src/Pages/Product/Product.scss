@@ -1,0 +1,10 @@
+.buttonOk {
+  background-color: #00a550;
+  color: white;
+  border: 1px solid #00a550;
+  &:hover {
+    background-color: red;
+    color: #00a550;
+    border: 1px solid #00a550;
+  }
+}
