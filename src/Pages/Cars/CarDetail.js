@@ -38,8 +38,10 @@ import Swal from "sweetalert2";
 import {
   useGetUserQuery,
   useGetVehicleQuery,
+  usePostReviewQuery,
 } from "../../features/user/userApiSlice";
 import { AmazonOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
 function CarDetail() {
   const url = "http://localhost:9090/vehicle/";
   const token = localStorage.getItem("token");
@@ -50,9 +52,11 @@ function CarDetail() {
   };
   const { vehicleID } = useParams();
   const { data: vehicle } = useGetVehicleQuery(vehicleID);
+  const getVehicle = useGetVehicleQuery(vehicleID);
   const { data: userCurrent } = useGetUserQuery();
   const { role } = useAuth();
   const navigate = useNavigate();
+  const [contentComment, setContentComment] = useState("");
   const [sex, setSex] = useState("");
   const [star, setStar] = useState(4);
   const [year, setYear] = useState([]);
@@ -207,27 +211,62 @@ function CarDetail() {
     setOpenRent(false);
   };
   useEffect(() => {
-    if (hourHire > 0) {
+    if (hourHire > 0 && vehicle.vehicle.Vehicle.price) {
+      const priceVehicle = parseInt(vehicle.vehicle.Vehicle.price);
+      const extraVehicle = parseInt(vehicle.vehicle.Vehicle.extraFee);
+      const insuranceVehicle = parseInt(vehicle.vehicle.VehicleSpec.insurance);
       setTotalMoney(
-        hourHire * parseInt(vehicle.Vehicle.price) +
-          (minuteHire / 60) * parseInt(vehicle.Vehicle.price) +
-          parseInt(vehicle.Vehicle.extraFee) +
-          parseInt(vehicle.VehicleSpec.insurance)
+        hourHire * priceVehicle +
+          (minuteHire / 60) * priceVehicle +
+          extraVehicle +
+          insuranceVehicle
       );
     }
-  }, [minuteHire, hourHire]);
-  const handleRent = () => {
+  }, [minuteHire, hourHire, vehicle]);
+  console.log("tong tien", typeof totalMoney);
+  const handleRent = (e) => {
     setOpenRent(false);
     var dateStart = new Date(daystart.$d);
     var dateEnd = new Date(dayend.$d);
-    //vehicleID
-    //from
-    //to
-    //totalTime
-    //total
-    //address
-    //serviceType
-    //clientRequire
+    const vehicleID = vehicle.vehicle.Vehicle._id;
+    const address =
+      vehicle.vehicle.Vehicle.address[0] + vehicle.vehicle.Vehicle.address[1];
+    console.log("address", typeof address);
+    const totalTime = hourHire + minuteHire / 60;
+    const roundedTotalTime = totalTime.toFixed(2);
+    const urlPostOrder = `http://localhost:9090/order/requestOrder`;
+    axios
+      .post(
+        urlPostOrder,
+        {
+          vehicleID: vehicleID,
+          from: dateStart,
+          to: dateEnd,
+          totalTime: roundedTotalTime,
+          total: totalMoney,
+          address: address,
+          serviceType: "order",
+          clientRequire: "order",
+        },
+        opts
+      )
+      .then((response) => {
+        setContentComment("");
+        toast.success("Bình luận thành công");
+        getVehicle.refetch();
+      })
+      .catch((error) => {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.msg === "User amount not enough!!"
+        ) {
+          toast.error("Số dư không đủ");
+        } else {
+          console.error(error);
+          toast.error("Bình luận thất bại");
+        }
+      });
     // Swal.fire({
 
     //   title: "Thành công!",
@@ -248,7 +287,45 @@ function CarDetail() {
   const handleTotalCost = (num1, num2, num3) => {
     return num1 + num2 + num3;
   };
+  const handleComment = (e) => {
+    e.preventDefault();
+    const urlPostComment = `http://localhost:9090/review/`;
+    const typeID = vehicle.vehicle.Vehicle._id;
+    axios
+      .post(
+        urlPostComment,
+        {
+          type: "User",
+          typeID: typeID,
+          rate: star,
+          content: contentComment,
+        },
+        opts
+      )
+      .then((response) => {
+        setContentComment("");
+        toast.success("Bình luận thành công");
+        getVehicle.refetch();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Bình luận thất bại");
+      });
+  };
+  const [total, setTotal] = useState(0);
+  const totalAverageRate = (vehicle) => {
+    if (!vehicle.reviews || vehicle.reviews.length === 0) {
+      return 0;
+    }
 
+    const sum = vehicle.reviews.reduce((accumulator, item) => {
+      return accumulator + parseInt(item.rate);
+    }, 0);
+
+    return Math.floor(sum / vehicle.reviews.length);
+  };
+
+  console.log("totalAvarageRate", total);
   return (
     <section className="carDetail-container">
       {vehicle === undefined ? (
@@ -319,7 +396,7 @@ function CarDetail() {
                   >
                     <MdBackpack style={{ color: "green" }} />
                     <span style={{ color: "#767676", fontSize: "16px" }}>
-                      8 chuyến
+                      {vehicle.orderCount} chuyến
                     </span>
                   </div>
                   <div
@@ -681,123 +758,85 @@ function CarDetail() {
                     }}
                   >
                     <MdStar style={{ color: "yellow" }} />
-                    5.0 ( 23 lượt đánh giá )
+                    {totalAverageRate(vehicle)} ( {vehicle.reviews.length} lượt
+                    đánh giá )
                   </span>
                 </div>
-                <div className="rate-body">
-                  <div className="rate-item">
-                    <div className="left">
-                      <img
-                        src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
-                        alt="a"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                        }}
-                      ></img>
-                      <div className="infor">
-                        <span>
-                          {userCurrent.User.lastName}{" "}
-                          {userCurrent.User.firstName}
-                        </span>
-                        <Rating
-                          name="simple-controlled"
-                          value={star}
-                          onChange={(event, newValue) => {
-                            setStar(newValue);
+                {userCurrent !== undefined && (
+                  <div className="rate-body">
+                    <div className="rate-item">
+                      <div className="left">
+                        <img
+                          src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
+                          alt="a"
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "50%",
                           }}
-                        />
+                        ></img>
+                        <div className="infor">
+                          <span>
+                            {userCurrent.User.lastName}{" "}
+                            {userCurrent.User.firstName}
+                          </span>
+                          <Rating
+                            name="simple-controlled"
+                            value={star}
+                            onChange={(event, newValue) => {
+                              setStar(newValue);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="right">
+                        <button
+                          onClick={(e) => {
+                            handleComment(e);
+                          }}
+                        >
+                          Gửi
+                        </button>
                       </div>
                     </div>
-                    <div className="right">
-                      <button>Gửi</button>
-                    </div>
+                    <input
+                      value={contentComment}
+                      onChange={(e) => {
+                        setContentComment(e.target.value);
+                      }}
+                      type="text"
+                      style={{ width: "100%", display: "block" }}
+                      placeholder="Nhập nội dung bình luận"
+                    ></input>
                   </div>
-                  <input
-                    type="text"
-                    style={{ width: "100%", display: "block" }}
-                    placeholder="Nhập nội dung bình luận"
-                  ></input>
-                </div>
-                <div className="rate-body">
-                  <div className="rate-item">
-                    <div className="left">
-                      <img
-                        src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
-                        alt="a"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                        }}
-                      ></img>
-                      <div className="infor">
-                        <span>Thinh Bui</span>
-                        <Rating name="simple-controlled" value={2} />
+                )}
+                {vehicle.reviews.map((item, index) => {
+                  return (
+                    <div className="rate-body">
+                      <div className="rate-item">
+                        <div className="left">
+                          <img
+                            src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
+                            alt="a"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%",
+                            }}
+                          ></img>
+                          <div className="infor">
+                            <span>Thinh Bui</span>
+                            <Rating readOnly value={parseInt(item.rate)} />
+                          </div>
+                        </div>
+                        <div className="right">
+                          <span>6/7</span>
+                        </div>
                       </div>
+                      <p>{item.content}</p>
                     </div>
-                    <div className="right">
-                      <span>6/7</span>
-                    </div>
-                  </div>
-                  <p>
-                    Trải nghiệm xe điện rất tốt, Chủ xe hướng dẫn đầy đủ những
-                    lưu ý.
-                  </p>
-                </div>
-                <div className="rate-body">
-                  <div className="rate-item">
-                    <div className="left">
-                      <img
-                        src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
-                        alt="a"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                        }}
-                      ></img>
-                      <div className="infor">
-                        <span>Thinh Bui</span>
-                        <Rating name="simple-controlled" value={2} />
-                      </div>
-                    </div>
-                    <div className="right">
-                      <span>6/7</span>
-                    </div>
-                  </div>
-                  <p>
-                    Trải nghiệm xe điện rất tốt, Chủ xe hướng dẫn đầy đủ những
-                    lưu ý.
-                  </p>
-                </div>
-                <div className="rate-body">
-                  <div className="rate-item">
-                    <div className="left">
-                      <img
-                        src="https://n1-cstg.mioto.vn/m/avatars/avatar-2.png"
-                        alt="a"
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          borderRadius: "50%",
-                        }}
-                      ></img>
-                      <div className="infor">
-                        <span>Thinh Bui</span>
-                        <Rating name="simple-controlled" value={2} />
-                      </div>
-                    </div>
-                    <div className="right">
-                      <span>6/7</span>
-                    </div>
-                  </div>
-                  <p>
-                    Trải nghiệm xe điện rất tốt, Chủ xe hướng dẫn đầy đủ những
-                    lưu ý.
-                  </p>
-                </div>
+                  );
+                })}
               </div>
             </section>
             <section className="right">

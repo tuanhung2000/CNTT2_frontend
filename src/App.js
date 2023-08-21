@@ -42,12 +42,12 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="/post" element={<PostCar />} />
             <Route path="/payment/:id" element={<Payment />} />
+            <Route path="/recharge" element={<Recharge />} />
           </Route>
           <Route element={<PrivateAdminComponent />}>
             <Route path="/admin/user" element={<ManageUser />} />
             <Route path="/admin/request" element={<ManageRequest />} />
           </Route>
-          {username && <Route path="/recharge" element={<Recharge />} />}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />}></Route>

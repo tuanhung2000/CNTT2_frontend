@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import "./Recharge.scss";
 import { FaArrowCircleLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useGetUserQuery } from "../../features/user/userApiSlice";
 const Recharge = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [cardNumber, setCardNumber] = useState("");
   const [cardName, setCardName] = useState("");
+  const getUserCurrent = useGetUserQuery();
   const [cvv, setCvv] = useState("");
   const [money, setMoney] = useState("");
   const [checkbox, setCheckbox] = useState(false);
@@ -27,7 +31,10 @@ const Recharge = () => {
     const formattedValue = format(e.target.value);
     setCardNumber(formattedValue);
   };
-
+  const handleMoneyChange = (e) => {
+    const numericValue = parseInt(e.target.value); // Convert string to number
+    setMoney(numericValue);
+  };
   function format(value) {
     const v = value
       .replace(/\s+/g, "")
@@ -41,31 +48,37 @@ const Recharge = () => {
 
     return parts.join(" ");
   }
-
+  const token = localStorage.getItem("token");
+  const opts = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
   const handleSubmit = (e) => {
-    if (checkbox) {
-      alert(money);
-      navigate("/");
-    }
+    setLoading(true);
   };
   const handleRecharge = (e) => {
-    alert(
-      "Name" +
-        cardName +
-        "\n" +
-        "Number" +
-        cardNumber +
-        "\n" +
-        "Cvv" +
-        " " +
-        cvv +
-        "\n" +
-        "Month" +
-        " " +
-        selectedMonth +
-        " " +
-        selectedYear
-    );
+    if (checkbox) {
+      const urlRecharge = `http://localhost:9090/user/recharge`;
+      axios
+        .post(
+          urlRecharge,
+          {
+            amount: money,
+            currency: "VND",
+          },
+          opts
+        )
+        .then((response) => {
+          toast.success("Nạp tiền thành công");
+          getUserCurrent.refetch();
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Nạp tiền thất bại");
+        });
+    }
   };
   return (
     <section className="recharge-page">
@@ -163,10 +176,10 @@ const Recharge = () => {
               <div className="input-container">
                 <label htmlFor="money">Nhập số tiền bạn muốn nạp</label>
                 <input
-                  type="text" // Use type="text" to allow formatting
+                  type="number" //
                   id="money"
                   value={money}
-                  onChange={(e) => setMoney(e.target.value)}
+                  onChange={handleMoneyChange}
                 />
               </div>
               <div style={{ width: "100%", display: "flex", gap: "5px" }}>
@@ -191,7 +204,7 @@ const Recharge = () => {
                 </p>
               </div>
               <div className="container-button">
-                <button onClick={handleSubmit}>Nạp tiền</button>
+                <button onClick={handleRecharge}>Nạp tiền</button>
               </div>
             </>
           )}

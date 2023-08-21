@@ -4,17 +4,23 @@ import useAuth from "../../hooks/useAuth";
 import styled from "styled-components";
 import { Box, Dialog, DialogTitle } from "@mui/material";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
+import { useGetUserQuery } from "../../features/user/userApiSlice";
 
 function Navbar() {
   const { username, role } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const [newpassword, setNewpassword] = useState("");
+  const { data: userCurrent } = useGetUserQuery();
+  const getUserCurrent = useGetUserQuery();
   const [newpasswordConfirm, setNewpasswordConfirm] = useState("");
   const [sendLogout] = useSendLogoutMutation();
   const [active, setActive] = useState("nav_menu");
   const [toggleIcon, setToggleIcon] = useState("nav_toggler");
   const [open, setOpen] = useState(false);
-
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
   const menuRef = useRef();
   const imgRef = useRef();
   window.addEventListener("click", (e) => {
@@ -41,7 +47,7 @@ function Navbar() {
   const handleClickClose = () => {
     setOpenDialog(false);
   };
-  console.log(role);
+  console.log(userCurrent);
   return (
     <NavbarContainer>
       <NavbarLeft>
@@ -85,16 +91,24 @@ function Navbar() {
             )}
           </Bao>
         </section>
-        {role === "customer" && (
+        {(role === "customer" || role === "owner") && (
           <section className="product" style={{ marginLeft: "20px" }}>
-            <span>0 đ</span>
+            <span>
+              {userCurrent && userCurrent.Wallet
+                ? formatter.format(userCurrent.Wallet.amount)
+                : formatter.format(0)}
+            </span>
           </section>
         )}
-        {role === "owner" && (
+        {/* {role === "owner" && (
           <section className="product" style={{ marginLeft: "20px" }}>
-            <span>0 đ</span>
+            <span>
+              {userCurrent.Wallet
+                ? formatter.format(userCurrent.Wallet.amount)
+                : formatter.format(0)}
+            </span>
           </section>
-        )}
+        )} */}
         <section className="product" style={{ marginLeft: "20px" }}>
           {role === "owner" ? (
             <>
