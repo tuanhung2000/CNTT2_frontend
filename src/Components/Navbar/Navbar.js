@@ -5,8 +5,17 @@ import styled from "styled-components";
 import { Box, Dialog, DialogTitle } from "@mui/material";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
 import { useGetUserQuery } from "../../features/user/userApiSlice";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { COLORS } from "../../assets/color";
 
 function Navbar() {
+  const token = localStorage.getItem("token");
+  const opts = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  };
   const { username, role } = useAuth();
   const [openDialog, setOpenDialog] = useState(false);
   const [newpassword, setNewpassword] = useState("");
@@ -47,7 +56,41 @@ function Navbar() {
   const handleClickClose = () => {
     setOpenDialog(false);
   };
-  console.log(userCurrent);
+  const onChangePassword = () => {
+    const urlDelete = `http://localhost:9090/auth/change-password`;
+    // console.log("userID: ", opts.headers);
+    axios
+      .patch(
+        urlDelete,
+        { username, password: newpassword, newPassword: newpasswordConfirm },
+        opts
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Cập nhật mật khẩu thành công!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setOpenDialog(false);
+            setNewpassword("");
+            setNewpasswordConfirm("");
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
+  };
   return (
     <NavbarContainer>
       <NavbarLeft>
@@ -206,9 +249,16 @@ function Navbar() {
                       textAlign: "center",
                     }}
                   >
-                    <Link to="products" className="link_item">
-                      {role === "admin" ? "Quản lý" : "Xe của bạn"}
-                    </Link>
+                    {role !== "admin" && (
+                      <Link to="products" className="link_item">
+                        Xe của bạn
+                      </Link>
+                    )}
+                    {role === "admin" && (
+                      <Link to="/admin/user" className="link_item">
+                        Người dùng
+                      </Link>
+                    )}
                   </li>
 
                   <li
@@ -308,13 +358,17 @@ function Navbar() {
                     htmlFor="newpassword"
                     style={{ cursor: "pointer", fontWeight: "600" }}
                   >
-                    Mật khẩu mới
+                    Mật khẩu cũ
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="newpassword"
                     value={newpassword}
-                    style={{ display: "block", padding: "5px" }}
+                    style={{
+                      display: "block",
+                      padding: "10px",
+                      outline: "none",
+                    }}
                     onChange={(e) => {
                       setNewpassword(e.target.value);
                     }}
@@ -331,19 +385,30 @@ function Navbar() {
                     htmlFor="newpasswordConfirm"
                     style={{ cursor: "pointer", fontWeight: "600" }}
                   >
-                    Nhập lại mật khẩu mới
+                    Nhập mật khẩu mới
                   </label>
                   <input
-                    type="text"
+                    type="password"
                     id="newpasswordConfirm"
                     value={newpasswordConfirm}
-                    style={{ display: "block", padding: "5px" }}
+                    style={{
+                      display: "block",
+                      padding: "10px",
+                      outline: "none",
+                    }}
                     onChange={(e) => {
                       setNewpasswordConfirm(e.target.value);
                     }}
                   />
                 </div>
-                <ButtonChange className="btn_change">Gửi</ButtonChange>
+                <ButtonChange
+                  className="btn_change"
+                  onClick={() => {
+                    onChangePassword();
+                  }}
+                >
+                  Gửi
+                </ButtonChange>
               </div>
             </Dialog>
           </div>
@@ -387,13 +452,13 @@ const NavbarContainer = styled.section`
   }
 `;
 const ButtonChange = styled.section`
-  color: black;
+  color: white;
   background-color: black;
   text-align: center;
   cursor: pointer;
   border: 1px solid black;
   font-weight: bold;
-  padding: 5px 10px;
+  padding: 10px;
   &:hover {
     color: black;
     border-color: black;

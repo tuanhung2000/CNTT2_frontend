@@ -18,7 +18,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-
+    deleteUser: build.query({
+      query: (userID) => {
+        return {
+          url: `/user/`,
+          method: "DELETE",
+          body: { userID },
+        };
+      },
+    }),
     // Vehicles
     getAllVehicles: build.query({
       query: () => {
@@ -120,6 +128,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => {
         return {
           url: `/order/all-orders`,
+          method: "GET",
+        };
+      },
+    }),
+    getOwnerOrders: build.query({
+      query: () => {
+        return {
+          url: `/order/`,
           method: "GET",
         };
       },
@@ -256,7 +272,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetUserQuery,
   useGetAllUsersQuery,
-
+  useDeleteUserQuery,
   //Vehicle
   useGetAllVehiclesQuery,
   useGetVehicleQuery,
@@ -266,6 +282,7 @@ export const {
   useGetVehicleOwnerQuery,
   //Order
   useGetAllOrdersQuery,
+  useGetOwnerOrdersQuery,
   // useRe
   useRequestOrderQuery,
   useUpdateOrderQuery,

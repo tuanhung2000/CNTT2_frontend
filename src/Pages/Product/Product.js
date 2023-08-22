@@ -4,13 +4,11 @@ import dayjs from "dayjs";
 import "./Product.scss";
 import Icon, {
   DeleteOutlined,
-  DownloadOutlined,
   EditOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  SwapOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
+  CloseOutlined,
+  CheckOutlined,
+  LoadingOutlined,
+  PrinterFilled,
 } from "@ant-design/icons";
 import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -30,6 +28,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import {
   useDeleteVehicleQuery,
   useGetAllVehiclesQuery,
+  useGetOwnerOrdersQuery,
   useGetVehicleOwnerQuery,
 } from "../../features/user/userApiSlice";
 import axios from "axios";
@@ -145,6 +144,7 @@ function Product() {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditImg, setIsEditImg] = useState(false);
   const [edit, setEdit] = useState(null);
+  const [responseInfor, setResponseInfor] = useState(null);
   const token = localStorage.getItem("token");
   const opts = {
     headers: {
@@ -152,6 +152,7 @@ function Product() {
     },
   };
   const getVehicleOwnerQuery = useGetVehicleOwnerQuery();
+
   ///////////////////////////////////
   const [map, setMap] = useState(false);
   const [bluetooth, setBluetooth] = useState(false);
@@ -244,28 +245,7 @@ function Product() {
       setDesc(edit.description);
     }
   }, [edit]);
-  // useEffect(() => {
-  //   setListFeatures(featureList);
-  // }, [
-  //   map,
-  //   bluetooth,
-  //   camera360,
-  //   cameratruoc,
-  //   cameratrip,
-  //   camerasau,
-  //   cuaso,
-  //   gps,
-  //   ghe,
-  //   lop,
-  //   manhinh,
-  //   tuikhi,
-  //   featureList,
-  // ]);
-  useEffect(() => {
-    if (listImageUpdatem.length > 0) {
-      console.log("List anh update", listImageUpdatem);
-    }
-  }, [listImageUpdatem]);
+
   const onUpdateImage1 = (imageUrl) => {
     setIsEditing(false);
     setIsEditImg(true);
@@ -297,19 +277,25 @@ function Product() {
   //////////////////////////////////useGetVehicleOwnerQuery
   const { data: allvehicle } = useGetAllVehiclesQuery();
   const { data: allvehicleowner } = useGetVehicleOwnerQuery();
-
-  useEffect(() => {
-    if (allvehicleowner !== undefined) {
-      console.log("allvehicleowner", allvehicleowner);
-    }
-  }, [allvehicleowner]);
+  const { data: ownerOrder } = useGetOwnerOrdersQuery();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const handleChange1 = (event, newValue) => {
     setValue1(newValue);
   };
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
   const [processedData, setProcessedData] = useState([]);
+  const [ownedData, setOwnedData] = useState([]);
+  const [isLoadingAccept, setIsLoadingAccept] = useState(
+    new Array(ownedData.length).fill(false)
+  );
+  const [isLoadingDecline, setIsLoadingDecline] = useState(
+    new Array(ownedData.length).fill(false)
+  );
   useEffect(() => {
     if (allvehicleowner !== undefined) {
       setProcessedData(
@@ -320,10 +306,20 @@ function Product() {
       );
     }
   }, [allvehicleowner]);
-
+  useEffect(() => {
+    if (ownerOrder !== undefined) {
+      setOwnedData(
+        ownerOrder.orders.map((item, index) => ({
+          ...item,
+          index: index + 1,
+        }))
+      );
+    }
+  }, [ownerOrder]);
   const paginationConfig = {
     className: "centered-pagination",
   };
+  // ===============================================RESPONSE========================================================
   const onEditCar = (record) => {
     setIsEditing(true);
     setEdit({ ...record });
@@ -356,6 +352,19 @@ function Product() {
         });
       });
   };
+  const onAccept = (record, rowIndex) => {
+    setIsLoadingAccept((prevLoadingStates) => ({
+      ...prevLoadingStates,
+      [record.key]: true,
+    }));
+  };
+  const onDecline = (record) => {
+    setIsLoadingDecline((prevLoadingStates) => ({
+      ...prevLoadingStates,
+      [record.key]: true,
+    }));
+  };
+  // ===============================================RESPONSE========================================================
   const onDownload = () => {
     alert("Downloading");
   };
@@ -459,6 +468,23 @@ function Product() {
         });
       });
   };
+
+  function formatISODate(isoDateString) {
+    const isoDate = new Date(isoDateString);
+
+    // Extract components from the ISO date
+    const day = isoDate.getUTCDate();
+    const month = isoDate.getUTCMonth() + 1; // Months are 0-based
+    const year = isoDate.getUTCFullYear();
+    const hours = isoDate.getUTCHours();
+    const minutes = isoDate.getUTCMinutes();
+    const seconds = isoDate.getUTCSeconds();
+
+    // Format the components into the desired format
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    return formattedDate;
+  }
   return (
     <>
       <ProductComponent>
@@ -1003,21 +1029,7 @@ function Product() {
         ) : (
           /* Tab of owner */
           <>
-            {allvehicleowner === undefined ? (
-              <>
-                <div
-                  style={{
-                    minHeight: "calc(100vh - 160px",
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CircularProgress />
-                </div>
-              </>
-            ) : (
+            {role === "owner" && allvehicleowner !== undefined ? (
               <>
                 <TabContext value={value1}>
                   <section className="sidebar">
@@ -1048,14 +1060,6 @@ function Product() {
                           className="tab_item"
                           value="2"
                           style={{ color: value1 == 2 ? "#00a550" : "" }}
-                        />
-                        <Tab
-                          icon={<AutoGraphIcon />}
-                          iconPosition="start"
-                          label="Phản hồi"
-                          value="3"
-                          className="tab_item"
-                          style={{ color: value1 == 3 ? "#00a550" : "" }}
                         />
                       </TabList>
                     </Box>
@@ -1195,7 +1199,6 @@ function Product() {
                     </TabPanel>
                   </TabPanel>
                   <TabPanel value="2">
-                    {" "}
                     <TabPanel
                       value="2"
                       style={{
@@ -1217,24 +1220,37 @@ function Product() {
                         columns={[
                           { title: "STT", dataIndex: "index" },
                           {
-                            title: "Tên",
-                            dataIndex: "name",
+                            title: "ID phương tiện",
+                            dataIndex: "vehicleID",
                             filteredValue: [searchText],
                             onFilter: (value, record) => {
                               return (
-                                String(record.name)
+                                String(record.vehicleID)
                                   .toLowerCase()
                                   .includes(value.toLowerCase()) ||
-                                String(record.owner)
+                                String(record.userID)
                                   .toLowerCase()
                                   .includes(value.toLowerCase()) ||
-                                String(record.desc)
+                                String(record.from)
+                                  .toLowerCase()
+                                  .includes(value.toLowerCase()) ||
+                                String(record.to)
                                   .toLowerCase()
                                   .includes(value.toLowerCase()) ||
                                 String(record.price)
                                   .toLowerCase()
                                   .includes(value.toLowerCase()) ||
-                                String(record.status)
+                                String(record.total)
+                                  .toLowerCase()
+                                  .includes(value.toLowerCase()) ||
+                                String(record.totalTime)
+                                  .toLowerCase()
+                                  .includes(value.toLowerCase()) ||
+                                String(
+                                  record.isAvailable === true
+                                    ? "Chưa được thuê"
+                                    : "Đang thuê"
+                                )
                                   .toLowerCase()
                                   .includes(value.toLowerCase()) ||
                                 String(record.times)
@@ -1244,43 +1260,75 @@ function Product() {
                             },
                           },
                           {
-                            title: "Ảnh",
-                            dataIndex: "image",
-                            render: (image) => (
-                              <Image
-                                src={image}
-                                style={{
-                                  width: "60px",
-                                  height: "60px",
-                                  objectFit: "cover",
-                                  objectPosition: "center",
-                                }}
-                              />
-                            ),
+                            title: "ID người thuê",
+                            dataIndex: "userID",
                           },
 
                           {
-                            title: "Giá giờ thuê",
-                            dataIndex: "price",
-                            render: (price) => formatter.format(price),
-                            sorter: (a, b) => a.price - b.price,
+                            title: "Ngày bắt đầu",
+                            dataIndex: "from",
+                            render: (from) => formatISODate(from),
+                            sorter: (a, b) => {
+                              const dateA = new Date(a.from);
+                              const dateB = new Date(b.from);
+                              return dateA - dateB;
+                            },
                           },
                           {
-                            title: "Trạng thái",
-                            dataIndex: "status",
-                            render: (status) => {
-                              if (status === "Đang thuê") {
-                                return <Tag color="green">{status}</Tag>;
-                              } else if (status === "Đang ở bãi") {
-                                return <Tag color="red">{status}</Tag>;
-                              } else {
-                                return <p>{status}</p>;
-                              }
+                            title: "Ngày kết thúc",
+                            dataIndex: "to",
+                            render: (to) => formatISODate(to),
+                            sorter: (a, b) => {
+                              const dateA = new Date(a.to);
+                              const dateB = new Date(b.to);
+                              return dateA - dateB;
+                            },
+                          },
+                          {
+                            title: "Số giờ",
+                            dataIndex: "totalTime",
+                          },
+                          {
+                            title: "Tổng tiền",
+                            dataIndex: "total",
+                            render: (total) => formatter.format(total),
+                          },
+
+                          {
+                            title: "Hợp đồng",
+                            width: 100,
+                            render: (record) => {
+                              return (
+                                <>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      gap: "10px",
+                                    }}
+                                  >
+                                    <button
+                                      style={{
+                                        fontSize: "13px",
+                                        padding: "5px 10px",
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                      }}
+                                    >
+                                      <PrinterFilled /> <span>In</span>
+                                    </button>
+                                  </div>
+                                </>
+                              );
                             },
                           },
                           {
                             title: "",
-                            render: (record) => {
+                            render: (record, _, index) => {
                               return (
                                 <>
                                   <div
@@ -1288,30 +1336,53 @@ function Product() {
                                       display: "flex",
                                       justifyContent: "space-around",
                                       alignItems: "center",
+                                      gap: "10px",
                                     }}
                                   >
-                                    <EditOutlined
-                                      style={{
-                                        fontSize: "20px",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => onEditCar(record)}
-                                    />
-                                    <DeleteOutlined
-                                      style={{
-                                        color: "red",
-                                        fontSize: "20px",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => onDeleteCar(record)}
-                                    />
+                                    {isLoadingAccept[record.key] ? (
+                                      <LoadingOutlined
+                                        style={{
+                                          fontSize: 20,
+                                        }}
+                                        spin
+                                      />
+                                    ) : (
+                                      <CheckOutlined
+                                        style={{
+                                          fontSize: "20px",
+                                          cursor: "pointer",
+                                          color: "green",
+                                        }}
+                                        onClick={() => onAccept(record)}
+                                      />
+                                    )}
+                                    {isLoadingDecline[record.key] ? (
+                                      <LoadingOutlined
+                                        style={{
+                                          fontSize: 20,
+                                        }}
+                                        spin
+                                      />
+                                    ) : (
+                                      <CloseOutlined
+                                        style={{
+                                          fontSize: "20px",
+                                          cursor: "pointer",
+                                          color: "red",
+                                        }}
+                                        onClick={() => onDecline(record, index)}
+                                      />
+                                    )}
                                   </div>
                                 </>
                               );
                             },
                           },
                         ]}
-                        dataSource={listCarOwner}
+                        dataSource={ownedData.map((item, index) => ({
+                          ...item,
+                          key: index, // or use a unique identifier if available in your data
+                        }))}
                         onChange={onChange}
                         locale={{
                           triggerDesc: "Giảm dần",
@@ -1324,8 +1395,21 @@ function Product() {
                       ></Table>
                     </TabPanel>
                   </TabPanel>
-                  <TabPanel value="3">Phản hồi</TabPanel>
                 </TabContext>
+              </>
+            ) : (
+              <>
+                <div
+                  style={{
+                    minHeight: "calc(100vh - 160px",
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircularProgress />
+                </div>
               </>
             )}
           </>
