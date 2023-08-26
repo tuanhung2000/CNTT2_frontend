@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Image, Input, Table } from "antd";
+import { Button, Image, Input, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import {
   useDeleteUserQuery,
@@ -9,6 +9,7 @@ import "./ManageUser.scss";
 import Swal from "sweetalert2";
 import { COLORS } from "../../../assets/color";
 import axios from "axios";
+import { Box, Dialog, DialogTitle } from "@mui/material";
 const ManageUser = () => {
   const token = localStorage.getItem("token");
   const opts = {
@@ -16,6 +17,12 @@ const ManageUser = () => {
       Authorization: token ? `Bearer ${token}` : "",
     },
   };
+  const [openDialog, setOpenDialog] = useState(false);
+  const [userInfor, setUserInFor] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [searchText, setSearchText] = useState("");
   const [processedData, setProcessedData] = useState([]);
   const paginationConfig = {
@@ -41,6 +48,10 @@ const ManageUser = () => {
       );
     }
   }, [listUsers]);
+
+  const handleClickClose = () => {
+    setOpenDialog(false);
+  };
   const onDeleteUser = (record) => {
     const urlDelete = `http://localhost:9090/user/`;
     const config = {
@@ -77,36 +88,69 @@ const ManageUser = () => {
         });
       });
   };
-  // const onDeleteCar = (record) => {
-  //   const urlDelete = `http://localhost:9090/user/`;
-  //   const userID = record._id;
-  //   // console.log("userID: ", opts.headers);
-  //   axios
-  //     .delete(urlDelete, { userID: userID }, opts)
-  //     .then((response) => {
-  //       Swal.fire({
-  //         title: "Thành công!",
-  //         text: "Xóa tài khoản thành công!",
-  //         icon: "success",
-  //         confirmButtonColor: `${COLORS.main}`,
-  //         confirmButtonText: "Đồng ý",
-  //       }).then((result) => {
-  //         if (result.isConfirmed) {
-  //           getListUser.refetch();
-  //         }
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       Swal.fire({
-  //         title: "Thất bại!",
-  //         text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
-  //         icon: "error",
-  //         confirmButtonColor: `${COLORS.main}`,
-  //         confirmButtonText: "Xác nhận",
-  //       });
-  //     });
-  // };
+  const onEditCar = (record) => {
+    setUserInFor({ ...record });
+    setOpenDialog(true);
+    console.log("user in for", userInfor);
+  };
+  const handleUpdate = (record) => {
+    const urlEdit = `http://localhost:9090/user/edit-info/`;
+
+    const userID = userInfor._id;
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`, // Replace with your actual access token
+      },
+      // data: {
+      //   userID: userID,
+      //   firstName: firstName,
+      //   lastName: lastName,
+      //   address: address,
+      //   phoneNumber: phoneNumber,
+      // },
+    };
+    console.log(config);
+    axios
+      .patch(
+        urlEdit,
+        {
+          userID: userID,
+          firstName: firstName,
+          lastName: lastName,
+          address: address,
+          phoneNumber: phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Replace with your actual access token
+          },
+        }
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Cập nhật tài khoản thành công!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getListUser.refetch();
+            setOpenDialog(false);
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
+  };
   return (
     <section className="manage-user">
       <h2 style={{ marginBottom: "20px", textAlign: "center" }}>
@@ -202,7 +246,7 @@ const ManageUser = () => {
                         fontSize: "20px",
                         cursor: "pointer",
                       }}
-                      // onClick={() => onEditCar(record)}
+                      onClick={() => onEditCar(record)}
                     />
                     <DeleteOutlined
                       style={{
@@ -232,6 +276,175 @@ const ManageUser = () => {
         bordered
         pagination={paginationConfig}
       ></Table>
+      <Dialog
+        open={openDialog}
+        onClose={handleClickClose}
+        style={{ zIndex: "1000" }}
+      >
+        <DialogTitle style={{ backgroundColor: "#00a550", color: "white" }}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <span style={{ fontWeight: "bold", color: "white" }}>
+              Cập nhật thông tin
+            </span>
+            <ion-icon
+              name="close-circle-outline"
+              onClick={handleClickClose}
+              style={{
+                cursor: "pointer",
+                width: "30px",
+                height: "30px",
+                display: "block",
+                border: "none",
+                zIndex: "6",
+                fontWeight: "bold",
+                color: "white",
+              }}
+            ></ion-icon>
+          </Box>
+        </DialogTitle>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            position: "relative",
+            padding: "40px",
+            width: "400px",
+            height: "400px",
+            gap: "10px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <label
+              htmlFor="firstname"
+              style={{ cursor: "pointer", fontWeight: "600" }}
+            >
+              Tên đệm
+            </label>
+            <input
+              type="firstname"
+              id="firstname"
+              value={firstName}
+              placeholder={userInfor.firstName}
+              style={{
+                display: "block",
+                padding: "10px",
+                outline: "none",
+              }}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <label
+              htmlFor="lastName"
+              style={{ cursor: "pointer", fontWeight: "600" }}
+            >
+              Tên
+            </label>
+            <input
+              placeholder={userInfor.lastName}
+              type="lastName"
+              id="lastName"
+              value={lastName}
+              style={{
+                display: "block",
+                padding: "10px",
+                outline: "none",
+              }}
+              onChange={(e) => {
+                setLastName(e.target.value);
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <label
+              htmlFor="address"
+              style={{ cursor: "pointer", fontWeight: "600" }}
+            >
+              Địa chỉ
+            </label>
+            <input
+              placeholder={userInfor.address}
+              type="address"
+              id="address"
+              value={address}
+              style={{
+                display: "block",
+                padding: "10px",
+                outline: "none",
+              }}
+              onChange={(e) => {
+                setAddress(e.target.value);
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "5px",
+            }}
+          >
+            <label
+              htmlFor="phoneNumber"
+              style={{ cursor: "pointer", fontWeight: "600" }}
+            >
+              Số điện thoại
+            </label>
+            <input
+              placeholder={userInfor.phoneNumber}
+              type="phoneNumber"
+              id="phoneNumber"
+              value={phoneNumber}
+              style={{
+                display: "block",
+                padding: "10px",
+                outline: "none",
+              }}
+              onChange={(e) => {
+                setPhoneNumber(e.target.value);
+              }}
+            />
+          </div>
+          <button
+            style={{
+              padding: "10px",
+              cursor: "pointer",
+              backgroundColor: "#00a550",
+              color: "white",
+              border: "1px solid #00a550",
+              borderRadius: "5px",
+            }}
+            onClick={handleUpdate}
+          >
+            Gửi
+          </button>
+        </div>
+      </Dialog>
     </section>
   );
 };

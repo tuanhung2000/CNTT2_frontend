@@ -1,0 +1,9 @@
+.manage-request {
+  min-height: calc(100vh - 51px);
+  width: 100%;
+  padding: 20px;
+  .centered-pagination {
+    display: flex;
+    justify-content: center;
+  }
+}

@@ -260,6 +260,21 @@ function Navbar() {
                       </Link>
                     )}
                   </li>
+                  <li
+                    className="menu-item"
+                    onClick={() => setOpen(false)}
+                    style={{
+                      padding: "10px 10px",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    {role === "admin" && (
+                      <Link to="/admin/request" className="link_item">
+                        Yêu cầu
+                      </Link>
+                    )}
+                  </li>
 
                   <li
                     className="menu-item"

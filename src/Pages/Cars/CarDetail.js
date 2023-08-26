@@ -163,7 +163,14 @@ function CarDetail() {
   };
 
   const handleDayStartChange = (newValue) => {
-    setDaystart(newValue);
+    if (newValue.isBefore(dayjs())) {
+      toast.error("Vui lòng chọn thời gian hợp lệ!", {
+        position: "top-center",
+        autoClose: 2000, // 3 seconds
+      });
+    } else {
+      setDaystart(newValue);
+    }
 
     if (dayend && dayjs(dayend).isBefore(dayjs(newValue))) {
       setDayend(dayjs(newValue).add(1, "hour"));
@@ -171,7 +178,14 @@ function CarDetail() {
   };
 
   const handleDayendChange = (newValue) => {
-    setDayend(newValue);
+    if (newValue.isBefore(dayjs()) || newValue.isBefore(dayjs(daystart))) {
+      toast.error("Vui lòng chọn thời gian hợp lệ!", {
+        position: "top-center",
+        autoClose: 2000, // 3 seconds
+      });
+    } else {
+      setDayend(newValue);
+    }
   };
   // console.log(city1);
   // console.log(district1);
@@ -235,51 +249,42 @@ function CarDetail() {
     const totalTime = hourHire + minuteHire / 60;
     const roundedTotalTime = totalTime.toFixed(2);
     const urlPostOrder = `http://localhost:9090/order/requestOrder`;
-    axios
-      .post(
-        urlPostOrder,
-        {
-          vehicleID: vehicleID,
-          from: dateStart,
-          to: dateEnd,
-          totalTime: roundedTotalTime,
-          total: totalMoney,
-          address: address,
-          serviceType: "order",
-          clientRequire: "order",
-        },
-        opts
-      )
-      .then((response) => {
-        setContentComment("");
-        toast.success("Bình luận thành công");
-        getVehicle.refetch();
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.msg === "User amount not enough!!"
-        ) {
-          toast.error("Số dư không đủ");
-        } else {
-          console.error(error);
-          toast.error("Bình luận thất bại");
-        }
-      });
-    // Swal.fire({
-
-    //   title: "Thành công!",
-    //   text: "Yêu cầu thuê xe đã được gửi",
-    //   icon: "success",
-    //   confirmButtonColor: `${COLORS.main}`,
-    //   confirmButtonText: "Đồng ý",
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     navigate("/listcars");
-    //     window.scrollTo(0, 0);
-    //   }
-    // });
+    if (!dateStart || !dateEnd) {
+      toast.error("Vui lòng chọn đủ thông tin!");
+    } else {
+      axios
+        .post(
+          urlPostOrder,
+          {
+            vehicleID: vehicleID,
+            from: dateStart,
+            to: dateEnd,
+            totalTime: roundedTotalTime,
+            total: totalMoney,
+            address: address,
+            serviceType: "order",
+            clientRequire: "order",
+          },
+          opts
+        )
+        .then((response) => {
+          setContentComment("");
+          toast.success("Bình luận thành công");
+          getVehicle.refetch();
+        })
+        .catch((error) => {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.msg === "User amount not enough!!"
+          ) {
+            toast.error("Số dư không đủ");
+          } else {
+            console.error(error);
+            toast.error("Thuê xe không thành công!");
+          }
+        });
+    }
   };
   const formatMoney = (amount) => {
     return amount / 1000;

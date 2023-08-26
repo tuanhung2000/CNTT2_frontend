@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useGetUserQuery } from "../../features/user/userApiSlice";
 const Recharge = () => {
+  const [confirmStep, setConfirmStep] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [cardNumber, setCardNumber] = useState("");
@@ -56,9 +57,10 @@ const Recharge = () => {
   };
   const handleSubmit = (e) => {
     setLoading(true);
+    setConfirmStep(true);
   };
   const handleRecharge = (e) => {
-    if (checkbox) {
+    if (checkbox && confirmStep) {
       const urlRecharge = `http://localhost:9090/user/recharge`;
       axios
         .post(

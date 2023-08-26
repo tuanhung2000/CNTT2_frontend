@@ -2,6 +2,7 @@ import { apiSlice } from "../../app/api/apiSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (build) => ({
+    //admin
     getUser: build.query({
       query: () => {
         return {
@@ -24,6 +25,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
           url: `/user/`,
           method: "DELETE",
           body: { userID },
+        };
+      },
+    }),
+    getNewVehicle: build.query({
+      query: () => {
+        return {
+          url: `/user/getNewVehicles`,
+          method: "GET",
         };
       },
     }),
@@ -270,9 +279,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+  //Admin
   useGetUserQuery,
   useGetAllUsersQuery,
   useDeleteUserQuery,
+  useGetNewVehicleQuery,
   //Vehicle
   useGetAllVehiclesQuery,
   useGetVehicleQuery,

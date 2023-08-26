@@ -457,7 +457,7 @@ function Cars() {
                       }}
                     >
                       <FaMapMarkerAlt />
-                      {/* <p>{item.address.city}</p> */}
+                      <p>{item.vehicle.address[0]}</p>
                     </div>
                     <div className="bottom">
                       <div className="bottom-left">

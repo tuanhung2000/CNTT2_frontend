@@ -44,6 +44,7 @@ const formatter = new Intl.NumberFormat("vi-VN", {
 });
 
 function Product() {
+  const [responseData, setResponseData] = useState([]);
   const [editMoney, setEditMoney] = useState(false);
   const [editMoney1, setEditMoney1] = useState(false);
   const [listCarOwner, setListCarOwner] = useState([
@@ -152,7 +153,7 @@ function Product() {
     },
   };
   const getVehicleOwnerQuery = useGetVehicleOwnerQuery();
-
+  const { data: listOwnerOrder } = useGetOwnerOrdersQuery();
   ///////////////////////////////////
   const [map, setMap] = useState(false);
   const [bluetooth, setBluetooth] = useState(false);
@@ -357,12 +358,47 @@ function Product() {
       ...prevLoadingStates,
       [record.key]: true,
     }));
+    const urlResponseOrder = `http://localhost:9090/order/responseOrder`;
+    axios
+      .patch(
+        urlResponseOrder,
+        {
+          vehicleID: record.vehicleID,
+          orderID: record._id,
+          isResponse: true,
+        },
+        opts
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getVehicleOwnerQuery.refetch();
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
   };
   const onDecline = (record) => {
     setIsLoadingDecline((prevLoadingStates) => ({
       ...prevLoadingStates,
       [record.key]: true,
     }));
+    setResponseData({ ...record });
   };
   // ===============================================RESPONSE========================================================
   const onDownload = () => {
@@ -441,7 +477,11 @@ function Product() {
           feature: featureList,
           description: desc,
         },
-        opts
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
       )
       .then((response) => {
         Swal.fire({
@@ -1297,7 +1337,7 @@ function Product() {
                           {
                             title: "Hợp đồng",
                             width: 100,
-                            render: (record) => {
+                            render: (isHandle) => {
                               return (
                                 <>
                                   <div
@@ -1312,12 +1352,13 @@ function Product() {
                                       style={{
                                         fontSize: "13px",
                                         padding: "5px 10px",
-                                        cursor: "pointer",
+                                        cursor: isHandle ? "pointer" : "",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
                                         gap: "10px",
                                       }}
+                                      disabled={isHandle}
                                     >
                                       <PrinterFilled /> <span>In</span>
                                     </button>
@@ -1339,39 +1380,47 @@ function Product() {
                                       gap: "10px",
                                     }}
                                   >
-                                    {isLoadingAccept[record.key] ? (
-                                      <LoadingOutlined
-                                        style={{
-                                          fontSize: 20,
-                                        }}
-                                        spin
-                                      />
+                                    {record.isHandle ? (
+                                      <span>Đã xử lý</span>
                                     ) : (
-                                      <CheckOutlined
-                                        style={{
-                                          fontSize: "20px",
-                                          cursor: "pointer",
-                                          color: "green",
-                                        }}
-                                        onClick={() => onAccept(record)}
-                                      />
-                                    )}
-                                    {isLoadingDecline[record.key] ? (
-                                      <LoadingOutlined
-                                        style={{
-                                          fontSize: 20,
-                                        }}
-                                        spin
-                                      />
-                                    ) : (
-                                      <CloseOutlined
-                                        style={{
-                                          fontSize: "20px",
-                                          cursor: "pointer",
-                                          color: "red",
-                                        }}
-                                        onClick={() => onDecline(record, index)}
-                                      />
+                                      <>
+                                        {isLoadingAccept[record.key] ? (
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 20,
+                                            }}
+                                            spin
+                                          />
+                                        ) : (
+                                          <CheckOutlined
+                                            style={{
+                                              fontSize: "20px",
+                                              cursor: "pointer",
+                                              color: "green",
+                                            }}
+                                            onClick={() => onAccept(record)}
+                                          />
+                                        )}
+                                        {isLoadingDecline[record.key] ? (
+                                          <LoadingOutlined
+                                            style={{
+                                              fontSize: 20,
+                                            }}
+                                            spin
+                                          />
+                                        ) : (
+                                          <CloseOutlined
+                                            style={{
+                                              fontSize: "20px",
+                                              cursor: "pointer",
+                                              color: "red",
+                                            }}
+                                            onClick={() =>
+                                              onDecline(record, index)
+                                            }
+                                          />
+                                        )}
+                                      </>
                                     )}
                                   </div>
                                 </>
