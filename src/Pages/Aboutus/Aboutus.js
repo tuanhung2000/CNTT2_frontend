@@ -51,7 +51,7 @@ function Aboutus() {
               width: "400px",
             }}
           >
-            Micar - Cùng bạn đến mọi hành trình
+            EasyCar - Cùng bạn đến mọi hành trình
           </h1>
           <div style={{ width: "calc(95% - 400px)", overflowX: "hidden" }}>
             <p
@@ -63,7 +63,7 @@ function Aboutus() {
               data-aos="fade-left"
               data-aos-duration="1000"
             >
-              Công ty Cổ phần Micar Asia hoạt động trên nền tảng ứng dụng cho
+              Công ty Cổ phần EasyCar Asia hoạt động trên nền tảng ứng dụng cho
               thuê xe tự lái 4-7 chỗ, theo mô hình kinh tế sẻ chia.
             </p>
             <p
@@ -75,9 +75,9 @@ function Aboutus() {
               data-aos="fade-left"
               data-aos-duration="2000"
             >
-              Micar được thành lập với sứ mệnh mang đến nền tảng công nghệ hiện
-              đại kết nối chủ xe ô tô và hành khách theo cách Nhanh Nhất, An
-              Toàn Nhất và Tiết Kiệm Nhất
+              EasyCar được thành lập với sứ mệnh mang đến nền tảng công nghệ
+              hiện đại kết nối chủ xe ô tô và hành khách theo cách Nhanh Nhất,
+              An Toàn Nhất và Tiết Kiệm Nhất
             </p>
             <p
               style={{
@@ -88,9 +88,9 @@ function Aboutus() {
               data-aos="fade-left"
               data-aos-duration="3000"
             >
-              Micar hướng tới việc xây dựng một cộng đồng chia sẻ ô tô văn minh
-              với nhiều tiện ích thông qua ứng dụng trên di động, nhằm nâng cao
-              chất lượng cuộc sống của cộng đồng.
+              EasyCar hướng tới việc xây dựng một cộng đồng chia sẻ ô tô văn
+              minh với nhiều tiện ích thông qua ứng dụng trên di động, nhằm nâng
+              cao chất lượng cuộc sống của cộng đồng.
             </p>
           </div>
         </div>
@@ -114,7 +114,7 @@ function Aboutus() {
             fontFamily: "Manrope",
           }}
         >
-          Lợi thế của Micar
+          Lợi thế của EasyCar
         </h2>
         <div className="list_ads">
           {listAds.map((item, index) => (

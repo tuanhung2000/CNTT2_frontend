@@ -199,8 +199,8 @@ const Recharge = () => {
                     }}
                   ></input>
                   Tôi xác nhận và đồng ý thực hiện giao dịch nạp tiền vào hệ
-                  thống Micar. Nhấn nút xác nhận hoặc tiến hành thanh toán, tôi
-                  chấp nhận các điều khoản và điều kiện liên quan. Thông tin
+                  thống EasyCar. Nhấn nút xác nhận hoặc tiến hành thanh toán,
+                  tôi chấp nhận các điều khoản và điều kiện liên quan. Thông tin
                   cung cấp là chính xác và tôi đã đọc, hiểu rõ trước khi giao
                   dịch.
                 </p>

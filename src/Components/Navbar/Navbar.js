@@ -96,7 +96,7 @@ function Navbar() {
       <NavbarLeft>
         <LogoSections>
           <LinkCustom to="/">
-            M<Green className="green">i</Green>car
+            <Green className="green">Easy</Green>car
           </LinkCustom>
         </LogoSections>
         <ContactSection>
@@ -108,7 +108,7 @@ function Navbar() {
           </div>
           <div>
             <Bao to="/aboutus">
-              <span className="hidden">Về Micar</span>
+              <span className="hidden">Về EasyCar</span>
             </Bao>
           </div>
         </ContactSection>

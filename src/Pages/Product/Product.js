@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import { saveAs } from "file-saver";
+import * as docx from "docx";
 import "./Product.scss";
 import Icon, {
   DeleteOutlined,
@@ -29,6 +31,7 @@ import {
   useDeleteVehicleQuery,
   useGetAllVehiclesQuery,
   useGetOwnerOrdersQuery,
+  useGetUserQuery,
   useGetVehicleOwnerQuery,
 } from "../../features/user/userApiSlice";
 import axios from "axios";
@@ -154,6 +157,7 @@ function Product() {
   };
   const getVehicleOwnerQuery = useGetVehicleOwnerQuery();
   const { data: listOwnerOrder } = useGetOwnerOrdersQuery();
+  const getUserCurrent = useGetUserQuery();
   ///////////////////////////////////
   const [map, setMap] = useState(false);
   const [bluetooth, setBluetooth] = useState(false);
@@ -278,6 +282,7 @@ function Product() {
   //////////////////////////////////useGetVehicleOwnerQuery
   const { data: allvehicle } = useGetAllVehiclesQuery();
   const { data: allvehicleowner } = useGetVehicleOwnerQuery();
+  const getOwnedOrder = useGetOwnerOrdersQuery();
   const { data: ownerOrder } = useGetOwnerOrdersQuery();
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -309,6 +314,7 @@ function Product() {
   }, [allvehicleowner]);
   useEffect(() => {
     if (ownerOrder !== undefined) {
+      console.log(ownerOrder);
       setOwnedData(
         ownerOrder.orders.map((item, index) => ({
           ...item,
@@ -367,18 +373,23 @@ function Product() {
           orderID: record._id,
           isResponse: true,
         },
-        opts
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
       )
       .then((response) => {
         Swal.fire({
           title: "Thành công!",
-          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          text: "Chấp thuận yêu cầu thành công!",
           icon: "success",
           confirmButtonColor: `${COLORS.main}`,
           confirmButtonText: "Đồng ý",
         }).then((result) => {
           if (result.isConfirmed) {
-            getVehicleOwnerQuery.refetch();
+            getUserCurrent.refetch();
+            getOwnedOrder.refetch();
           }
         });
       })
@@ -391,6 +402,12 @@ function Product() {
           confirmButtonColor: `${COLORS.main}`,
           confirmButtonText: "Xác nhận",
         });
+      })
+      .finally(() => {
+        setIsLoadingAccept((prevLoadingStates) => ({
+          ...prevLoadingStates,
+          [record.key]: false, // Set loading back to false
+        }));
       });
   };
   const onDecline = (record) => {
@@ -524,6 +541,552 @@ function Product() {
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
     return formattedDate;
+  }
+  function generate(record) {
+    const benAChuKy = "Chữ ký của Bên A";
+    const benBChuKy = "Chữ ký của Bên B";
+    // console.log("Hợp đồng", record);
+    const doc = new docx.Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              alignment: docx.AlignmentType.CENTER,
+              children: [
+                new docx.TextRun({
+                  text: "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+                  size: 32,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              alignment: docx.AlignmentType.CENTER,
+              children: [
+                new docx.TextRun({
+                  text: "Độc lập - Tự do - Hạnh phúc",
+                  size: 30,
+                  italics: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              alignment: docx.AlignmentType.CENTER,
+              children: [
+                new docx.TextRun({
+                  break: 1,
+                  text: "HỢP ĐỒNG THUÊ XE",
+                  size: 32,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "Hôm nay, ngày ",
+                  size: 26,
+                  break: 1,
+                }),
+                new docx.TextRun({
+                  text: new Date().toLocaleDateString("vi-VN"),
+                  bold: true,
+                  size: 26,
+                }),
+                new docx.TextRun({ text: ", tại ", size: 26 }),
+                new docx.TextRun({
+                  text: "địa chỉ thuê xe: Quảng Ngãi",
+                  size: 26,
+                }),
+                new docx.TextRun({ text: ", giữa:", size: 26 }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "Bên A: ", size: 26, bold: true }),
+                new docx.TextRun({ text: "(Bên cho thuê)", size: 26 }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "- Tên: ", size: 26 }),
+                new docx.TextRun({
+                  text: "Cao Minh Bảo",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "- Số điện thoại: ", size: 26 }),
+                new docx.TextRun({
+                  text: "043432424432",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "Bên B: ", size: 26, bold: true }),
+                new docx.TextRun({ text: "(Bên thuê xe)", size: 26 }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "- Tên: ", size: 26 }),
+                new docx.TextRun({
+                  text: "Cao Minh Bảo",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({ text: "- Số điện thoại: ", size: 26 }),
+                new docx.TextRun({
+                  text: "043432424432",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "Sau khi bàn bạc, thỏa thuận, hai bên thống nhất ký kết Hợp đồng thuê xe với các điều khoản như sau:",
+                  size: 26,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "ĐIỀU 1:",
+                  size: 26,
+                  bold: true,
+                  break: 1,
+                }),
+                new docx.TextRun({
+                  text: " NỘI DUNG HỢP ĐỒNG",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, //
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "Bên A đồng ý cho Bên B thuê phương tiện có thông tin như sau:",
+                  size: 26,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Tên phương tiện: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "Audi A3 2002",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Biển số phương tiện: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "76A4-32422",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Số khung: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "76A4-32422",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Ngày bắt đầu thuê phương tiện: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "76A4-32422",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Ngày kết thúc thuê phương tiện: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "76A4-32422",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "ĐIỀU 2:",
+                  size: 26,
+                  bold: true,
+                  break: 1,
+                }),
+                new docx.TextRun({
+                  text: " GIÁ TRỊ HỢP ĐỒNG",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              children: [
+                new docx.TextRun({
+                  text: "- Tổng số tiền thuê phương tiện: ",
+                  size: 26,
+                }),
+                new docx.TextRun({
+                  text: "76A4-32422",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              children: [
+                new docx.TextRun({
+                  text: "( Giá trên đã bao gồm thuế GTGT )",
+                  size: 26,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "ĐIỀU 3:",
+                  size: 26,
+                  bold: true,
+                  break: 1,
+                }),
+                new docx.TextRun({
+                  text: " TRÁCH NHIỆM CỦA CÁC BÊN",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              children: [
+                new docx.TextRun({
+                  text: "3.1. Trách nhiệm của bên A:",
+                  size: 26,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Giao xe và toàn bộ giấy tờ liên quan đến xe ngay sau khi Hợp đồng có hiệu lực và Bên A đã thanh toán tiền thuê xe 01 tháng đầu tiên. Giấy tờ liên quan đến xe gồm: Giấy đăng ký xe, giấy kiểm định, giấy bảo hiểm xe.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Chịu trách nhiệm pháp lý về nguồn gốc và quyền sở hữu của xe.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Mua bảo hiểm xe và đăng kiểm xe cho các lần kế tiếp trong thời hạn hiệu lực của Hợp đồng.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Mua bảo hiểm xe và đăng kiểm xe cho các lần kế tiếp trong thời hạn hiệu lực của Hợp đồng.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              children: [
+                new docx.TextRun({
+                  text: "3.2. Trách nhiệm của bên B :",
+                  size: 26,
+                  break: 1,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Thanh toán tiền thuê xe cho Bên A đúng hạn.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Chịu toàn bộ chi phí bảo dưỡng xe theo định kỳ",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Chịu toàn bộ chi phí xăng dầu khi sử dụng xe.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20, // Convert to twips
+                after: 3.6 * 20, // Convert to twips
+              },
+              children: [
+                new docx.TextRun({
+                  text: "ĐIỀU 4:",
+                  size: 26,
+                  bold: true,
+                  break: 1,
+                }),
+                new docx.TextRun({
+                  text: " HIỆU LỰC HỢP ĐỒNG",
+                  size: 26,
+                  bold: true,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Hợp đồng có giá trị kể từ ngày ….. đến hết ngày …..",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 7.2 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.JUSTIFIED,
+              children: [
+                new docx.TextRun({
+                  text: "- Nếu một trong hai Bên, bên nào muốn chấm dứt Hợp đồng trước thời hạn thì phải thông báo cho Bên kia trươc ít nhất 01 tháng.",
+                  size: 26,
+                  justified: true,
+                }),
+              ],
+            }),
+
+            new docx.Paragraph({
+              spacing: {
+                before: 10 * 20,
+                after: 3.6 * 20,
+              },
+              alignment: docx.AlignmentType.CENTER,
+              children: [
+                new docx.TextRun({ text: `${benAChuKy}`, size: 26 }),
+                new docx.TextRun(" ".repeat(30)), // Khoảng trống giữa hai chữ ký
+                new docx.TextRun({ text: `${benBChuKy}`, size: 26 }),
+              ],
+            }),
+          ],
+        },
+      ],
+    });
+
+    // Xuất tệp DOCX
+    docx.Packer.toBlob(doc).then((blob) => {
+      saveAs(blob, "hopdongthuexe.docx");
+      console.log("Document created successfully");
+    });
   }
   return (
     <>
@@ -1337,7 +1900,7 @@ function Product() {
                           {
                             title: "Hợp đồng",
                             width: 100,
-                            render: (isHandle) => {
+                            render: (record) => {
                               return (
                                 <>
                                   <div
@@ -1352,13 +1915,21 @@ function Product() {
                                       style={{
                                         fontSize: "13px",
                                         padding: "5px 10px",
-                                        cursor: isHandle ? "pointer" : "",
+                                        cursor:
+                                          record.isHandle && record.isResponse
+                                            ? "pointer"
+                                            : "",
                                         display: "flex",
                                         justifyContent: "center",
                                         alignItems: "center",
                                         gap: "10px",
                                       }}
-                                      disabled={isHandle}
+                                      disabled={
+                                        !record.isHandle && !record.isResponse
+                                      }
+                                      onClick={() => {
+                                        generate(record);
+                                      }}
                                     >
                                       <PrinterFilled /> <span>In</span>
                                     </button>

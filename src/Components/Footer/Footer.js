@@ -19,8 +19,8 @@ function Footer() {
             <p>Hỗ trợ 9AM-9PM T2-T7</p>
           </div>
           <div style={{ padding: "0 5px" }}>
-            <p>contact@micar.vn</p>
-            <p>Đặt câu hỏi cho Micar</p>
+            <p>contact@EasyCar.vn</p>
+            <p>Đặt câu hỏi cho EasyCar</p>
           </div>
         </div>
         <div
@@ -50,14 +50,14 @@ function Footer() {
             <p className="main1">ddd</p>
             <div className="item-sub">
               <p>Hỏi và trả lời</p>
-              <p>Micar blog</p>
+              <p>EasyCar blog</p>
             </div>
           </div>
           <div className="item_four">
             <p className="main">Đối tác</p>
             <div className="item-sub">
-              <p>Đăng ký chủ xe Micar</p>
-              <p>Đăng ký thuê xe Micar</p>
+              <p>Đăng ký chủ xe EasyCar</p>
+              <p>Đăng ký thuê xe EasyCar</p>
             </div>
           </div>
         </div>

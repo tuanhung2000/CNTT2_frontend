@@ -269,7 +269,7 @@ function CarDetail() {
         )
         .then((response) => {
           setContentComment("");
-          toast.success("Bình luận thành công");
+          toast.success("Vui lòng chờ chủ xe xét duyệt");
           getVehicle.refetch();
         })
         .catch((error) => {

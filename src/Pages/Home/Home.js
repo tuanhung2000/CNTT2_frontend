@@ -96,7 +96,7 @@ function Home() {
                 color: "white",
               }}
             >
-              Micar - Cùng Bạn Đến Mọi Hành Trình
+              EasyCar - Cùng Bạn Đến Mọi Hành Trình
             </h1>
           </div>
           <div className="container_search">

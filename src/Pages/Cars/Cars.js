@@ -187,7 +187,9 @@ function Cars() {
     if (item === "all") {
       setFilteredCars(null);
     } else {
-      const filtered = listCar.filter((car) => car.motor === item);
+      const filtered = allvehicle.vehicleList.filter(
+        (car) => car.motor === item
+      );
       setFilteredCars(filtered.length > 0 ? filtered : []);
     }
   };
