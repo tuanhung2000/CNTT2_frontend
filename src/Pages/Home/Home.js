@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HomeImg from "../../assets/home.png";
 import { Carousel } from "antd";
@@ -12,8 +12,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 function Home() {
   const [open, setOpen] = useState("close");
   const [city, setCity] = useState("");
+  const [city2, setCity2] = useState("");
+  const [nameCity, setNameCity] = useState("");
   const [active, setActive] = useState(1);
   const [listcity, setListCity] = useState([]);
+  const [listcity2, setListCity2] = useState([]);
   const { role } = useAuth();
   const [daystart, setDaystart] = useState(null);
   const [dayend, setDayend] = useState(null);
@@ -22,11 +25,16 @@ function Home() {
   const [district1, setDistrict1] = useState("");
   const [city1, setCity1] = useState("");
   const [listdistrict, setListDistrict] = useState([]);
-
+  const navigate = useNavigate();
   const [listward, setListWard] = useState([]);
   useEffect(() => {
     axios.get("https://provinces.open-api.vn/api/").then((response) => {
       setListCity(response.data);
+    });
+  }, []);
+  useEffect(() => {
+    axios.get("https://provinces.open-api.vn/api/").then((response) => {
+      setListCity2(response.data);
     });
   }, []);
   useEffect(() => {
@@ -75,7 +83,20 @@ function Home() {
     }
   };
   const { username } = useAuth();
-  console.log(username);
+  useEffect(() => {
+    if (city2 !== undefined) {
+      setNameCity(city2);
+    }
+  }, [city2]);
+  const data = {
+    nameCity: nameCity,
+    // dayStart: daystart,
+    // dayend: dayend,
+  };
+  const handleNavigate = () => {
+    navigate("/listcars", { state: data });
+  };
+
   return (
     <HomeSection>
       <HomeSectionTop
@@ -182,9 +203,9 @@ function Home() {
                         displayEmpty
                         labelId="demo-simple-select-label"
                         id="city"
-                        value={city}
+                        value={city2}
                         style={{ height: "56px", width: "100%" }}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => setCity2(e.target.value)}
                         MenuProps={{
                           getcontentanchorel: null,
                           anchorOrigin: {
@@ -201,7 +222,7 @@ function Home() {
                       >
                         <MenuItem value="">Tỉnh/Thành phố</MenuItem>
                         {listcity.map((item) => (
-                          <MenuItem value={item.code} key={item.code}>
+                          <MenuItem value={item.name} key={item.code}>
                             {item.name}
                           </MenuItem>
                         ))}
@@ -280,6 +301,7 @@ function Home() {
                         </div>
                       </div>
                       <button
+                        onClick={() => handleNavigate()}
                         style={{
                           width: "20%",
                           padding: "10px",
@@ -332,7 +354,7 @@ function Home() {
                         }}
                       >
                         <MenuItem value="">Tỉnh/Thành phố</MenuItem>
-                        {listcity.map((item) => (
+                        {listcity2.map((item) => (
                           <MenuItem value={item.code} key={item.code}>
                             {item.name}
                           </MenuItem>

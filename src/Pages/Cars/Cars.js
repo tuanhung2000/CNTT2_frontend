@@ -30,10 +30,13 @@ import {
 } from "react-icons/fa";
 import "./Cars.scss";
 import axios from "axios";
+
 import { useGetAllVehiclesQuery } from "../../features/user/userApiSlice";
 function Cars() {
+  const location = useLocation();
+  const [nameCity, setNameCity] = useState();
+  const propsFromSource = location.state;
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const [isSticky, setIsSticky] = useState(false);
   const [listCity, setListCity] = useState("");
   const [open, setOpen] = useState(false);
@@ -56,6 +59,44 @@ function Cars() {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    if (
+      propsFromSource === null ||
+      propsFromSource === undefined ||
+      propsFromSource === ""
+    ) {
+      console.log("myProp is null, undefined, or empty");
+    } else {
+      if (
+        propsFromSource.nameCity === null ||
+        propsFromSource.nameCity === undefined ||
+        propsFromSource.nameCity === ""
+      ) {
+        console.log("myProp is null, undefined, or empty");
+      } else {
+        setNameCity(propsFromSource.nameCity);
+        console.log("myProp has a value", propsFromSource.nameCity);
+      }
+    }
+  }, [propsFromSource]);
+
+  useEffect(() => {
+    if (
+      nameCity &&
+      allvehicle &&
+      allvehicle.vehicleList &&
+      (propsFromSource.nameCity !== null ||
+        propsFromSource.nameCity === undefined ||
+        propsFromSource.nameCity === "")
+    ) {
+      const filtered = allvehicle.vehicleList.filter(
+        (car) =>
+          car.vehicle.address[0] === nameCity &&
+          car.vehicle.isSelfDrive === true
+      );
+      setFilteredCars(filtered.length > 0 ? filtered : []);
+    }
+  }, [nameCity, allvehicle]);
   React.useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY >= 60);
@@ -219,7 +260,7 @@ function Cars() {
         <>
           <section
             className="filter-container"
-            issticky={isSticky}
+            issticky={isSticky ? "true" : "false"}
             style={{ position: "sticky", top: isSticky ? "0" : "auto" }}
           >
             <div className="top-filter">
@@ -261,9 +302,9 @@ function Cars() {
                     backgroundColor: "white",
                   }}
                 >
-                  {searchResults.map((city) => (
+                  {searchResults.map((city, index) => (
                     <li
-                      key={city.id}
+                      key={index}
                       onClick={() => handleCitySelect(city)}
                       style={{
                         padding: "5px",
@@ -353,7 +394,11 @@ function Cars() {
             {filteredCars === null ? (
               allvehicle.vehicleList.map((item, index) => {
                 return (
-                  <Link className="item" to={`/listcars/${item.vehicle._id}`}>
+                  <Link
+                    key={index}
+                    className="item"
+                    to={`/listcars/${item.vehicle._id}`}
+                  >
                     <img alt="" src={item.vehicle.image[0]} />
                     <div
                       style={{
@@ -428,7 +473,11 @@ function Cars() {
             ) : (
               filteredCars.map((item, index) => {
                 return (
-                  <Link className="item" to={`/listcars/${item.vehicle._id}`}>
+                  <Link
+                    key={index}
+                    className="item"
+                    to={`/listcars/${item.vehicle._id}`}
+                  >
                     <img alt="" src={item.vehicle.image[0]} />
                     <div
                       style={{
@@ -804,6 +853,7 @@ function Cars() {
                 nameCar.map((item, index) => {
                   return (
                     <div
+                      key={index}
                       style={{
                         display: "flex",
                         justifyContent: "flex-start",
