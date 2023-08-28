@@ -63,6 +63,45 @@ const ManageRequest = () => {
   const handleClickClose = () => {
     setOpenDialog(false);
   };
+  const onDecline = (record) => {
+    const urlAccept = `http://localhost:9090/user/responseVehicle`;
+    axios
+      .patch(
+        urlAccept,
+        {
+          vehicleID: record._id,
+          isAccepted: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Replace with your actual access token
+          },
+        }
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Từ chối thành công!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getListRequestNewVehicle.refetch();
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
+  };
   const onAccept = (record) => {
     const urlAccept = `http://localhost:9090/user/responseVehicle`;
     axios
@@ -70,6 +109,7 @@ const ManageRequest = () => {
         urlAccept,
         {
           vehicleID: record._id,
+          isAccepted: true,
         },
         {
           headers: {
@@ -278,7 +318,7 @@ const ManageRequest = () => {
                         fontSize: "20px",
                         cursor: "pointer",
                       }}
-                      onClick={() => onEditCar(record)}
+                      onClick={() => onDecline(record)}
                     />
                     <CheckOutlined
                       style={{
