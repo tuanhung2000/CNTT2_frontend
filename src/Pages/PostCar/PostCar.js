@@ -9,7 +9,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { COLORS } from "../../assets/color";
 import { useNavigate } from "react-router-dom";
-import { useCreateVehicleQuery } from "../../features/user/userApiSlice";
+import {
+  useCreateVehicleQuery,
+  useGetAllVehiclesQuery,
+} from "../../features/user/userApiSlice";
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -61,6 +64,7 @@ const IOSSwitch = styled((props) => (
   },
 }));
 function PostCar() {
+  const getListCar = useGetAllVehiclesQuery();
   const navigate = useNavigate();
   const [desc, setDesc] = useState("");
   const [activeStep, setActiveStep] = useState(0);
@@ -346,7 +350,6 @@ function PostCar() {
           insurance: "1201234",
           consumption: 20,
           maxSpeed: 100,
-          isSelfDrive: isSelfDrive,
           numberConstructor: numberConstructor,
           seatNumbers: numberChair,
           rent: checked,
@@ -363,6 +366,7 @@ function PostCar() {
           confirmButtonText: "Đồng ý",
         }).then((result) => {
           if (result.isConfirmed) {
+            getListCar.refetch();
             navigate("/listcars");
           }
         });

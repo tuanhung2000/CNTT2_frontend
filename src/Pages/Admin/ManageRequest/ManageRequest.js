@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import {
   useDeleteUserQuery,
   useGetAllUsersQuery,
+  useGetAllVehiclesQuery,
   useGetNewVehicleQuery,
 } from "../../../features/user/userApiSlice";
 import "./ManageRequest.scss";
@@ -16,7 +17,10 @@ import Swal from "sweetalert2";
 import { COLORS } from "../../../assets/color";
 import axios from "axios";
 import { Box, Dialog, DialogTitle } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const ManageRequest = () => {
+  const navigate = useNavigate();
+  const getListCar = useGetAllVehiclesQuery();
   const formatter = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
@@ -57,6 +61,7 @@ const ManageRequest = () => {
           index: index + 1,
         }))
       );
+      console.log(listRequestNewVehicle);
     }
   }, [listRequestNewVehicle]);
 
@@ -127,6 +132,8 @@ const ManageRequest = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             getListRequestNewVehicle.refetch();
+            getListCar.refetch();
+            navigate("/listcars");
           }
         });
       })

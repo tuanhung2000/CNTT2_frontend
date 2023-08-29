@@ -123,7 +123,7 @@ function Navbar() {
         <section className="product" style={{ marginLeft: "20px" }}>
           <Bao to="/products">
             <ion-icon name="people-outline"></ion-icon>
-            {username ? (
+            {username && role !== "admin" ? (
               <>
                 <span className="hidden">Xe của bạn</span>
               </>
@@ -275,20 +275,23 @@ function Navbar() {
                       </Link>
                     </li>
                   )}
-
-                  <li
-                    className="menu-item"
-                    onClick={() => setOpen(false)}
-                    style={{
-                      padding: "10px 10px",
-                      fontWeight: "500",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Link to="/recharge" className="link_item">
-                      Nạp tiền
-                    </Link>
-                  </li>
+                  {role !== "admin" && (
+                    <>
+                      <li
+                        className="menu-item"
+                        onClick={() => setOpen(false)}
+                        style={{
+                          padding: "10px 10px",
+                          fontWeight: "500",
+                          textAlign: "center",
+                        }}
+                      >
+                        <Link to="/recharge" className="link_item">
+                          Nạp tiền
+                        </Link>
+                      </li>
+                    </>
+                  )}
 
                   <li
                     onClick={() => {

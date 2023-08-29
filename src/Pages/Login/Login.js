@@ -102,7 +102,7 @@ function Login() {
                 Đăng nhập
               </h1>
               <p style={{ marginBottom: "20px", color: "GrayText" }}>
-                Chào mừng đến với HVcar
+                Chào mừng đến với EasyCar
               </p>
               <form autoComplete="off" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={1}>
@@ -125,6 +125,7 @@ function Login() {
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      type="password"
                       name="password"
                       label="Mật khẩu"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}

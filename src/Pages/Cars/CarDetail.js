@@ -830,12 +830,12 @@ function CarDetail() {
                             }}
                           ></img>
                           <div className="infor">
-                            <span>Thinh Bui</span>
+                            <span>{item.fullname}</span>
                             <Rating readOnly value={parseInt(item.rate)} />
                           </div>
                         </div>
                         <div className="right">
-                          <span>6/7</span>
+                          <span></span>
                         </div>
                       </div>
                       <p>{item.content}</p>

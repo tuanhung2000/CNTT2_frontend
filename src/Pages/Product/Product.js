@@ -52,96 +52,7 @@ function Product() {
   const [responseData, setResponseData] = useState([]);
   const [editMoney, setEditMoney] = useState(false);
   const [editMoney1, setEditMoney1] = useState(false);
-  const [listCarOwner, setListCarOwner] = useState([
-    {
-      index: 1,
-      name: "Honda",
-      image:
-        "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
-      owner: "Thùy Vân",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 3,
-      price: 1000000,
-      status: "Đang giao xe",
-    },
-    {
-      index: 2,
-      name: "Mecs",
-      owner: "Huỳnh Chánh",
-      image:
-        "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 4,
-      price: 7000000,
-      status: "Đang giao xe",
-    },
-    {
-      index: 3,
-      name: "Audi",
-      image:
-        "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-      owner: "Thùy Vân",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 20,
-      price: 500000,
-      status: "Đang thuê",
-    },
-    {
-      index: 4,
-      name: "Audi",
-      owner: "duy",
-      image:
-        "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 14,
-      price: 10000030,
-      status: "Đang thuê",
-    },
-    {
-      index: 5,
-      name: "Audi",
-      owner: "Đăng Duy",
-      image:
-        "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 9,
-      price: 66600000,
-      status: "Đang thuê",
-    },
-    {
-      index: 6,
-      name: "Audi",
-      image:
-        "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-      owner: "Đăng Duy",
-      desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
-      times: 7,
-      price: 6600000,
-      status: "Đang thuê",
-    },
-    {
-      index: 7,
-      name: "Audi",
-      image:
-        "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-      owner: "Đăng Duy",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 1,
-      price: 450000,
-      status: "Đang thuê",
-    },
-    {
-      index: 8,
-      name: "Audi",
-      image:
-        "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-      owner: "Đăng Duy",
-      desc: ["Rất đẹp", "Có máy lạnh"],
-      times: 1,
-      price: 380000,
-      status: "Đang thuê",
-    },
-  ]);
+
   const [user, setUser] = useState(false);
   const { role, username } = useAuth();
   const [value, setValue] = React.useState("1");
@@ -152,6 +63,7 @@ function Product() {
   const [edit, setEdit] = useState(null);
   const [responseInfor, setResponseInfor] = useState(null);
   const token = localStorage.getItem("token");
+  const getAllVehicle = useGetAllVehiclesQuery();
   const opts = {
     headers: {
       Authorization: token ? `Bearer ${token}` : "",
@@ -393,6 +305,7 @@ function Product() {
           if (result.isConfirmed) {
             getUserCurrent.refetch();
             getOwnedOrder.refetch();
+            getVehicleOwnerQuery.refetch();
           }
         });
       })
@@ -419,6 +332,49 @@ function Product() {
       [record.key]: true,
     }));
     setResponseData({ ...record });
+  };
+  const onCompleted = (record) => {
+    const urlResponseOrder = `http://localhost:9090/order/completeOrder`;
+    axios
+      .patch(
+        urlResponseOrder,
+        {
+          vehicleID: record.vehicleID,
+          orderID: record._id,
+          isCompleted: true,
+        },
+        {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
+      )
+      .then((response) => {
+        Swal.fire({
+          title: "Thành công!",
+          text: "Đã xác nhận kết thúc thành công!",
+          icon: "success",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Đồng ý",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getUserCurrent.refetch();
+            getOwnedOrder.refetch();
+            getVehicleOwnerQuery.refetch();
+            getAllVehicle.refetch();
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Thất bại!",
+          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+          icon: "error",
+          confirmButtonColor: `${COLORS.main}`,
+          confirmButtonText: "Xác nhận",
+        });
+      });
   };
   // ===============================================RESPONSE========================================================
   const onDownload = () => {
@@ -1446,11 +1402,36 @@ function Product() {
                         { title: "STT", dataIndex: "index" },
                         {
                           title: "Tên",
-                          dataIndex: "name",
+                          align: "center",
+                          render: (record) => {
+                            const vehicle = ownerOrder.VehicleList.find(
+                              (item) => item._id === record.vehicleID
+                            );
+
+                            const nameCar = vehicle ? vehicle.make : "N/A";
+                            return (
+                              <>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "5px",
+                                  }}
+                                >
+                                  <span>{nameCar}</span>
+                                </div>
+                              </>
+                            );
+                          },
                           filteredValue: [searchText],
                           onFilter: (value, record) => {
+                            const vehicle = ownerOrder.VehicleList.find(
+                              (item) => item._id === record.vehicleID
+                            );
+                            const nameCar = vehicle.make;
                             return (
-                              String(record.name)
+                              String(nameCar)
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
                               String(record.owner)
@@ -1474,165 +1455,71 @@ function Product() {
 
                         {
                           title: "Tổng số giờ thuê",
-                          dataIndex: "times",
-                          render: (times) => `${times} giờ`,
-                          sorter: (a, b) => a.times - b.times,
+                          dataIndex: "totalTime",
+                          align: "center",
+                          render: (totalTime) => `${totalTime} giờ`,
+                          sorter: (a, b) => a.totalTime - b.totalTime,
                         },
                         {
                           title: "Ngày bắt đầu",
-                          dataIndex: "daystart",
-                          render: (daystart) => daystart,
+                          dataIndex: "from",
+                          render: (from) => formatISODate(from),
                           sorter: (a, b) => {
-                            const dateA = dayjs(
-                              a.daystart,
-                              "DD/MM/YYYY HH:mm:ss"
-                            );
-                            const dateB = dayjs(
-                              b.daystart,
-                              "DD/MM/YYYY HH:mm:ss"
-                            );
-                            if (dateA.isBefore(dateB)) {
-                              return -1;
-                            } else if (dateA.isAfter(dateB)) {
-                              return 1;
-                            }
-                            return 0;
+                            const dateA = new Date(a.from);
+                            const dateB = new Date(b.from);
+                            return dateA - dateB;
                           },
                         },
                         {
                           title: "Ngày kết thúc",
-                          dataIndex: "dayend",
-                          render: (dayend) => dayend,
+                          dataIndex: "to",
+                          render: (to) => formatISODate(to),
                           sorter: (a, b) => {
-                            const dateA = dayjs(
-                              a.dayend,
-                              "DD/MM/YYYY HH:mm:ss"
-                            );
-                            const dateB = dayjs(
-                              b.dayend,
-                              "DD/MM/YYYY HH:mm:ss"
-                            );
-                            if (dateA.isBefore(dateB)) {
-                              return -1;
-                            } else if (dateA.isAfter(dateB)) {
-                              return 1;
-                            }
-                            return 0;
+                            const dateA = new Date(a.to);
+                            const dateB = new Date(b.to);
+                            return dateA - dateB;
                           },
                         },
                         {
-                          title: "Tổng giá tiền",
-                          dataIndex: "price",
-                          render: (price) => formatter.format(price),
-                          sorter: (a, b) => a.price - b.price,
+                          title: "Tổng tiền",
+                          dataIndex: "total",
+                          render: (total) => formatter.format(total),
+                        },
+                        {
+                          title: "Trạng thái",
+                          align: "center",
+                          render: (record) => {
+                            return (
+                              <>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: "5px",
+                                  }}
+                                >
+                                  {!record.isHandle ? (
+                                    <span>Đang giải quyết</span>
+                                  ) : record.isResponse ? (
+                                    record.isCompleted ? (
+                                      <span>Đã thuê xong</span>
+                                    ) : (
+                                      <span>Đang thuê</span>
+                                    )
+                                  ) : (
+                                    <span>Thuê thất bại</span>
+                                  )}
+                                </div>
+                              </>
+                            );
+                          },
                         },
                       ]}
-                      dataSource={[
-                        {
-                          index: 1,
-                          name: "Honda",
-                          image:
-                            "https://images.unsplash.com/photo-1501066927591-314112b5888e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bWVyY2VkZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60",
-                          owner: "Thùy Vân",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 3,
-                          price: 1000000,
-                          status: "Đang giao xe",
-                        },
-                        {
-                          index: 2,
-                          name: "Mecs",
-                          owner: "Huỳnh Chánh",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 4,
-                          price: 7000000,
-                          status: "Đang giao xe",
-                        },
-                        {
-                          index: 3,
-                          name: "Audi",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/04/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1609703048009-d3576872b32c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                          owner: "Thùy Vân",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 20,
-                          price: 500000,
-                          status: "Đang thuê",
-                        },
-                        {
-                          index: 4,
-                          name: "Audi",
-                          owner: "duy",
-                          daystart: "17/05/2023 21:00:00",
-                          dayend: "17/02/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1605556816125-d752c226247b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fG1lcmNlZGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 14,
-                          price: 10000030,
-                          status: "Đang thuê",
-                        },
-                        {
-                          index: 5,
-                          name: "Audi",
-                          owner: "Đăng Duy",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          image:
-                            "https://media.istockphoto.com/id/1066163022/photo/salon-old-retro-car-close-up-cars-details.jpg?b=1&s=170667a&w=0&k=20&c=zr7O6YxQfdi4LworXLhld8remHR2JHwHYufBThRRSAI=",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 9,
-                          price: 66600000,
-                          status: "Đang thuê",
-                        },
-                        {
-                          index: 6,
-                          name: "Audi",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-                          owner: "Đăng Duy",
-                          desc: ["Rất đẹp", "Có máy lạnh", "Cửa tự động"],
-                          times: 7,
-                          price: 6600000,
-                          status: "Đang thuê",
-                        },
-                        {
-                          index: 7,
-                          name: "Audi",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-                          owner: "Đăng Duy",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 1,
-                          price: 450000,
-                          status: "Đang thuê",
-                        },
-                        {
-                          index: 8,
-                          name: "Audi",
-                          daystart: "17/05/2023 19:00:00",
-                          dayend: "17/05/2023 22:00:00",
-                          image:
-                            "https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGNhcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60",
-                          owner: "Đăng Duy",
-                          desc: ["Rất đẹp", "Có máy lạnh"],
-                          times: 1,
-                          price: 380000,
-                          status: "Đang thuê",
-                        },
-                      ]}
+                      dataSource={ownedData.map((item, index) => ({
+                        ...item,
+                        key: index, // or use a unique identifier if available in your data
+                      }))}
                       onChange={onChange}
                       locale={{
                         triggerDesc: "Giảm dần",
@@ -2012,6 +1899,45 @@ function Product() {
                                           />
                                         )}
                                       </>
+                                    )}
+                                  </div>
+                                </>
+                              );
+                            },
+                          },
+                          {
+                            title: "",
+                            width: 100,
+                            render: (record, _, index) => {
+                              return (
+                                <>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-around",
+                                      alignItems: "center",
+                                      gap: "10px",
+                                    }}
+                                  >
+                                    {record.isCompleted ? (
+                                      <>
+                                        <span>Đã hoàn thành</span>
+                                      </>
+                                    ) : (
+                                      <button
+                                        style={{
+                                          fontSize: "13px",
+                                          padding: "5px 10px",
+
+                                          cursor: record.isResponse
+                                            ? "pointer"
+                                            : "",
+                                        }}
+                                        disabled={!record.isResponse}
+                                        onClick={() => onCompleted(record)}
+                                      >
+                                        Hoàn thành
+                                      </button>
                                     )}
                                   </div>
                                 </>

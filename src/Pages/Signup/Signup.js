@@ -221,6 +221,7 @@ function Signup() {
                   </Grid>
                   <Grid xs={12} sm={12} item>
                     <TextField
+                      type="password"
                       name="password"
                       label="Mật khẩu"
                       InputLabelProps={{ style: { color: `${COLORS.main}` } }}
