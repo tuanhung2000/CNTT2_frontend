@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { saveAs } from "file-saver";
 import * as docx from "docx";
 import "./Product.scss";
@@ -47,6 +47,8 @@ const formatter = new Intl.NumberFormat("vi-VN", {
 });
 
 function Product() {
+  const [carDetail, setCarDetail] = useState([]);
+  const [customerDetail, setCustomerDetail] = useState([]);
   const [responseData, setResponseData] = useState([]);
   const [editMoney, setEditMoney] = useState(false);
   const [editMoney1, setEditMoney1] = useState(false);
@@ -157,6 +159,7 @@ function Product() {
   };
   const getVehicleOwnerQuery = useGetVehicleOwnerQuery();
   const { data: listOwnerOrder } = useGetOwnerOrdersQuery();
+  const { data: userCurrent } = useGetUserQuery();
   const getUserCurrent = useGetUserQuery();
   ///////////////////////////////////
   const [map, setMap] = useState(false);
@@ -542,9 +545,15 @@ function Product() {
 
     return formattedDate;
   }
+  const inforUser = (user) => {};
   function generate(record) {
     const benAChuKy = "Chữ ký của Bên A";
     const benBChuKy = "Chữ ký của Bên B";
+    console.log(userCurrent.User);
+    const nameA = userCurrent.User.lastName + " " + userCurrent.User.firstName;
+    const phoneA = userCurrent.User.phoneNumber;
+    const date = dayjs(record.from);
+    const dateCreate = date.format("DD/MM/YYYY");
     // console.log("Hợp đồng", record);
     const doc = new docx.Document({
       sections: [
@@ -606,13 +615,13 @@ function Product() {
                   break: 1,
                 }),
                 new docx.TextRun({
-                  text: new Date().toLocaleDateString("vi-VN"),
+                  text: `${dateCreate}`,
                   bold: true,
                   size: 26,
                 }),
                 new docx.TextRun({ text: ", tại ", size: 26 }),
                 new docx.TextRun({
-                  text: "địa chỉ thuê xe: Quảng Ngãi",
+                  text: `địa chỉ thuê xe: ${record.address}`,
                   size: 26,
                 }),
                 new docx.TextRun({ text: ", giữa:", size: 26 }),
@@ -637,7 +646,7 @@ function Product() {
               children: [
                 new docx.TextRun({ text: "- Tên: ", size: 26 }),
                 new docx.TextRun({
-                  text: "Cao Minh Bảo",
+                  text: `${nameA}`,
                   size: 26,
                   bold: true,
                 }),
@@ -651,7 +660,7 @@ function Product() {
               children: [
                 new docx.TextRun({ text: "- Số điện thoại: ", size: 26 }),
                 new docx.TextRun({
-                  text: "043432424432",
+                  text: `${phoneA}`,
                   size: 26,
                   bold: true,
                 }),
