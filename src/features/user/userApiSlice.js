@@ -149,6 +149,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getCurrentOrder: build.query({
+      query: () => {
+        return {
+          url: `/order/currentOrder`,
+          method: "GET",
+        };
+      },
+    }),
     requestOrder: build.query({
       query: (val) => {
         console.log(val);
@@ -294,6 +302,7 @@ export const {
   //Order
   useGetAllOrdersQuery,
   useGetOwnerOrdersQuery,
+  useGetCurrentOrderQuery,
   // useRe
   useRequestOrderQuery,
   useUpdateOrderQuery,
