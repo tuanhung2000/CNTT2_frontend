@@ -545,16 +545,43 @@ function Product() {
 
     return formattedDate;
   }
-  const inforUser = (user) => {};
+  const inforUser = (user) => {
+    const filteredData = ownedData.userList.filter((user) => user._id === user);
+    setCustomerDetail(filteredData);
+  };
   function generate(record) {
     const benAChuKy = "Chữ ký của Bên A";
     const benBChuKy = "Chữ ký của Bên B";
     console.log(userCurrent.User);
-    const nameA = userCurrent.User.lastName + " " + userCurrent.User.firstName;
+    const nameA =
+      userCurrent.User.lastName.toUpperCase() +
+      " " +
+      userCurrent.User.firstName.toUpperCase();
     const phoneA = userCurrent.User.phoneNumber;
+    const inforB = ownerOrder.userList.filter(
+      (user) => user._id === record.userID
+    );
+    const inforVehicle = ownerOrder.vehicleList.filter(
+      (vehicle) => vehicle._id === record.vehicleID
+    );
+    const nameB =
+      inforB[0].lastName.toUpperCase() +
+      " " +
+      inforB[0].firstName.toUpperCase();
+    const phoneB = inforB[0].phoneNumber;
     const date = dayjs(record.from);
+    const nameVehicle =
+      inforVehicle[0].make.toUpperCase() +
+      " " +
+      inforVehicle[0].model.toUpperCase() +
+      " " +
+      inforVehicle[0].year.toUpperCase();
+    const bienso = inforVehicle[0].licensePlate;
     const dateCreate = date.format("DD/MM/YYYY");
-    // console.log("Hợp đồng", record);
+    const date2 = dayjs(record.to);
+    const dateEnd = date2.format("DD/MM/YYYY");
+    const totalMoney = formatter.format(record.total);
+    console.log("Hợp đồng", totalMoney);
     const doc = new docx.Document({
       sections: [
         {
@@ -684,7 +711,7 @@ function Product() {
               children: [
                 new docx.TextRun({ text: "- Tên: ", size: 26 }),
                 new docx.TextRun({
-                  text: "Cao Minh Bảo",
+                  text: `${nameB}`,
                   size: 26,
                   bold: true,
                 }),
@@ -698,7 +725,7 @@ function Product() {
               children: [
                 new docx.TextRun({ text: "- Số điện thoại: ", size: 26 }),
                 new docx.TextRun({
-                  text: "043432424432",
+                  text: `${phoneB}`,
                   size: 26,
                   bold: true,
                 }),
@@ -758,7 +785,7 @@ function Product() {
                   size: 26,
                 }),
                 new docx.TextRun({
-                  text: "Audi A3 2002",
+                  text: `${nameVehicle}`,
                   size: 26,
                   bold: true,
                 }),
@@ -775,29 +802,13 @@ function Product() {
                   size: 26,
                 }),
                 new docx.TextRun({
-                  text: "76A4-32422",
+                  text: `${bienso}`,
                   size: 26,
                   bold: true,
                 }),
               ],
             }),
-            new docx.Paragraph({
-              spacing: {
-                before: 7.2 * 20, // Convert to twips
-                after: 3.6 * 20, // Convert to twips
-              },
-              children: [
-                new docx.TextRun({
-                  text: "- Số khung: ",
-                  size: 26,
-                }),
-                new docx.TextRun({
-                  text: "76A4-32422",
-                  size: 26,
-                  bold: true,
-                }),
-              ],
-            }),
+
             new docx.Paragraph({
               spacing: {
                 before: 7.2 * 20, // Convert to twips
@@ -809,7 +820,7 @@ function Product() {
                   size: 26,
                 }),
                 new docx.TextRun({
-                  text: "76A4-32422",
+                  text: `${dateCreate}`,
                   size: 26,
                   bold: true,
                 }),
@@ -827,7 +838,7 @@ function Product() {
                   size: 26,
                 }),
                 new docx.TextRun({
-                  text: "76A4-32422",
+                  text: `${dateEnd}`,
                   size: 26,
                   bold: true,
                 }),
@@ -863,7 +874,7 @@ function Product() {
                   size: 26,
                 }),
                 new docx.TextRun({
-                  text: "76A4-32422",
+                  text: `${totalMoney}`,
                   size: 26,
                   bold: true,
                 }),
@@ -876,7 +887,7 @@ function Product() {
               },
               children: [
                 new docx.TextRun({
-                  text: "( Giá trên đã bao gồm thuế GTGT )",
+                  text: "(Giá trên đã bao gồm phí dịch vụ và phí bảo hiển)",
                   size: 26,
                 }),
               ],
@@ -975,7 +986,7 @@ function Product() {
               },
               children: [
                 new docx.TextRun({
-                  text: "3.2. Trách nhiệm của bên B :",
+                  text: "3.2. Trách nhiệm của bên B:",
                   size: 26,
                   break: 1,
                 }),
@@ -1052,7 +1063,7 @@ function Product() {
               alignment: docx.AlignmentType.JUSTIFIED,
               children: [
                 new docx.TextRun({
-                  text: "- Hợp đồng có giá trị kể từ ngày ….. đến hết ngày …..",
+                  text: `- Hợp đồng có giá trị kể từ ngày ${dateCreate} đến hết ngày ${dateEnd}.`,
                   size: 26,
                   justified: true,
                 }),
