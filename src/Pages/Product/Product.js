@@ -244,7 +244,12 @@ function Product() {
   useEffect(() => {
     if (orderCurrent !== undefined) {
       console.log(orderCurrent);
-      // setOrderUserCurrent(orderCurrent.orders);
+      setOrderUserCurrent(
+        orderCurrent.vehicles.map((item, index) => ({
+          ...item,
+          index: index + 1,
+        }))
+      );
     }
   }, [orderCurrent]);
   const paginationConfig = {
@@ -1642,15 +1647,15 @@ function Product() {
                 <h2
                   style={{ fontWeight: "800", fontSize: "40px", width: "50%" }}
                 >
-                  Cho thuê xe trên Mioto để gia tăng thu nhập đến 10tr/tháng !
+                  Cho thuê xe trên EasyCar để gia tăng thu nhập đến 10tr/tháng !
                 </h2>
                 <p>Hotline: 1900 9217 (T2-T7 9AM-9PM)</p>
                 <p>
-                  Mioto không thu phí khi bạn đăng xe. Bạn chỉ chia sẻ phí dịch
-                  vụ với Mioto khi có giao dịch cho thuê thành công.
+                  EasyCar không thu phí khi bạn đăng xe. Bạn chỉ chia sẻ phí
+                  dịch vụ với EasyCar khi có giao dịch cho thuê thành công.
                 </p>
               </div>
-              <div className="productTop-right">
+              {/* <div className="productTop-right">
                 <form
                   style={{
                     display: "flex",
@@ -1724,7 +1729,7 @@ function Product() {
                     <button className="button">Gửi đến thông tin</button>
                   </div>
                 </form>
-              </div>
+              </div> */}
             </section>
             <section className="productMid">
               <div className="row">
@@ -1741,19 +1746,19 @@ function Product() {
                 <div className="col" style={{ textAlign: "center" }}>
                   <div className="card card1">
                     <h5>Audi</h5>
-                    <p>hihih</p>
+                    <p>2016</p>
                   </div>
                   <div className="card card2">
                     <h5>BMW</h5>
-                    <p>hihih</p>
+                    <p>2017</p>
                   </div>
                   <div className="card card3">
                     <h5>Mercedes</h5>
-                    <p>hihih</p>
+                    <p>2018</p>
                   </div>
                   <div className="card card4">
                     <h5>Honda</h5>
-                    <p>hihih</p>
+                    <p>2019</p>
                   </div>
                 </div>
                 <div className="col">
@@ -1761,7 +1766,8 @@ function Product() {
                   <p style={{ fontSize: "15px", textAlign: "right" }}>
                     Bạn đồng hành cùng bạn trên những chuyến đi
                   </p>
-                  <div
+                  <Link
+                    to="/signup"
                     style={{
                       display: "flex",
                       justifyContent: "flex-end",
@@ -1770,7 +1776,7 @@ function Product() {
                     <button type="button" className="btn_signup">
                       Đăng ký
                     </button>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </section>
@@ -1845,46 +1851,37 @@ function Product() {
                     />
                     <Table
                       columns={[
-                        { title: "STT", dataIndex: "index" },
+                        { title: "STT", dataIndex: "index", align: "center" },
                         {
                           title: "Tên",
-                          render: (record) => {
-                            const vehicle = orderCurrent.vehicles.find(
-                              (item) => item._id === record.vehicleID
-                            );
-
-                            const nameCar = vehicle ? vehicle.make : "N/A";
-                            return (
-                              <>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: "5px",
-                                  }}
-                                >
-                                  <span>{nameCar}</span>
-                                </div>
-                              </>
-                            );
-                          },
+                          align: "center",
+                          dataIndex: "make",
                           filteredValue: [searchText],
                           onFilter: (value, record) => {
                             return (
-                              String(record.name)
+                              String(record.make)
+                                .toLowerCase()
+                                .includes(value.toLowerCase()) ||
+                              String(record.model)
+                                .toLowerCase()
+                                .includes(value.toLowerCase()) ||
+                              String(record.year)
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
                               String(record.owner)
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
-                              String(record.desc)
+                              String(record.description)
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
                               String(record.price)
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
-                              String(record.status)
+                              String(
+                                record.rent === true
+                                  ? "Chưa được thuê"
+                                  : "Đang thuê"
+                              )
                                 .toLowerCase()
                                 .includes(value.toLowerCase()) ||
                               String(record.times)
@@ -1894,11 +1891,22 @@ function Product() {
                           },
                         },
                         {
+                          title: "Loại",
+                          align: "center",
+                          dataIndex: "model",
+                        },
+                        {
+                          title: "Năm sản xuất",
+                          align: "center",
+                          dataIndex: "year",
+                        },
+                        {
                           title: "Ảnh",
+                          align: "center",
                           dataIndex: "image",
                           render: (image) => (
                             <Image
-                              src={image}
+                              src={image[0]}
                               style={{
                                 width: "60px",
                                 height: "60px",
@@ -1908,50 +1916,23 @@ function Product() {
                             />
                           ),
                         },
-                        { title: "Chủ xe", dataIndex: "owner" },
+
                         {
-                          title: "Mô tả",
-                          key: "desc",
-                          dataIndex: "desc",
-                          render: (_, { desc }) => (
-                            <>
-                              {desc.map((tag) => {
-                                let color =
-                                  tag.length > 5 ? "geekblue" : "green";
-                                if (tag === "Có máy lạnh") {
-                                  color = "volcano";
-                                }
-                                return (
-                                  <Tag color={color} key={tag}>
-                                    {tag.toUpperCase()}
-                                  </Tag>
-                                );
-                              })}
-                            </>
-                          ),
-                        },
-                        {
-                          title: "Thời gian",
-                          dataIndex: "times",
-                          render: (times) => `${times} ngày`,
-                          sorter: (a, b) => a.times - b.times,
-                        },
-                        {
-                          title: "Giá tiền",
+                          title: "Giá giờ thuê",
                           dataIndex: "price",
+                          align: "center",
                           render: (price) => formatter.format(price),
                           sorter: (a, b) => a.price - b.price,
                         },
                         {
                           title: "Trạng thái",
-                          dataIndex: "status",
-                          render: (status) => {
-                            if (status === "Đang thuê") {
-                              return <Tag color="green">{status}</Tag>;
-                            } else if (status === "Đang giao xe") {
-                              return <Tag color="red">{status}</Tag>;
+                          dataIndex: "isAvailable",
+                          align: "center",
+                          render: (isAvailable) => {
+                            if (isAvailable === true) {
+                              return <Tag color="red">Chưa được thuê</Tag>;
                             } else {
-                              return <p>{status}</p>;
+                              return <Tag color="green">Đang được thuê</Tag>;
                             }
                           },
                         },

@@ -107,28 +107,39 @@ function Cars() {
       window.removeEventListener("scroll", handleScroll);
     };
   });
-  useEffect(() => {
-    axios.get("https://provinces.open-api.vn/api/").then((response) => {
-      setListCity(response.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get("https://provinces.open-api.vn/api/").then((response) => {
+  //     setListCity(response.data);
+  //   });
+  // }, []);
   console.log(nameCar);
   useEffect(() => {
-    if (listCity && searchTerm) {
-      const filteredResults = listCity.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    if (searchTerm) {
+      const filtered = allvehicle.vehicleList.vehicles.filter(
+        (car) => car.address[0].toLowerCase() === searchTerm.toLowerCase()
       );
-      setSearchResults(filteredResults);
+      setFilteredCars(filtered.length > 0 ? filtered : []);
+      console.log("bao", searchTerm.toLowerCase());
     }
   }, [searchTerm]);
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
-    setSelectedCity(null); // Clear selected city when typing
+
+    // const filtered = allvehicle.vehicleList.vehicles.filter(
+    //   (car) => car.address[0] === searchTerm
+    // );
+    // setFilteredCars(filtered.length > 0 ? filtered : []);
   };
 
   const handleCitySelect = (city) => {
     setSearchTerm(city.name);
-    setSelectedCity(city);
+    setSelectedCity(city.name);
+    console.log("Result is :", city.name);
+    console.log("Data is", allvehicle.vehicleList.vehicles);
+    // const filtered = allvehicle.vehicleList.vehicle.filter(
+    //   (car) => car.address[0] === city.name
+    // );
+    // setFilteredCars(filtered.length > 0 ? filtered : []);
   };
   const handleClickOpen = (item) => {
     if (activeFilter === 1) {
@@ -263,61 +274,6 @@ function Cars() {
             issticky={isSticky ? "true" : "false"}
             style={{ position: "sticky", top: isSticky ? "0" : "auto" }}
           >
-            <div className="top-filter">
-              <div className="input-container">
-                <input
-                  value={searchTerm}
-                  onChange={handleInputChange}
-                  placeholder="Nhập thành phố bạn muốn tìm xe"
-                  style={{
-                    width: "100%",
-                    padding: "10px 10px 10px 30px",
-                    cursor: "pointer",
-                    outline: "none",
-                    display: "block",
-                    height: "40px",
-                    border: "none",
-                  }}
-                ></input>
-                <FaMapMarkerAlt
-                  style={{
-                    position: "absolute",
-                    top: "5px",
-                    left: "5px",
-                    height: "30px",
-                    width: "20px",
-                  }}
-                />
-
-                <ul
-                  style={{
-                    listStyle: "none",
-                    position: "absolute",
-                    top: "40px",
-                    left: "0",
-                    width: "100%",
-                    maxHeight: "300px",
-                    overflow: "scroll",
-                    overflowX: "hidden",
-                    backgroundColor: "white",
-                  }}
-                >
-                  {searchResults.map((city, index) => (
-                    <li
-                      key={index}
-                      onClick={() => handleCitySelect(city)}
-                      style={{
-                        padding: "5px",
-                        display: selectedCity || !searchTerm ? "none" : "block",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {city.name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
             <div className="bottom-filter">
               <div className="item" onClick={() => handleUndo()}>
                 <FaUndoAlt />

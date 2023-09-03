@@ -538,12 +538,12 @@ function Home() {
           ></img>
           <ion-icon name="close-circle-outline" onClick={openDialog}></ion-icon>
           <div>
-            <h3>NHẬP MÃ MI03 - TIẾT KIỆM 15% KHI THUÊ XE TẠI MIOTO</h3>
+            <h3>NHẬP MÃ MI03 - TIẾT KIỆM 15% KHI THUÊ XE TẠI EASYCAR</h3>
             <p>
               Với dịch vụ thuê xe có tài tiện lợi, nhanh chóng cùng thủ tục đơn
-              giản. Hãy để Mioto đồng hành cùng bạn trong mọi chuyến đi. Nhập mã
-              MI03 - Tiết kiệm 15% (tối đa 150k) chi phí khi thuê xe có tài tại
-              Mioto. *Ưu đãi được áp dụng đến hết ngày 31/03
+              giản. Hãy để EasyCar đồng hành cùng bạn trong mọi chuyến đi. Nhập
+              mã MI03 - Tiết kiệm 15% (tối đa 150k) chi phí khi thuê xe có tài
+              tại EasyCar. *Ưu đãi được áp dụng đến hết ngày 31/03
             </p>
           </div>
         </div>
@@ -623,7 +623,7 @@ function Home() {
                   alt=""
                 />
               </figure>
-              <h3>Zoom In</h3>
+              <h3>Tính năng</h3>
               <p>
                 Phục vụ Phi Ngôn Ngữ giúp khách hàng cảm giác được Nâng tầm khi
                 mà Khách đến Công ty và lái xe đi như chính là xe của mình mà

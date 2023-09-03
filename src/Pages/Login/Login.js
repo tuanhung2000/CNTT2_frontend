@@ -168,17 +168,20 @@ function Login() {
                     </p>
                   </Grid>
                   <Grid xs={12} sm={12} item style={{ textAlign: "right" }}>
-                    <Link
-                      to=""
-                      style={{
-                        textDecoration: "none",
-                        color: "black",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Quên mật khẩu
-                    </Link>
+                    <p>
+                      Quay về{" "}
+                      <Link
+                        to="/"
+                        style={{
+                          textDecoration: "none",
+                          color: "black",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Trang chủ
+                      </Link>
+                    </p>
                   </Grid>
                 </Grid>
               </form>
