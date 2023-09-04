@@ -422,7 +422,7 @@ function CarDetail() {
                       borderRadius: "5px",
                     }}
                   >
-                    {vehicle.vehicle.VehicleSpec.isSelfDrive === true
+                    {!vehicle.vehicle.VehicleSpec.isSelfDrive
                       ? "Tự lái"
                       : "Có tài xế"}
                   </div>

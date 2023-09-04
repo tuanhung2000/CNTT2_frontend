@@ -78,6 +78,7 @@ function Cars() {
         setNameCity(propsFromSource.nameCity);
         setIsSelfDrive(propsFromSource.isSelfDrive);
         console.log("myProp has a value", propsFromSource.nameCity);
+        console.log("isSelft has a value", propsFromSource.isSelfDrive);
       }
     }
   }, [propsFromSource]);
@@ -91,6 +92,7 @@ function Cars() {
         propsFromSource.nameCity === undefined ||
         propsFromSource.nameCity === "")
     ) {
+      console.log("Is drive>?", isSelfDrive);
       const filtered = allvehicle.vehicleList.filter(
         (car) =>
           car.vehicle.address[0] === nameCity &&
