@@ -13,6 +13,7 @@ import {
   useCreateVehicleQuery,
   useGetAllVehiclesQuery,
 } from "../../features/user/userApiSlice";
+import { toast } from "react-toastify";
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
@@ -84,7 +85,9 @@ function PostCar() {
   const [provinces, setProvinces] = useState({ code: "", name: "" });
   const [licensePlate, setLicensePlate] = useState("");
   const [fuelType, setFuelType] = useState("");
+
   const [numberConstructor, setNumberConstructor] = useState("");
+  const [consumption, setConSumption] = useState("");
   const [numberChair, setNumberChair] = useState("");
   ////////////////
   const [map, setMap] = useState(false);
@@ -212,33 +215,48 @@ function PostCar() {
       });
   }
   function handleStep(step) {
-    if (step === 1) {
-      const featureList = [
-        { id: 1, value: map },
-        { id: 2, value: bluetooth },
-        { id: 3, value: camera360 },
-        { id: 4, value: cameratruoc },
-        { id: 5, value: cameratrip },
-        { id: 6, value: camerasau },
-        { id: 7, value: cuaso },
-        { id: 8, value: gps },
-        { id: 9, value: ghe },
-        { id: 10, value: lop },
-        { id: 11, value: manhinh },
-        { id: 12, value: tuikhi },
-      ];
+    if (
+      !licensePlate ||
+      !isSelfDrive ||
+      !make ||
+      !type ||
+      !model ||
+      !year ||
+      !desc ||
+      !fuelType ||
+      !numberConstructor ||
+      !numberChair
+    ) {
+      toast.warning("Vui lòng nhập đủ thông tin");
+    } else {
+      if (step === 1) {
+        const featureList = [
+          { id: 1, value: map },
+          { id: 2, value: bluetooth },
+          { id: 3, value: camera360 },
+          { id: 4, value: cameratruoc },
+          { id: 5, value: cameratrip },
+          { id: 6, value: camerasau },
+          { id: 7, value: cuaso },
+          { id: 8, value: gps },
+          { id: 9, value: ghe },
+          { id: 10, value: lop },
+          { id: 11, value: manhinh },
+          { id: 12, value: tuikhi },
+        ];
 
-      setListFeatures(featureList);
-    } else if (step === 2) {
-      setAddress((prevAddress) => [
-        ...prevAddress,
-        city.name,
-        provinces.name,
-        district.name,
-      ]);
+        setListFeatures(featureList);
+      } else if (step === 2) {
+        setAddress((prevAddress) => [
+          ...prevAddress,
+          city.name,
+          provinces.name,
+          district.name,
+        ]);
+      }
+      setActiveStep(step);
+      window.scrollTo(0, 0);
     }
-    setActiveStep(step);
-    window.scrollTo(0, 0);
   }
   function handleBackStep(step) {
     setActiveStep(step);
@@ -348,7 +366,7 @@ function PostCar() {
           fuelType: fuelType,
           // numberConstructor: numberConstructor,
           insurance: "1201234",
-          consumption: 20,
+          consumption: consumption,
           maxSpeed: 100,
           numberConstructor: numberConstructor,
           seatNumbers: numberChair,
@@ -537,7 +555,11 @@ function PostCar() {
                       setMake(e.target.value);
                     }}
                   >
-                    <option value="" defaultValue>
+                    <option
+                      value=""
+                      defaultValue
+                      style={{ display: "block", width: "100%" }}
+                    >
                       Chọn hãng xe
                     </option>
                     {nameCar &&
@@ -749,6 +771,11 @@ function PostCar() {
                     Số lít nhiên liệu cho quãng đường 100km.
                   </span>
                   <input
+                    type="number"
+                    value={consumption}
+                    onChange={(e) => {
+                      setConSumption(e.target.value);
+                    }}
                     style={{
                       width: "100%",
                       border: "1px solid #e5e5e5",
@@ -790,7 +817,6 @@ function PostCar() {
                       height: "100px",
                       padding: "10px",
                       borderRadius: "5px",
-                      overflowY: "scroll",
                     }}
                     className="input"
                   ></textarea>

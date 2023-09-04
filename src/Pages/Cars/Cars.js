@@ -35,6 +35,7 @@ import { useGetAllVehiclesQuery } from "../../features/user/userApiSlice";
 function Cars() {
   const location = useLocation();
   const [nameCity, setNameCity] = useState();
+  const [isSelfDrive, setIsSelfDrive] = useState();
   const propsFromSource = location.state;
   const navigate = useNavigate();
   const [isSticky, setIsSticky] = useState(false);
@@ -75,6 +76,7 @@ function Cars() {
         console.log("myProp is null, undefined, or empty");
       } else {
         setNameCity(propsFromSource.nameCity);
+        setIsSelfDrive(propsFromSource.isSelfDrive);
         console.log("myProp has a value", propsFromSource.nameCity);
       }
     }
@@ -92,7 +94,7 @@ function Cars() {
       const filtered = allvehicle.vehicleList.filter(
         (car) =>
           car.vehicle.address[0] === nameCity &&
-          car.vehicle.isSelfDrive === true
+          car.vehicle.isSelfDrive === isSelfDrive
       );
       setFilteredCars(filtered.length > 0 ? filtered : []);
     }

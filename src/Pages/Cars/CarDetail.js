@@ -415,6 +415,17 @@ function CarDetail() {
                       ? "Số tự động"
                       : "Số sàn"}
                   </div>
+                  <div
+                    style={{
+                      padding: "5px 7px",
+                      backgroundColor: "#eef7ff",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    {vehicle.vehicle.VehicleSpec.isSelfDrive === true
+                      ? "Tự lái"
+                      : "Có tài xế"}
+                  </div>
                 </div>
               </div>
               <div className="detail">

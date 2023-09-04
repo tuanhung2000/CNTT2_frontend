@@ -14,6 +14,7 @@ function Home() {
   const [city, setCity] = useState("");
   const [city2, setCity2] = useState("");
   const [nameCity, setNameCity] = useState("");
+  const [isSelfDrive, setIsSelfDrive] = useState(false);
   const [active, setActive] = useState(1);
   const [listcity, setListCity] = useState([]);
   const [listcity2, setListCity2] = useState([]);
@@ -90,18 +91,25 @@ function Home() {
   }, [city2]);
   const data = {
     nameCity: nameCity,
+    isSelfDrive: false,
+    // dayStart: daystart,
+    // dayend: dayend,
+  };
+  const data1 = {
+    nameCity: nameCity,
+    isSelfDrive: true,
     // dayStart: daystart,
     // dayend: dayend,
   };
   const handleNavigate = () => {
     navigate("/listcars", { state: data });
   };
-
+  const handleNavigate1 = () => {
+    navigate("/listcars", { state: data1 });
+  };
   return (
     <HomeSection>
-      <HomeSectionTop
-        style={{ marginBottom: active === 1 ? "100px" : "200px" }}
-      >
+      <HomeSectionTop style={{ marginBottom: "100px" }}>
         <div
           style={{ margin: "0 auto", maxWidth: "1140px", position: "relative" }}
         >
@@ -160,15 +168,15 @@ function Home() {
                   setActive(2);
                 }}
                 style={{
+                  borderRadius: "16px 0 0",
                   width: "100%",
                   padding: "16px",
                   display: "flex",
                   gap: "8px",
-                  cursor: "pointer",
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor: active === 2 ? "#5fcf86" : "white",
-                  borderRadius: "0px 16px 0px 0px",
+                  cursor: "pointer",
                 }}
               >
                 <ion-icon
@@ -214,7 +222,7 @@ function Home() {
                           },
                           PaperProps: {
                             style: {
-                              maxHeight: 100,
+                              maxHeight: 300,
                               width: "auto",
                             },
                           },
@@ -324,11 +332,11 @@ function Home() {
               </>
             ) : (
               <>
-                <Grid container className="search1">
-                  <Grid item xs={4} md={4} className="search-item">
-                    <div className="title" style={{ color: "black" }}>
+                <div className="search">
+                  <div className="search-item">
+                    <div className="title">
                       <ion-icon name="car-sport-outline"></ion-icon>
-                      <p style={{ color: "black" }}>Địa điểm đón</p>
+                      <p style={{ color: "black" }}>Chọn nơi đón</p>
                     </div>
                     <div className="input">
                       <Select
@@ -336,9 +344,9 @@ function Home() {
                         displayEmpty
                         labelId="demo-simple-select-label"
                         id="city"
-                        value={city}
+                        value={city2}
                         style={{ height: "56px", width: "100%" }}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => setCity2(e.target.value)}
                         MenuProps={{
                           getcontentanchorel: null,
                           anchorOrigin: {
@@ -347,129 +355,38 @@ function Home() {
                           },
                           PaperProps: {
                             style: {
-                              maxHeight: 100,
+                              maxHeight: 300,
                               width: "auto",
                             },
                           },
                         }}
                       >
                         <MenuItem value="">Tỉnh/Thành phố</MenuItem>
-                        {listcity2.map((item) => (
-                          <MenuItem value={item.code} key={item.code}>
+                        {listcity.map((item) => (
+                          <MenuItem value={item.name} key={item.code}>
                             {item.name}
                           </MenuItem>
                         ))}
                       </Select>
                     </div>
-                  </Grid>
-
-                  <Grid item xs={4} md={4} className="search-item">
-                    <div
-                      className="title"
-                      style={{ color: "black", opacity: 0 }}
-                    >
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div className="title">
                       <ion-icon name="calendar-outline"></ion-icon>
-                      <p style={{ color: "black", opacity: 0 }}>Bắt đầu</p>
-                    </div>
-                    <div className="input">
-                      <Select
-                        name="district"
-                        displayEmpty
-                        labelId="demo-simple-select-label"
-                        id="district"
-                        value={district}
-                        style={{ height: "56px", width: "100%" }}
-                        onChange={(e) => setDistrict(e.target.value)}
-                        MenuProps={{
-                          getcontentanchorel: null,
-                          anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "center",
-                          },
-                          PaperProps: {
-                            style: {
-                              maxHeight: 100,
-                              width: "auto",
-                            },
-                          },
-                        }}
-                      >
-                        <MenuItem value="">Quận/Huyện</MenuItem>
-                        {listdistrict.map((item) => (
-                          <MenuItem value={item.code} key={item.code}>
-                            {item.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </div>
-                  </Grid>
-
-                  <Grid item xs={4} md={4} className="search-item">
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "flex-end",
-                        width: "100%",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "100%",
-                        }}
-                      >
-                        <div
-                          className="title"
-                          style={{ color: "black", opacity: 0 }}
-                        >
-                          <ion-icon name="calendar-outline"></ion-icon>
-                          <p style={{ color: "black" }}>Kết thúc</p>
-                        </div>
-                        <div className="input">
-                          <Select
-                            name="ward"
-                            displayEmpty
-                            labelId="demo-simple-select-label"
-                            id="ward"
-                            value={ward}
-                            style={{ height: "56px", width: "100%" }}
-                            onChange={(e) => setWard(e.target.value)}
-                            MenuProps={{
-                              getcontentanchorel: null,
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "center",
-                              },
-                              PaperProps: {
-                                style: {
-                                  maxHeight: 100,
-                                  width: "auto",
-                                },
-                              },
-                            }}
-                          >
-                            <MenuItem value="">Phường/Xã/Thị trấn</MenuItem>
-                            {listward.map((item) => (
-                              <MenuItem value={item.name} key={item.name}>
-                                {item.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-                  </Grid>
-                  <Grid item xs={5} md={5} className="search-item">
-                    <div className="title" style={{ color: "black" }}>
-                      <ion-icon name="car-sport-outline"></ion-icon>
-                      <p style={{ color: "black" }}>Ngày bắt đầu</p>
+                      <p style={{ color: "black" }}>Bắt đầu</p>
                     </div>
                     <div className="input">
                       <LocalizationProvider
                         dateAdapter={AdapterDayjs}
-                        style={{ width: "100%" }}
+                        style={{ backgroundColor: "red" }}
                       >
                         <DateTimePicker
                           id="daystart"
@@ -479,33 +396,72 @@ function Home() {
                         />
                       </LocalizationProvider>
                     </div>
-                  </Grid>
-
-                  <Grid item xs={5} md={5} className="search-item">
-                    <div className="title" style={{ color: "black" }}>
-                      <ion-icon name="calendar-outline"></ion-icon>
-                      <p style={{ color: "black" }}>Ngày kết thúc</p>
-                    </div>
-                    <div className="input">
-                      <LocalizationProvider
-                        dateAdapter={AdapterDayjs}
-                        style={{ width: "100%" }}
+                  </div>
+                  <div
+                    style={{
+                      width: "0.5px",
+                      lineHeight: "20px",
+                      margin: "4px 12px",
+                      backgroundColor: "gray",
+                    }}
+                  ></div>
+                  <div className="search-item">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-end",
+                        width: "100%",
+                        justifyContent: "space-between",
+                        gap: "12px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "80%",
+                        }}
                       >
-                        <DateTimePicker
-                          id="dayend"
-                          minDateTime={
-                            daystart ? dayjs(daystart).add(1, "hour") : dayjs()
-                          }
-                          value={dayend}
-                          onChange={handleDayendChange}
-                        />
-                      </LocalizationProvider>
+                        <div className="title">
+                          <ion-icon name="calendar-outline"></ion-icon>
+                          <p style={{ color: "black" }}>Kết thúc</p>
+                        </div>
+                        <div className="input">
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimePicker
+                              id="dayend"
+                              minDateTime={
+                                daystart
+                                  ? dayjs(daystart).add(1, "hour")
+                                  : dayjs()
+                              }
+                              value={dayend}
+                              onChange={handleDayendChange}
+                            />
+                          </LocalizationProvider>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleNavigate1()}
+                        style={{
+                          width: "20%",
+                          padding: "10px",
+                          backgroundColor: "#5fcf86",
+                          border: "none",
+                          height: "56px",
+                          outline: "none",
+                          borderRadius: "5px",
+                          color: "white",
+                          display: "flex",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Tìm kiếm
+                      </button>
                     </div>
-                  </Grid>
-                  <Grid item xs={2} md={2} className="search-item">
-                    <button>Tìm kiếm</button>
-                  </Grid>
-                </Grid>
+                  </div>
+                </div>
               </>
             )}
           </div>
