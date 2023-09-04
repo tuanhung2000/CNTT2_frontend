@@ -230,6 +230,7 @@ function PostCar() {
       toast.warning("Vui lòng nhập đủ thông tin");
     } else {
       if (step === 1) {
+        console.log("Sai", isSelfDrive);
         const featureList = [
           { id: 1, value: map },
           { id: 2, value: bluetooth },
@@ -347,58 +348,63 @@ function PostCar() {
   const handlePushedFeature = () => {};
   const handlePostCar = (e) => {
     e.preventDefault();
-    axios
-      .post(
-        url,
-        {
-          image: listImg,
-          licensePlate: licensePlate,
-          price: price,
-          extraFee: 150000,
-          isSelfDrive: isSelfDrive,
-          make: make,
-          type: type,
-          model: model,
-          year: year,
-          feature: listFeatures,
-          description: desc,
-          powers: "500hp",
-          fuelType: fuelType,
-          // numberConstructor: numberConstructor,
-          insurance: "1201234",
-          consumption: consumption,
-          maxSpeed: 100,
-          numberConstructor: numberConstructor,
-          seatNumbers: numberChair,
-          rent: checked,
-          address: address,
-        },
-        opts
-      )
-      .then((response) => {
-        Swal.fire({
-          title: "Thành công!",
-          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
-          icon: "success",
-          confirmButtonColor: `${COLORS.main}`,
-          confirmButtonText: "Đồng ý",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            getListCar.refetch();
-            navigate("/listcars");
-          }
+    if (!img1 || !img2 || !img3 || !img4) {
+      toast.warning("Vui lòng chọn đủ 4 ảnh!");
+    } else {
+      console.log("Sai", isSelfDrive);
+      axios
+        .post(
+          url,
+          {
+            image: listImg,
+            licensePlate: licensePlate,
+            price: price,
+            extraFee: 150000,
+            isSelfDrive: isSelfDrive,
+            make: make,
+            type: type,
+            model: model,
+            year: year,
+            feature: listFeatures,
+            description: desc,
+            powers: "500hp",
+            fuelType: fuelType,
+            // numberConstructor: numberConstructor,
+            insurance: "1201234",
+            consumption: consumption,
+            maxSpeed: 100,
+            numberConstructor: numberConstructor,
+            seatNumbers: numberChair,
+            rent: checked,
+            address: address,
+          },
+          opts
+        )
+        .then((response) => {
+          Swal.fire({
+            title: "Thành công!",
+            text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+            icon: "success",
+            confirmButtonColor: `${COLORS.main}`,
+            confirmButtonText: "Đồng ý",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              getListCar.refetch();
+              navigate("/listcars");
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            title: "Thất bại!",
+            text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
+            icon: "error",
+            confirmButtonColor: `${COLORS.main}`,
+            confirmButtonText: "Xác nhận",
+          });
         });
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire({
-          title: "Thất bại!",
-          text: "Vui lòng chờ kiểm tra thông tin từ quản trị viên!",
-          icon: "error",
-          confirmButtonColor: `${COLORS.main}`,
-          confirmButtonText: "Xác nhận",
-        });
-      });
+    }
   };
   return (
     <section className="postContainer">
@@ -746,8 +752,8 @@ function PostCar() {
                     }}
                   >
                     <option value="">Chọn hình thức</option>
-                    <option value={true}>Có tài xế</option>
-                    <option value={false}>Không có tài xế</option>
+                    <option value={false}>Có tài xế</option>
+                    <option value={true}>Không có tài xế</option>
                   </select>
                 </div>
               </div>

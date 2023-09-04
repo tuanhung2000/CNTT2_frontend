@@ -91,13 +91,13 @@ function Home() {
   }, [city2]);
   const data = {
     nameCity: nameCity,
-    isSelfDrive: false,
+    isSelfDrive: true,
     // dayStart: daystart,
     // dayend: dayend,
   };
   const data1 = {
     nameCity: nameCity,
-    isSelfDrive: true,
+    isSelfDrive: false,
     // dayStart: daystart,
     // dayend: dayend,
   };
