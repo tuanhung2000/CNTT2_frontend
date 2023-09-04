@@ -73,7 +73,7 @@ function PostCar() {
     "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
   );
   const [price, setPrice] = useState(0);
-  const [isSelfDrive, setIsSelfDrive] = useState(false);
+  const [isSelfDrive, setIsSelfDrive] = useState("");
   const [make, setMake] = useState("");
   const [type, setType] = useState("");
   const [model, setModel] = useState("");
