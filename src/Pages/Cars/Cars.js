@@ -418,7 +418,7 @@ function Cars() {
                         <span style={{ color: "#5fcf86", fontWeight: "bold" }}>
                           {calculate(item.vehicle.price)}K
                         </span>
-                        <span>/ngày</span>
+                        <span>/giờ</span>
                       </div>
                     </div>
                   </Link>
