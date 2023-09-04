@@ -846,7 +846,7 @@ function CarDetail() {
             </section>
             <section className="right">
               <section className="price-container">
-                <h3>{formatMoney(vehicle.vehicle.Vehicle.price)}K/ngày</h3>
+                <h3>{formatMoney(vehicle.vehicle.Vehicle.price)}K/giờ</h3>
                 <section className="address">
                   <h6>Địa điểm giao nhận xe</h6>
                   <p>
@@ -858,20 +858,19 @@ function CarDetail() {
                   <div className="item">
                     <span>Đơn giá thuê</span>
                     <span className="price">
-                      {formatter.format(vehicle.vehicle.Vehicle.price)}/ ngày
+                      {formatter.format(vehicle.vehicle.Vehicle.price)}/ giờ
                     </span>
                   </div>
                   <div className="item">
                     <span>Phí dịch vụ</span>
                     <span className="price">
-                      {formatter.format(vehicle.vehicle.Vehicle.extraFee)}/ ngày
+                      {formatter.format(vehicle.vehicle.Vehicle.extraFee)}
                     </span>
                   </div>
                   <div className="item item-last">
                     <span>Phí bảo hiệm</span>
                     <span className="price">
-                      {formatter.format(vehicle.vehicle.VehicleSpec.insurance)}/
-                      ngày
+                      {formatter.format(vehicle.vehicle.VehicleSpec.insurance)}
                     </span>
                   </div>
                   <div className="item">
@@ -884,7 +883,6 @@ function CarDetail() {
                           parseInt(vehicle.vehicle.Vehicle.price)
                         )
                       )}{" "}
-                      x 1 ngày
                     </span>
                   </div>
                   <div className="btn-container">
